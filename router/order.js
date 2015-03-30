@@ -117,4 +117,37 @@ module.exports=function(app, mongoose, moment) {
         
     });
 
+    app.post('/v1/order_process', function(req, res) {
+        // verifica se existe produtos na cesta
+        if(req.body.basket.products && req.body.basket.products.length > 0){
+            
+            validateOrder(req.body.basket, function(basket){
+                
+                basket.total.toFixed(2);
+                
+                if(basket.inactive_products.length > 0){
+                    
+                    res.statusCode = 400;
+                    res.send(basket);
+                    
+                } else {
+                    
+                    res.send(basket);
+                    
+                }
+            });
+ 
+            // atualiza o preço dos produtos
+            
+        } else {
+            res.statusCode = 400;
+            res.send({errors: {
+                'Products' : {
+                    message: "A cesta está vazia."
+                }
+            }});
+        }
+        
+    });
+    
 }
