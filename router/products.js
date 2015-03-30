@@ -22,9 +22,9 @@ module.exports=function(app, mongoose, moment, utils) {
     
                 category : String,
                 
-                highlight : Boolean,
+                highlight : { type: Boolean, default: false },
                 
-                active : Boolean,
+                active : { type: Boolean, default: true },
                 
                 supplier: String,
                 
@@ -42,7 +42,7 @@ module.exports=function(app, mongoose, moment, utils) {
                         
                         var filter = {};
                         
-                        if(userKind != 'admin') filter.active = true;
+                        if(userKind != 'admin') filter.active = 1;
                         
                         Products.find(filter, null, {sort: {name: 1}}, function(err, products) {
 
@@ -96,7 +96,7 @@ module.exports=function(app, mongoose, moment, utils) {
                         
                         season: req.body.season,
                         
-                        recipes: req.body.recipes,
+                        recipes: req.body.recipes
                 
                 }, function(err, product) {
 

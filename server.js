@@ -71,7 +71,7 @@ require('./router/payments')(app, mongoose, moment, config);
 
 require('./router/tickets')(app, mongoose);
 
-require('./router/order')(app, mongoose, moment);
+require('./router/order')(app, mongoose, moment, utils, config, https);
 
 require('./router/users')(app, mongoose, utils, config);
 

@@ -52,3 +52,28 @@ function getUserKind(req, callback){
 }
 
 exports.getUserKind = getUserKind;
+
+function getRequestUser(req, res, next){
+    
+    var bearerHeader = req.headers["authorization"];
+    
+    if (typeof bearerHeader !== 'undefined') {
+        var bearer = bearerHeader.split(" ");
+        // verify a token symmetric
+        jwt.verify( bearer[1], config.APP_PRIVATE_KEY, function(err, decoded) {
+
+            req.user = decoded;
+            next();
+
+        });   
+
+    } else {
+
+        req.user = null;
+        next();
+
+    }
+    
+}
+
+exports.getRequestUser = getRequestUser;

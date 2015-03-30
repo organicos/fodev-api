@@ -1,19 +1,30 @@
 "use strict";
 
-module.exports=function(app, mongoose, moment) {
+module.exports=function(app, mongoose, moment, utils, config, https) {
     
     var Products = mongoose.model('Products');
 
-    var Order = mongoose.model('Order', {
-
-            name : { type: String, required: 'Informe o nome da cesta!' },
-
-            total: Number,
-            
-            products: { type: Array, required: 'A cesta está vazia!' },
-            
-            updated: { type: Date, default: moment().format("MM/DD/YYYY") }
-
+    var Orders = mongoose.model('Orders', {
+        name : { type: String, required: 'Informe o nome da cesta!' },
+        total: Number,
+        products: { type: Array, required: 'A cesta está vazia!' },
+        customer: { type: Object, required: 'Identifique o cliente!' },
+        pagseguro: { type: Object, default: {}, required: 'Identifique a ordem de pagamento!' },
+        cep: { type: String, required: 'Informe o cep!' },
+        street: { type: String, required: 'Informe o endereço!' },
+        number: { type: String, required: 'Informe o numero da casa!' },
+        complement: String,
+        district: { type: String, required: 'Informe o bairro!' },
+        city: { type: String, required: 'Informe a cidade!' },
+        state: { type: String, required: 'Informe o estado!' },
+        country: { type: String, required: 'Informe o país!' },
+        address_ref: { type: String, required: 'Informe alguma referência!' },
+        deliveryOption: { type: String, required: 'Informe a data de entrega!' },
+        payment_status: { type: String, default: 'order_created' },
+        active : { type: Boolean, default: true },
+        status : { type: Boolean, default: true },
+        invalid : { type: Boolean, default: false },
+        updated: { type: Date, default: moment().format("MM/DD/YYYY") }
     });
 
     var validateOrder = function(basket, validationCallback){
@@ -33,15 +44,12 @@ module.exports=function(app, mongoose, moment) {
                 
             } else {
 
-                // do database call with element
                 var product = elements[index];
 
                 if(product._id){
                     
                     Products.findOne({_id: product._id, active: true}, function(err, productNow) {
                         
-                        console.log(productNow);
-
                         if (err) {
                                 
                             newBasket.inactive_products.push(product);
@@ -53,7 +61,6 @@ module.exports=function(app, mongoose, moment) {
                                 product.price = productNow.price;
                                 product.dscr = productNow.dscr;
                                 product.name = productNow.name;
-                                console.log(product);
                                 newBasket.products.push(product);
                                 newBasket.total += Number(product.price * product.quantity);
                             
@@ -117,11 +124,48 @@ module.exports=function(app, mongoose, moment) {
         
     });
 
-    app.post('/v1/order_process', function(req, res) {
+
+    app.get('/v1/orders', function(req, res) {
+            
+
+        Orders.find({status:1}, null, function(err, products) {
+
+                if (err) {
+                        res.send(err);       
+                }
+
+                res.json(products);
+
+        });
+
+
+    });
+    
+    app.get('/v1/order/:product_id', function(req, res) {
+
+            Orders.findOne({_id: req.params.product_id}, function(err, product) {
+
+                    if (err) {
+                        
+                        res.send(err);
+                        
+                    } else {
+                        
+                        res.json(product);
+                        
+                    }
+
+            });
+
+    });
+        
+    app.post('/v1/order', utils.getRequestUser, function(req, res) {
         // verifica se existe produtos na cesta
         if(req.body.basket.products && req.body.basket.products.length > 0){
             
             validateOrder(req.body.basket, function(basket){
+                
+                var invalidCity = req.body.shipping_data.city == 'Florianópolis' ? false : true;
                 
                 basket.total.toFixed(2);
                 
@@ -132,12 +176,100 @@ module.exports=function(app, mongoose, moment) {
                     
                 } else {
                     
-                    res.send(basket);
+                    var customer = {
+                        __v: req.user.__v,
+                        _id: req.user._id,
+                        email: req.user.email,
+                        name: req.user.name
+                    }
+
+                    Orders.create({
+    
+                        name : req.body.basket.name,
+                        customer: customer,
+                        total:  req.body.basket.total,
+                        products:  req.body.basket.products,
+                        cep:  req.body.shipping_data.cep,
+                        street:  req.body.shipping_data.street,
+                        number:  req.body.shipping_data.number,
+                        complement:  req.body.shipping_data.complement,
+                        district:  req.body.shipping_data.district,
+                        city:  req.body.shipping_data.city,
+                        state:  req.body.shipping_data.state,
+                        country:  req.body.shipping_data.country,
+                        address_ref:  req.body.shipping_data.address_ref,
+                        deliveryOption:  req.body.shipping_data.deliveryOption,
+                        invalid: invalidCity,
+                        updated:  req.body.shipping_data.updated
+                    
+                    }, function(err, order) {
+    
+                            if (err){
+                                    
+                                    res.statusCode = 400;
+                                    
+                                    res.send(err);
+                                    
+                            } else {
+                                
+                                if(invalidCity){
+                    
+                                    res.statusCode = 400;
+                                    
+                                    res.send({errors: {
+                                        city: {message: 'Atualmente entregamos apenas no município de Florianópolis. Seu interesse foi registrado e assim que nosso atendimento chegar em sua cidade entraremos em contato. Se você puder receber sua cesta em Florianópolis, basta alterar os dados de entrega e finalizar o pedido novamente.'}
+                                    }});
+                    
+                                } else {
+                                    
+                                    createPaymentOrder(order, function(err, checkout){
+                                        
+                                        if(err){
+                                            
+                                            res.statusCode = 400;
+                                            
+                                            res.send({errors: {
+                                                city: {message: 'Tivemos alguns problemas em gerar sua ordem de pagamento. Nossa equipe irá verificar o motivo e entrar em contato com você em breve. Pedimos desculpas pelo inconveniente.'}
+                                            }});
+                                            
+                                        } else {
+                                            
+                                            console.log(checkout);
+                                            
+                                            Orders.findOne({ _id: order._id }, function (err, doc){
+                                                
+                                                doc.pagseguro = {checkout:checkout};
+                                                
+                                                doc.save(function(err, updatedOrder) {
+        
+                                                    if (err) {
+                                                            
+                                                            res.statusCode = 400;
+                    
+                                                            return res.send(err);
+                    
+                                                    } else {
+                                                            
+                                                            res.json(updatedOrder);
+                                                            
+                                                    }
+                        
+                                                });
+                                                
+                                            });
+
+                                        }
+                                        
+                                    });
+
+                                }
+                                    
+                            }
+    
+                    });
                     
                 }
-            });
- 
-            // atualiza o preço dos produtos
+            });    
             
         } else {
             res.statusCode = 400;
@@ -149,5 +281,107 @@ module.exports=function(app, mongoose, moment) {
         }
         
     });
-    
+
+    var createPaymentOrder = function(order, callback) {
+        
+        var data = {
+            email: config.pagseguro.email,
+            token: config.pagseguro.token,
+            currency: 'BRL',
+            reference: order._id,
+            senderName: order.customer.name ? order.customer.name + ' --' : order.customer.email + ' --',
+            senderPhone: order.customer.phone,
+            senderEmail: order.customer.email,
+            shippingType: 3,
+            shippingAddressStreet: order.street,
+            shippingAddressNumber: order.number,
+            shippingAddressComplement: order.complement,
+            shippingAddressDistrict: order.district,
+            shippingAddressPostalCode: order.cep,
+            shippingAddressCity: order.city,
+            shippingAddressState: order.state,
+            shippingAddressCountry: order.country
+        };
+
+        var arrayLength = order.products.length;
+
+        for (var i = 0; i < arrayLength; i++) {
+            data['itemId'+ (i+1)] = order.products[i]._id;
+            data['itemDescription'+ (i+1)] = order.products[i].name;
+            data['itemAmount'+ (i+1)] = order.products[i].price.toFixed(2);
+            data['itemQuantity'+ (i+1)] = order.products[i].quantity;
+            data['itemWeight'+ (i+1)] = order.products[i].weight || 1;
+        };
+        
+        var request = require('request');   
+        
+        request.post({
+            url:config.pagseguro.host+'/v2/checkout',
+            form: data,
+            headers: {'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8;'},
+            }, function(err,httpResponse,body){
+                
+                if(err){
+
+                    callback(err, null);
+
+                } else {
+                    
+                    var xml2js = require('xml2js');
+                    var parser = new xml2js.Parser();
+                    parser.parseString(body, function (err, result) {
+                        
+                        var checkout = {
+                            code: result.checkout.code[0]
+                            , date: result.checkout.date[0]
+                        };
+                        
+                        callback(null, checkout);
+
+                    });
+                    
+                }
+                
+            }
+            
+        );
+        
+    };
+
+    app.delete('/v1/order/:order_id', utils.ensureAuthorized, function(req, res) {
+
+        return Orders.findById(req.params.order_id, function(err, order) {
+                
+                if (err) {
+                        
+                        res.statusCode = 400;
+
+                        return res.send(err);
+                        
+                } else {
+                        
+                        order.status = 0;
+                        
+                        return order.save(function(err, updatedProduct) {
+
+                                if (err) {
+                                        
+                                        res.statusCode = 400;
+
+                                        return res.send(err);
+
+                                } else {
+                                        
+                                        return res.send(updatedProduct);
+                                        
+                                }
+
+                        });
+                        
+                }
+
+        });
+
+    });
+        
 }
