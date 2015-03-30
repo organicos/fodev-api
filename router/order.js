@@ -234,8 +234,6 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                                             
                                         } else {
                                             
-                                            console.log(checkout);
-                                            
                                             Orders.findOne({ _id: order._id }, function (err, doc){
                                                 
                                                 doc.pagseguro = {checkout:checkout};
@@ -288,7 +286,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
             email: config.pagseguro.email,
             token: config.pagseguro.token,
             currency: 'BRL',
-            reference: order._id,
+            reference: order._id.toString(),
             senderName: order.customer.name ? order.customer.name + ' --' : order.customer.email + ' --',
             senderPhone: order.customer.phone,
             senderEmail: order.customer.email,
@@ -384,5 +382,61 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
         });
 
     });
+
+    app.post('/v1/notificacao_pagseguro', function(req, res) {
+
+        var request = require('request');   
         
+        request.get({
+            url:config.pagseguro.host+'/v2/transactions/notifications/'+req.body.notificationCode+'?email=' + config.pagseguro.email + '&token=' + config.pagseguro.token,
+            headers: {'Content-Type' : 'application/json; charset=utf-8'},
+            }, function(err,httpResponse,body){
+                
+                if(err){
+                    
+                    res.statusCode = 400;
+
+                    return res.send(err);
+
+                } else {
+                    
+                    var xml2js = require('xml2js');
+                    var parser = new xml2js.Parser();
+                    parser.parseString(body, function (err, result) {
+                        
+                        var reference = result.transaction.reference[0];
+                        
+                        Orders.findOne({ _id: reference }, function (err, doc){
+                            
+                            doc.pagseguro = {
+                                checkout: doc.pagseguro.checkout,
+                                transaction: result.transaction
+                            };
+                            
+                            doc.save(function(err, updatedOrder) {
+                                
+                                if (err) {
+                                        
+                                    res.statusCode = 400;
+
+                                    return res.send(err);
+
+                                } else {
+                                        
+                                    res.json(true);
+                                        
+                                }
+    
+                            });
+                            
+                        });
+
+                    });
+                    
+                }
+                
+            }
+            
+        );
+    });
 }
