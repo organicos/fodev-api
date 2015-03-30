@@ -8,6 +8,8 @@ module.exports=function(app, mongoose, moment, utils) {
 
                 price: Number,
                 
+                cost: Number,
+                
                 dscr : String,
 
                 img: {
@@ -42,13 +44,11 @@ module.exports=function(app, mongoose, moment, utils) {
                         
                         if(userKind != 'admin') filter.active = true;
                         
-                        Products.find(filter, function(err, products) {
-                                
-                                console.log(userKind);
-        
-                                if (err)
-        
-                                        res.send(err);
+                        Products.find(filter, null, {sort: {name: 1}}, function(err, products) {
+
+                                if (err) {
+                                        res.send(err);       
+                                }
         
                                 res.json(products);
         
@@ -60,7 +60,7 @@ module.exports=function(app, mongoose, moment, utils) {
 
         app.get('/v1/product/:product_id', function(req, res) {
 
-                Products.find({_id: req.params.product_id}, function(err, product) {
+                Products.findOne({_id: req.params.product_id}, function(err, product) {
 
                         if (err)
 
@@ -79,6 +79,8 @@ module.exports=function(app, mongoose, moment, utils) {
                         name : req.body.name,
 
                         price : req.body.price,
+                        
+                        cost : req.body.cost,
                         
                         dscr : req.body.dscr,
                         
@@ -129,6 +131,8 @@ module.exports=function(app, mongoose, moment, utils) {
                                 product.name = req.body.name;
                                 
                                 product.price = req.body.price;
+                                
+                                product.cost = req.body.cost;
                                 
                                 product.dscr = req.body.dscr;
                                 

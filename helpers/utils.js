@@ -15,6 +15,17 @@ function ensureAuthorized(req, res, next) {
 
 exports.ensureAuthorized = ensureAuthorized;
 
+function ensureAdmin(req, res, next) {
+    getUserKind(req, function(userKind) {
+       if (userKind == 'admin') {
+           next();
+       } else {
+           res.send(403);
+       }
+    });
+}
+
+exports.ensureAdmin = ensureAdmin;
 
 var config = require('./../config/development/config');
 var jwt = require("jsonwebtoken");

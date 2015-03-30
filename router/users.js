@@ -6,7 +6,7 @@ module.exports=function(app, mongoose, utils, config) {
         
         var Users = require('./../modules/Users.js');
 
-        app.get('/v1/users', function(req, res) {
+        app.get('/v1/users', utils.ensureAdmin, function(req, res) {
 
                 Users.find(function(err, users) {
 
@@ -20,7 +20,7 @@ module.exports=function(app, mongoose, utils, config) {
 
         });
 
-        app.get('/v1/users/:user_id', function(req, res) {
+        app.get('/v1/users/:user_id', utils.ensureAdmin, function(req, res) {
 
                 Users.find({_id: req.params.user_id}, function(err, user) {
 
