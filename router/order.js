@@ -300,7 +300,8 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
             shippingAddressPostalCode: order.cep,
             shippingAddressCity: order.city,
             shippingAddressState: order.state,
-            shippingAddressCountry: order.country
+            shippingAddressCountry: order.country,
+            encoding: 'UTF-8'
         };
 
         var arrayLength = order.products.length;
@@ -318,7 +319,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
         request.post({
             url:config.pagseguro.host+'/v2/checkout',
             form: data,
-            headers: {'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8;'},
+            headers: {'Content-Type' : 'application/json; charset=utf-8'},
             }, function(err,httpResponse,body){
                 
                 if(err){
