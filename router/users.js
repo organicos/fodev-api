@@ -116,6 +116,8 @@ module.exports=function(app, mongoose, utils, config) {
                                         
                                         } else {
                                             
+                                            send_user_email(user);
+                                            
                                             user.token = '';
                                                 
                                             user.token = jwt.sign(user, config.APP_PRIVATE_KEY);
@@ -165,4 +167,55 @@ module.exports=function(app, mongoose, utils, config) {
                 });
         });
 
+    var send_user_email = function(user){
+        
+        var nodemailer = require('nodemailer');
+        var path = require('path');
+        var templatesDir   = path.join(__dirname, '../templates');
+        var emailTemplates = require('email-templates');
+
+        var transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465, // 465
+            secure: true, // true
+            debug : true,
+            auth: {
+                user: 'bruno@tzadi.com',
+                pass: 'Dublin2010ireland'
+            }
+        });
+
+        emailTemplates(templatesDir, function(err, template) {
+             
+            if (err) {
+                console.log(err);
+            } else {
+              
+                template('users/signup', user, function(err, html, text) {
+                    
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        var mailOptions = {
+                            from: 'Feira Orgânica Delivery <info@feiraorganica.com>', //sender address
+                            replyTo: "info@feiraorganica.com",
+                            to: user.email, // list of receivers
+                            cc: 'info@feiraorganica.com', // lredirects to 'bruno@tzadi.com, denisefaccin@gmail.com'
+                            subject: 'Bem vindo a Feira Orgânica Delivery',
+                            text: text,
+                            html: html
+                        };
+                        transporter.sendMail(mailOptions, function(error, info){
+                            if(error){
+                                console.log(error);
+                            }else{
+                                console.log('Message sent: ' + info.response);
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+    
 }

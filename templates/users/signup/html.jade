@@ -1,0 +1,65 @@
+extends ../../layout/layout.jade
+
+block content
+
+  h1 Olá #{customer.name}. 
+  
+  p Recebemos seu novo pedido e já preparamos tudo para que você possa 
+   a(href="https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{order.pagseguro.checkout.code}" style="text-decoration: none;") pagar 
+   | da maneira mais simples e segura.
+   
+  p Clique 
+    a(href="https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{order.pagseguro.checkout.code}" style="text-decoration: none;") aqui 
+    | para pagar ou copie o endereço abaixo e cole em sue navegador:
+    
+  p 
+    a(href="https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{order.pagseguro.checkout.code}" style="text-decoration: none;") https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{order.pagseguro.checkout.code}
+    
+  p Para acompanhar o seu pedido acesse: 
+  
+  p 
+    a(href="http://feiraorgânica.com/#/order/#{_id}" style="text-decoration: none;") http://feiraorgânica.com/#/order/#{_id}
+    
+  p 
+    a(href="https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{order.pagseguro.checkout.code}" style="text-decoration: none;") https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{order.pagseguro.checkout.code}
+    
+  
+  h2 Detalhes
+  
+  p 
+    b Identificador: 
+    | a(href="http://feiraorgânica.com/#/order/#{_id}" style="text-decoration: none;") #{_id}
+
+  p
+    b CEP:
+    | #{cep}
+  p
+    b Rua:
+    | #{street}
+  p
+    b Número:
+    | #{number}
+  p
+    b Complemento:
+    | #{complement}
+  p
+    b Bairro:
+    | #{district}
+  p
+    b Cidade:
+    | #{city}
+  p
+    b Estado:
+    | #{state}
+  p
+    b Entrega:
+    | #{deliveryOption}
+  p
+    b Referência:
+    | #{reference}
+  p
+    b Total:
+    | #{total}
+  p
+    b Data:
+    | #{date}
