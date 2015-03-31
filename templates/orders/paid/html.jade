@@ -2,21 +2,50 @@ extends ../../layout/layout.jade
 
 block content
 
-  h1 Bem vindo. 
+  h1 Pagamento realizado.
   
-  p 
+  p Olá #{customer.name}.
+  
+  p Identificamos o pagamento do pedido 
+   a(href="http://feiraorgânica.com/#/order/#{_id}" style="text-decoration: none;") #{_id}.
+   
+  p Para acompanhar a entrega acesse: 
+    a(href="http://feiraorgânica.com/#/order/#{_id}" style="text-decoration: none;") http://feiraorgânica.com/#/order/#{_id}
   
   h2 Detalhes
   
   p 
-    b Nome: 
-    | #{name}
-  p 
-    strong E-mail: 
-    | #{email}
-  p 
-    strong Telefone: 
-    | #{phone}
-  p 
-    strong Mensagem: 
-    | #{msg}
+    b Identificador: 
+    a(href="http://feiraorgânica.com/#/order/#{_id}" style="text-decoration: none;") #{_id}
+  b CEP: 
+  | #{cep}
+  br
+  b Rua: 
+  | #{street}
+  br
+  b Número: 
+  | #{number}
+  br
+  b Complemento: 
+  | #{complement}
+  br
+  b Bairro: 
+  | #{district}
+  br
+  b Cidade: 
+  | #{city}
+  br
+  b Estado: 
+  | #{state}
+  br
+  b Entrega: 
+  | #{deliveryOption}
+  br
+  b Referência: 
+  | #{reference}
+  br
+  b Total R$: 
+  | #{total}
+  br
+  b Data: 
+  | #{updated}

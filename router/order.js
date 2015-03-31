@@ -424,6 +424,8 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                                     return res.send(err);
 
                                 } else {
+                                    
+                                    send_paid_email(updatedOrder);
                                         
                                     res.json(true);
                                         
@@ -443,6 +445,8 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
     });
     
     var send_new_order_email = function(order){
+        
+        console.log(order);
         
         var nodemailer = require('nodemailer');
         var path = require('path');
@@ -467,6 +471,57 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
             } else {
               
                 template('orders/new', order, function(err, html, text) {
+                    
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        var mailOptions = {
+                            from: 'Feira Orgânica Delivery <info@feiraorganica.com>', //sender address
+                            replyTo: "info@feiraorganica.com",
+                            to: order.customer.email, // list of receivers
+                            cc: 'info@feiraorganica.com', // lredirects to 'bruno@tzadi.com, denisefaccin@gmail.com'
+                            subject: 'Pedido ' + order._id,
+                            text: text,
+                            html: html
+                        };
+                        transporter.sendMail(mailOptions, function(error, info){
+                            if(error){
+                                console.log(error);
+                            }else{
+                                console.log('Message sent: ' + info.response);
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+    
+    var send_paid_email = function(order){
+        
+        var nodemailer = require('nodemailer');
+        var path = require('path');
+        var templatesDir   = path.join(__dirname, '../templates');
+        var emailTemplates = require('email-templates');
+
+        var transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465, // 465
+            secure: true, // true
+            debug : true,
+            auth: {
+                user: 'bruno@tzadi.com',
+                pass: 'Dublin2010ireland'
+            }
+        });
+
+        emailTemplates(templatesDir, function(err, template) {
+             
+            if (err) {
+                console.log(err);
+            } else {
+              
+                template('orders/paid', order, function(err, html, text) {
                     
                     if (err) {
                         console.log(err);
