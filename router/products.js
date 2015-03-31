@@ -47,6 +47,8 @@ module.exports=function(app, mongoose, moment, utils) {
                         Products.find(filter, null, {sort: {name: 1}}, function(err, products) {
 
                                 if (err) {
+                                        
+                                        res.statusCode = 400;
                                         res.send(err);       
                                 }
         
@@ -62,11 +64,14 @@ module.exports=function(app, mongoose, moment, utils) {
 
                 Products.findOne({_id: req.params.product_id}, function(err, product) {
 
-                        if (err)
-
+                        if (err){
+                                res.statusCode = 400;
                                 res.send(err);
+                        } else {
 
-                        res.json(product);
+                                res.json(product);
+                                
+                        }
 
                 });
 
@@ -182,19 +187,27 @@ module.exports=function(app, mongoose, moment, utils) {
 
                 }, function(err, product) {
 
-                        if (err)
-
+                        if (err) {
+                                
+                                res.statusCode = 400;
                                 res.send(err);
+                                
+                        } else {
 
-                        Products.find(function(err, products) {
+                                Products.find(function(err, products) {
+        
+                                        if (err) {
+                                                res.statusCode = 400;
+                                                res.send(err);
+                                        } else {
+        
+                                                res.json(products);
+                                                
+                                        }
+        
+                                });
 
-                                if (err)
-
-                                        res.send(err);
-
-                                res.json(products);
-
-                        });
+                        }
 
                 });
 

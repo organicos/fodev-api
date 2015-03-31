@@ -10,11 +10,17 @@ module.exports=function(app, mongoose, utils, config) {
 
                 Users.find(function(err, users) {
 
-                        if (err)
-
-                                res.send(err)
-
-                        res.json(users);
+                        if (err) {
+                            
+                            res.statusCode = 400;
+                            
+                            res.send(err)
+                            
+                        } else {
+                            
+                            res.json(users);
+                            
+                        }
 
                 });
 
@@ -24,11 +30,17 @@ module.exports=function(app, mongoose, utils, config) {
 
                 Users.find({_id: req.params.user_id}, function(err, user) {
 
-                        if (err)
-
-                                res.send(err)
-
-                        res.json(user);
+                        if (err) {
+                            
+                            res.statusCode = 400;
+                            
+                            res.send(err)
+                            
+                        } else {
+                            
+                            res.json(user);
+                            
+                        }
 
                 });
 
@@ -37,11 +49,15 @@ module.exports=function(app, mongoose, utils, config) {
         app.post('/v1/signin', function(req, res) {
                 Users.findOne({email: req.body.email, password: req.body.password}, function(err, user) {
                         if (err) {
+                            
+                            res.statusCode = 400;
+                            
                             res.json({
                                 type: false,
                                 data: "Erro: " + err
                             });
                         } else {
+
                             if (user) {
                                 
                                 user.token = '';
@@ -51,8 +67,10 @@ module.exports=function(app, mongoose, utils, config) {
                                 user.save(function(err, updated_user) {
                                 
                                         if(err) {
+                                            
+                                            res.statusCode = 400;
 
-                                                res.send(err);
+                                            res.send(err);
 
                                         } else {
 
@@ -69,13 +87,20 @@ module.exports=function(app, mongoose, utils, config) {
                                 });
                                     
                             } else {
+                                
+                                res.statusCode = 400;
+                                
                                 res.json({
                                     type: false,
                                     data: "E-mail e senha não combinam! Tente novamente."
                                 });
+
                             }
+
                         }
+
                 });
+
         });
 
         app.post('/v1/signup', function(req, res) {
@@ -83,6 +108,8 @@ module.exports=function(app, mongoose, utils, config) {
                 Users.findOne({email: req.body.email, password: req.body.password}, function(err, user) {
 
                         if (err) {
+                            
+                            res.statusCode = 400;
                                 
                             res.json({
                                 type: false,
@@ -92,6 +119,8 @@ module.exports=function(app, mongoose, utils, config) {
                         } else {
                                 
                             if (user) {
+                                
+                                res.statusCode = 400;
                                     
                                 res.json({
                                     type: false,
@@ -111,12 +140,12 @@ module.exports=function(app, mongoose, utils, config) {
                                 }, function(err, user) {
                 
                                         if (err) {
+                                            
+                                            res.statusCode = 400;
                 
-                                                res.send(err);
+                                            res.send(err);
                                         
                                         } else {
-                                            
-                                            send_user_email(user);
                                             
                                             user.token = '';
                                                 
@@ -125,9 +154,14 @@ module.exports=function(app, mongoose, utils, config) {
                                             user.save(function(err, new_user) {
                                                     
                                                     if(err) {
-                                                            res.send(err);
+                                                        
+                                                        res.statusCode = 400;
+                                                        
+                                                        res.send(err);
+                                                        
                                                     } else {
                                                         new_user = new_user.toObject(); // swap for a plain javascript object instance
+                                                        send_user_email(new_user);
                                                         delete new_user["_id"];
                                                         delete new_user["password"];
                                                         res.json({
@@ -151,6 +185,9 @@ module.exports=function(app, mongoose, utils, config) {
         app.get('/v1/me', utils.ensureAuthorized, function(req, res) {
                 Users.findOne({token: req.token}, function(err, user) {
                         if (err) {
+                            
+                            res.statusCode = 400;
+                            
                             res.json({
                                 type: false,
                                 data: "Error occured: " + err

@@ -2,64 +2,27 @@ extends ../../layout/layout.jade
 
 block content
 
-  h1 Olá #{customer.name}. 
+  h1 Seja bem vindo a 
+    a(href="http://feiraorganica.com" style="text-decoration: none;") Feira Orgânica Delivery!
   
-  p Recebemos seu novo pedido e já preparamos tudo para que você possa 
-   a(href="https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{order.pagseguro.checkout.code}" style="text-decoration: none;") pagar 
-   | da maneira mais simples e segura.
-   
-  p Clique 
-    a(href="https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{order.pagseguro.checkout.code}" style="text-decoration: none;") aqui 
-    | para pagar ou copie o endereço abaixo e cole em sue navegador:
-    
-  p 
-    a(href="https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{order.pagseguro.checkout.code}" style="text-decoration: none;") https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{order.pagseguro.checkout.code}
-    
-  p Para acompanhar o seu pedido acesse: 
+  p Seu cadastro foi realizado com sucesso!
+
+  p No site 
+    a(href="http://feiraorganica.com" style="text-decoration: none;") Feira Orgânica Delivery 
+    | você encontra uma variedade de produtos orgânicos produzidos com amor e respeito a você e ao meio ambiente.
+
+  p É muito fácil comprar na 
+    a(href="http://feiraorganica.com" style="text-decoration: none;") Feira Orgânica Delivery
+    | ! Basta montar sua cesta e informar os dados de entrega. Todo o pagamento é feito através do pagseguro de forma simples e 100% segura.
   
-  p 
-    a(href="http://feiraorgânica.com/#/order/#{_id}" style="text-decoration: none;") http://feiraorgânica.com/#/order/#{_id}
-    
-  p 
-    a(href="https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{order.pagseguro.checkout.code}" style="text-decoration: none;") https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{order.pagseguro.checkout.code}
-    
+  p Em caso de dúvida, entre em contato conosco respondendo a este e-mail ou através do nosso  
+    a(href="http://feiraorganica.com/#/home#contact" style="text-decoration: none;") site.
   
   h2 Detalhes
   
   p 
-    b Identificador: 
-    | a(href="http://feiraorgânica.com/#/order/#{_id}" style="text-decoration: none;") #{_id}
-
-  p
-    b CEP:
-    | #{cep}
-  p
-    b Rua:
-    | #{street}
-  p
-    b Número:
-    | #{number}
-  p
-    b Complemento:
-    | #{complement}
-  p
-    b Bairro:
-    | #{district}
-  p
-    b Cidade:
-    | #{city}
-  p
-    b Estado:
-    | #{state}
-  p
-    b Entrega:
-    | #{deliveryOption}
-  p
-    b Referência:
-    | #{reference}
-  p
-    b Total:
-    | #{total}
-  p
-    b Data:
-    | #{date}
+    b Nome: 
+    | #{name}
+  p 
+    strong E-mail: 
+    | #{email}

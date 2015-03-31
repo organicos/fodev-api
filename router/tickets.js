@@ -26,9 +26,12 @@ module.exports=function(app, mongoose) {
 
     app.get('/api/tickets', function(req, res) {
         Tickets.find(function(err, tickets) {
-            if (err)
+            if (err){
+                res.statusCode = 400;
                 res.send(err);
-            res.json(tickets);
+            } else {
+                res.json(tickets);
+            }
         });
     });
     
@@ -59,11 +62,14 @@ module.exports=function(app, mongoose) {
                         
                         res.statusCode = 400;
                         res.send(err);
+                        
+                    } else {
+
+                        send_ticket_email(ticket);
+
+                        res.json(tickets);
+                        
                     }
-
-                    send_ticket_email(ticket);
-
-                    res.json(tickets);
 
                 });   
                 
