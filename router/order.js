@@ -160,126 +160,135 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
     });
         
     app.post('/v1/order', utils.getRequestUser, function(req, res) {
-        // verifica se existe produtos na cesta
-        if(req.body.basket.products && req.body.basket.products.length > 0){
-            
-            validateOrder(req.body.basket, function(basket){
+        
+        if(req.body.basket.total >= 35){
+            // verifica se existe produtos na cesta
+            if(req.body.basket.products && req.body.basket.products.length > 0){
                 
-                var invalidCity = req.body.shipping_data.city == 'Florianópolis' ? false : true;
-                
-                basket.total.toFixed(2);
-                
-                if(basket.inactive_products.length > 0){
+                validateOrder(req.body.basket, function(basket){
                     
-                    res.statusCode = 400;
-                    res.send(basket);
+                    var invalidCity = req.body.shipping_data.city == 'Florianópolis' ? false : true;
                     
-                } else {
+                    basket.total.toFixed(2);
                     
-                    var customer = {
-                        __v: req.user.__v,
-                        _id: req.user._id,
-                        email: req.user.email,
-                        name: req.user.name
-                    }
-
-                    Orders.create({
+                    if(basket.inactive_products.length > 0){
+                        
+                        res.statusCode = 400;
+                        res.send(basket);
+                        
+                    } else {
+                        
+                        var customer = {
+                            __v: req.user.__v,
+                            _id: req.user._id,
+                            email: req.user.email,
+                            name: req.user.name
+                        }
     
-                        name : req.body.basket.name,
-                        customer: customer,
-                        total:  req.body.basket.total,
-                        products:  req.body.basket.products,
-                        cep:  req.body.shipping_data.cep,
-                        street:  req.body.shipping_data.street,
-                        number:  req.body.shipping_data.number,
-                        complement:  req.body.shipping_data.complement,
-                        district:  req.body.shipping_data.district,
-                        city:  req.body.shipping_data.city,
-                        state:  req.body.shipping_data.state,
-                        country:  req.body.shipping_data.country,
-                        address_ref:  req.body.shipping_data.address_ref,
-                        deliveryOption:  req.body.shipping_data.deliveryOption,
-                        invalid: invalidCity,
-                        updated:  req.body.shipping_data.updated
-                    
-                    }, function(err, order) {
-    
-                            if (err){
-                                    
-                                    res.statusCode = 400;
-                                    
-                                    res.send(err);
-                                    
-                            } else {
-                                
-                                if(invalidCity){
-                    
-                                    res.statusCode = 400;
-                                    
-                                    res.send({errors: {
-                                        city: {message: 'Atualmente entregamos apenas no município de Florianópolis. Seu interesse foi registrado e assim que nosso atendimento chegar em sua cidade entraremos em contato. Se você puder receber sua cesta em Florianópolis, basta alterar os dados de entrega e finalizar o pedido novamente.'}
-                                    }});
-                    
+                        Orders.create({
+        
+                            name : req.body.basket.name,
+                            customer: customer,
+                            total:  req.body.basket.total,
+                            products:  req.body.basket.products,
+                            cep:  req.body.shipping_data.cep,
+                            street:  req.body.shipping_data.street,
+                            number:  req.body.shipping_data.number,
+                            complement:  req.body.shipping_data.complement,
+                            district:  req.body.shipping_data.district,
+                            city:  req.body.shipping_data.city,
+                            state:  req.body.shipping_data.state,
+                            country:  req.body.shipping_data.country,
+                            address_ref:  req.body.shipping_data.address_ref,
+                            deliveryOption:  req.body.shipping_data.deliveryOption,
+                            invalid: invalidCity,
+                            updated:  req.body.shipping_data.updated
+                        
+                        }, function(err, order) {
+        
+                                if (err){
+                                        
+                                        res.statusCode = 400;
+                                        
+                                        res.send(err);
+                                        
                                 } else {
                                     
-                                    createPaymentOrder(order, function(err, checkout){
-                                        
-                                        if(err){
-                                            
-                                            res.statusCode = 400;
-                                            
-                                            res.send({errors: {
-                                                city: {message: 'Tivemos alguns problemas em gerar sua ordem de pagamento. Nossa equipe irá verificar o motivo e entrar em contato com você em breve. Pedimos desculpas pelo inconveniente.'}
-                                            }});
-                                            
-                                        } else {
-                                            
-                                            Orders.findOne({ _id: order._id }, function (err, doc){
-                                                
-                                                doc.pagseguro = {checkout:checkout};
-                                                
-                                                doc.save(function(err, updatedOrder) {
-        
-                                                    if (err) {
-                                                            
-                                                            res.statusCode = 400;
-                    
-                                                            return res.send(err);
-                    
-                                                    } else {
-                                                        
-                                                        send_new_order_email(updatedOrder);
-                                                            
-                                                        res.json(updatedOrder);
-                                                            
-                                                    }
+                                    if(invalidCity){
                         
-                                                });
-                                                
-                                            });
-
-                                        }
+                                        res.statusCode = 400;
                                         
-                                    });
-
-                                }
-                                    
-                            }
-    
-                    });
-                    
-                }
-            });    
+                                        res.send({errors: {
+                                            city: {message: 'Atualmente entregamos apenas no município de Florianópolis. Seu interesse foi registrado e assim que nosso atendimento chegar em sua cidade entraremos em contato. Se você puder receber sua cesta em Florianópolis, basta alterar os dados de entrega e finalizar o pedido novamente.'}
+                                        }});
+                        
+                                    } else {
+                                        
+                                        createPaymentOrder(order, function(err, checkout){
+                                            
+                                            if(err){
+                                                
+                                                res.statusCode = 400;
+                                                
+                                                res.send({errors: {
+                                                    city: {message: 'Tivemos alguns problemas em gerar sua ordem de pagamento. Nossa equipe irá verificar o motivo e entrar em contato com você em breve. Pedimos desculpas pelo inconveniente.'}
+                                                }});
+                                                
+                                            } else {
+                                                
+                                                Orders.findOne({ _id: order._id }, function (err, doc){
+                                                    
+                                                    doc.pagseguro = {checkout:checkout};
+                                                    
+                                                    doc.save(function(err, updatedOrder) {
             
+                                                        if (err) {
+                                                                
+                                                                res.statusCode = 400;
+                        
+                                                                return res.send(err);
+                        
+                                                        } else {
+                                                            
+                                                            send_new_order_email(updatedOrder);
+                                                                
+                                                            res.json(updatedOrder);
+                                                                
+                                                        }
+                            
+                                                    });
+                                                    
+                                                });
+    
+                                            }
+                                            
+                                        });
+    
+                                    }
+                                        
+                                }
+        
+                        });
+                        
+                    }
+                });    
+                
+            } else {
+                res.statusCode = 400;
+                res.send({errors: {
+                    'Products' : {
+                        message: "A cesta está vazia."
+                    }
+                }});
+            }
         } else {
             res.statusCode = 400;
             res.send({errors: {
-                'Products' : {
-                    message: "A cesta está vazia."
+                'Total' : {
+                    message: "O valor mínimo para a compra de produtos é de R$35,00."
                 }
             }});
         }
-        
     });
 
     var createPaymentOrder = function(order, callback) {

@@ -10,7 +10,7 @@ module.exports=function(app, mongoose, moment, utils) {
                 
                 encoded_url: { type: String, required: 'Informe a url codificada!' },
                 
-                img: { type: String, required: 'Informe a imagem do artigo!' },
+                img: { type: String },
                 
                 updated: { type: Date, default: moment().format("MM/DD/YYYY") }
 
@@ -40,20 +40,43 @@ module.exports=function(app, mongoose, moment, utils) {
 
         });
 
-        app.get('/v1/article/:article_id', function(req, res) {
-
-                Articles.findOne({_id: req.params.article_id}, function(err, article) {
-
-                        if (err){
-                                res.statusCode = 400;
-                                res.send(err);
-                        } else {
-
-                                res.json(article);
-                                
-                        }
-
-                });
+        app.get('/v1/article/:encoded_url', function(req, res) {
+                
+                var article_id_url = req.params.encoded_url;
+                
+                var isObjectId = mongoose.Types.ObjectId.isValid(article_id_url);
+                
+                if(isObjectId){
+                        
+                        Articles.findOne({_id: req.params.encoded_url}, function(err, article) {
+        
+                                if (err){
+                                        res.statusCode = 400;
+                                        res.send(err);
+                                } else {
+                                        
+                                        res.json(article);
+                                        
+                                }
+        
+                        });
+                        
+                } else {
+                        
+                        Articles.findOne({encoded_url: req.params.encoded_url}, function(err, article) {
+        
+                                if (err){
+                                        res.statusCode = 400;
+                                        res.send(err);
+                                } else {
+                                        
+                                        res.json(article);
+                                        
+                                }
+        
+                        });
+                        
+                }
 
         });
 

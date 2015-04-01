@@ -13,18 +13,18 @@ module.exports=function(app, mongoose) {
 
     Tickets.schema.path('kind').validate(function (value) {
         return /contact|support|improvment/i.test(value);
-    }, 'Invalid kind.');
+    }, 'Tipo inválido de ticket.');
 
     Tickets.schema.path('email').validate(function (value) {
         var emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
         return emailRegex.test(value);
-    }, 'Invalid email.');
+    }, 'E-mail inválido.');
 
     Tickets.schema.path('msg').validate(function (value) {
         return value.length > 20;
-    }, 'Invalid message. Messages must have at least 20 characters.');
+    }, 'A mensgaem deve possuir ao menos 20 caracteres.');
 
-    app.get('/api/tickets', function(req, res) {
+    app.get('/v1/tickets', function(req, res) {
         Tickets.find(function(err, tickets) {
             if (err){
                 res.statusCode = 400;
@@ -35,7 +35,7 @@ module.exports=function(app, mongoose) {
         });
     });
     
-    app.post('/api/tickets', function(req, res) {
+    app.post('/v1/tickets', function(req, res) {
         
         Tickets.create({
 
