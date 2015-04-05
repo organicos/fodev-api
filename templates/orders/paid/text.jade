@@ -18,34 +18,40 @@ block content
     b Identificador: 
     a(href="http://feiraorganica.com/#/order/#{_id}" style="text-decoration: none;") #{_id}
   b CEP: 
-  | #{cep}
+  | #{shipping.cep}
   br
   b Rua: 
-  | #{street}
+  | #{shipping.street}
   br
   b Número: 
-  | #{number}
+  | #{shipping.number}
   br
   b Complemento: 
-  | #{complement}
+  | #{shipping.complement}
   br
   b Bairro: 
-  | #{district}
+  | #{shipping.district}
   br
   b Cidade: 
-  | #{city}
+  | #{shipping.city}
   br
   b Estado: 
-  | #{state}
+  | #{shipping.state}
   br
   b Entrega: 
-  | #{deliveryOption}
+  | #{shipping.deliveryOption}
   br
   b Referência: 
-  | #{reference}
+  | #{shipping.address_ref}
   br
-  b Total R$: 
+  b Valor da cesta R$: 
   | #{total}
+  br
+  b Valor do frete R$: 
+  | #{shipping.price}
+  br
+  b Valor final R$: 
+  | #{total+shipping.price}
   br
   b Data: 
   | #{updated}

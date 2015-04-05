@@ -210,8 +210,6 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                             
                         };
                         
-                        console.log(order);
-                        
                         Orders.create(order, function(err, order) {
         
                                 if (err){
@@ -331,11 +329,11 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
             data['itemWeight'+ (i+1)] = order.products[i].weight || 1;
         };
         
-        data['itemId'+ arrayLength] = 'Shipping';
-        data['itemDescription'+ arrayLength] = 'Frete';
-        data['itemAmount'+ arrayLength] = order.shipping.price.toFixed(2);
-        data['itemQuantity'+ arrayLength] = 1;
-        data['itemWeight'+ arrayLength] = 1;
+        data['itemId'+ (arrayLength+1)] = 'Shipping';
+        data['itemDescription'+ (arrayLength+1)] = 'Frete';
+        data['itemAmount'+ (arrayLength+1)] = order.shipping.price.toFixed(2);
+        data['itemQuantity'+ (arrayLength+1)] = 1;
+        data['itemWeight'+ (arrayLength+1)] = 1;
             
         var request = require('request');   
         
