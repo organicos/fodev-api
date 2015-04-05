@@ -12,6 +12,10 @@ module.exports=function(app, mongoose, moment, utils) {
                 
                 img: { type: String },
                 
+                highlight : { type: Boolean, default: false },
+                
+                active : { type: Boolean, default: true },
+                
                 updated: { type: Date, default: moment().format("MM/DD/YYYY") }
 
         });
@@ -42,41 +46,55 @@ module.exports=function(app, mongoose, moment, utils) {
 
         app.get('/v1/article/:encoded_url', function(req, res) {
                 
-                var article_id_url = req.params.encoded_url;
+                utils.getUserKind(req, function(userKind){
+                        
+                        var article_id_url = req.params.encoded_url;
+                        
+                        var isObjectId = mongoose.Types.ObjectId.isValid(article_id_url);
+                        
+                        var filter = {};
+                        
+                        if(userKind != 'admin') filter.active = 1;
+                        
+                        if(isObjectId){
+                                
+                                filter._id = article_id_url;
+                                
+                                Articles.findOne(filter, null, function(err, article) {
                 
-                var isObjectId = mongoose.Types.ObjectId.isValid(article_id_url);
+                                        if (err){
+                                                res.statusCode = 400;
+                                                res.send(err);
+                                        } else {
+                                                
+                                                res.json(article);
+                                                
+                                        }
                 
-                if(isObjectId){
-                        
-                        Articles.findOne({_id: req.params.encoded_url}, function(err, article) {
-        
-                                if (err){
-                                        res.statusCode = 400;
-                                        res.send(err);
-                                } else {
-                                        
-                                        res.json(article);
-                                        
-                                }
-        
-                        });
-                        
-                } else {
-                        
-                        Articles.findOne({encoded_url: req.params.encoded_url}, function(err, article) {
-        
-                                if (err){
-                                        res.statusCode = 400;
-                                        res.send(err);
-                                } else {
-                                        
-                                        res.json(article);
-                                        
-                                }
-        
-                        });
-                        
-                }
+                                });
+                                
+                        } else {
+                                
+                                filter.encoded_url = article_id_url;
+                                
+                                Articles.findOne(filter, null, function(err, article) {
+                
+                                        if (err){
+                                                res.statusCode = 400;
+                                                res.send(err);
+                                        } else {
+                                                
+                                                res.json(article);
+                                                
+                                        }
+                
+                                });
+                                
+                        }
+
+                });
+                
+
 
         });
 
@@ -90,7 +108,11 @@ module.exports=function(app, mongoose, moment, utils) {
                         
                         img : req.body.img,
                         
-                        encoded_url : req.body.encoded_url
+                        encoded_url : req.body.encoded_url,
+                        
+                        highlight : req.body.highlight,
+                        
+                        active : req.body.active
 
                 }, function(err, article) {
 
@@ -129,6 +151,10 @@ module.exports=function(app, mongoose, moment, utils) {
                                 article.img = req.body.img;
                                 
                                 article.encoded_url = req.body.encoded_url;
+                                
+                                article.highlight = req.body.highlight;
+                                
+                                article.active = req.body.active;
                                 
                                 return article.save(function(err, updatedArticle) {
         

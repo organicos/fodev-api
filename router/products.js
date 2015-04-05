@@ -62,18 +62,28 @@ module.exports=function(app, mongoose, moment, utils) {
 
         app.get('/v1/product/:product_id', function(req, res) {
 
-                Products.findOne({_id: req.params.product_id}, function(err, product) {
-
-                        if (err){
-                                res.statusCode = 400;
-                                res.send(err);
-                        } else {
-
-                                res.json(product);
-                                
-                        }
+                utils.getUserKind(req, function(userKind){
+                        
+                        var filter = {_id: req.params.product_id};
+                        
+                        if(userKind != 'admin') filter.active = 1;
+                        
+                        Products.findOne(filter, null, function(err, product) {
+        
+                                if (err){
+                                        res.statusCode = 400;
+                                        res.send(err);
+                                } else {
+        
+                                        res.json(product);
+                                        
+                                }
+        
+                        });
 
                 });
+                
+
 
         });
 

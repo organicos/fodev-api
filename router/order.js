@@ -1,25 +1,28 @@
 "use strict";
 
 module.exports=function(app, mongoose, moment, utils, config, https) {
-    
+
     var Products = mongoose.model('Products');
 
     var Orders = mongoose.model('Orders', {
         name : { type: String, required: 'Informe o nome da cesta!' },
-        total: Number,
+        total: { type: Number, required: 'Informe o total!' },
         products: { type: Array, required: 'A cesta está vazia!' },
         customer: { type: Object, required: 'Identifique o cliente!' },
+        shipping: {
+            price: { type: Number, required: 'Informe o preço do frete!' },
+            cep: { type: String, required: 'Informe o cep!' },
+            street: { type: String, required: 'Informe o endereço!' },
+            number: { type: String, required: 'Informe o numero da casa!' },
+            complement: String,
+            district: { type: String, required: 'Informe o bairro!' },
+            city: { type: String, required: 'Informe a cidade!' },
+            state: { type: String, required: 'Informe o estado!' },
+            country: { type: String, default: 'Brasil', required: 'Informe o país!' },
+            address_ref: { type: String, required: 'Informe alguma referência!' },
+            deliveryOption: { type: String, required: 'Informe a data de entrega!' },
+        },
         pagseguro: { type: Object, default: {}, required: 'Identifique a ordem de pagamento!' },
-        cep: { type: String, required: 'Informe o cep!' },
-        street: { type: String, required: 'Informe o endereço!' },
-        number: { type: String, required: 'Informe o numero da casa!' },
-        complement: String,
-        district: { type: String, required: 'Informe o bairro!' },
-        city: { type: String, required: 'Informe a cidade!' },
-        state: { type: String, required: 'Informe o estado!' },
-        country: { type: String, required: 'Informe o país!' },
-        address_ref: { type: String, required: 'Informe alguma referência!' },
-        deliveryOption: { type: String, required: 'Informe a data de entrega!' },
         payment_status: { type: String, default: 'order_created' },
         active : { type: Boolean, default: true },
         status : { type: Boolean, default: true },
@@ -28,13 +31,24 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
     });
 
     var validateOrder = function(basket, validationCallback){
-
+        
         var newBasket = {
             name: basket.name || 'Nova cesta',
             total: 0,
             products: [],
+            shipping: basket.shipping,
             inactive_products: []
         };
+
+        if(newBasket.shipping) {
+            newBasket.shipping.price = 6;
+            newBasket.shipping.country = 'Brasil';
+        } else {
+            newBasket.shipping = {
+                price: 6,
+                country: 'Brasil'
+            }
+        }
 
         var iterateElements = function (elements, index, callback) 
         {
@@ -98,7 +112,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
             validateOrder(req.body.basket, function(basket){
                 
                 basket.total.toFixed(2);
-                
+
                 if(basket.inactive_products.length > 0){
                     
                     res.statusCode = 400;
@@ -167,7 +181,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                 
                 validateOrder(req.body.basket, function(basket){
                     
-                    var invalidCity = req.body.shipping_data.city == 'Florianópolis' ? false : true;
+                    var invalidCity = req.body.basket.shipping.city == 'Florianópolis' ? false : true;
                     
                     basket.total.toFixed(2);
                     
@@ -179,32 +193,26 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                     } else {
                         
                         var customer = {
-                            __v: req.user.__v,
-                            _id: req.user._id,
-                            email: req.user.email,
-                            name: req.user.name
+                            __v: req.user.__v, //utils.getRequestUser
+                            _id: req.user._id, // utils.getRequestUser
+                            email: req.user.email, // utils.getRequestUser
+                            name: req.user.name // utils.getRequestUser
                         }
-    
-                        Orders.create({
-        
-                            name : req.body.basket.name,
-                            customer: customer,
-                            total:  req.body.basket.total,
-                            products:  req.body.basket.products,
-                            cep:  req.body.shipping_data.cep,
-                            street:  req.body.shipping_data.street,
-                            number:  req.body.shipping_data.number,
-                            complement:  req.body.shipping_data.complement,
-                            district:  req.body.shipping_data.district,
-                            city:  req.body.shipping_data.city,
-                            state:  req.body.shipping_data.state,
-                            country:  req.body.shipping_data.country,
-                            address_ref:  req.body.shipping_data.address_ref,
-                            deliveryOption:  req.body.shipping_data.deliveryOption,
-                            invalid: invalidCity,
-                            updated:  req.body.shipping_data.updated
                         
-                        }, function(err, order) {
+                        var order = {
+        
+                            name : basket.name,
+                            customer: customer,
+                            total:  basket.total,
+                            products:  basket.products,
+                            shipping:  basket.shipping,
+                            invalid: invalidCity
+                            
+                        };
+                        
+                        console.log(order);
+                        
+                        Orders.create(order, function(err, order) {
         
                                 if (err){
                                         
@@ -323,6 +331,12 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
             data['itemWeight'+ (i+1)] = order.products[i].weight || 1;
         };
         
+        data['itemId'+ arrayLength] = 'Shipping';
+        data['itemDescription'+ arrayLength] = 'Frete';
+        data['itemAmount'+ arrayLength] = order.shipping.price.toFixed(2);
+        data['itemQuantity'+ arrayLength] = 1;
+        data['itemWeight'+ arrayLength] = 1;
+            
         var request = require('request');   
         
         request.post({
@@ -454,8 +468,6 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
     });
     
     var send_new_order_email = function(order){
-        
-        console.log(order);
         
         var nodemailer = require('nodemailer');
         var path = require('path');

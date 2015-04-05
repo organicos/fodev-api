@@ -4,7 +4,7 @@ var config = {};
 
 config.database = {
     host: 'x.x.x.x'
-}
+};
 
 config.pagseguro = {
     host: 'https://ws.pagseguro.uol.com.br/v2',
