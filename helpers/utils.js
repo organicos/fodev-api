@@ -27,7 +27,7 @@ function ensureAdmin(req, res, next) {
 
 exports.ensureAdmin = ensureAdmin;
 
-var config = require('./../config/development/config');
+var config = require('./../config/env_config');
 var jwt = require("jsonwebtoken");
 
 function getUserKind(req, callback){
