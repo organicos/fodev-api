@@ -143,11 +143,7 @@ module.exports=function(app, mongoose, utils, config) {
                                 
                                 updated_user = updated_user.toObject(); // swap for a plain javascript object instance
                                 
-                                res.json({
-                                        type: true,
-                                        data: updated_user,
-                                        token: updated_user.token
-                                });  
+                                res.json(updated_user);
     
                             }
                         
