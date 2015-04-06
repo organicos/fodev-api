@@ -139,20 +139,25 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
     });
 
 
-    app.get('/v1/orders', function(req, res) {
+    app.get('/v1/orders', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
             
 
-        Orders.find({status:1}, null, function(err, products) {
-
-                if (err) {
-                        res.send(err);       
-                }
-
-                res.json(products);
+        utils.getUserKind(req, function(userKind){
+            
+            var filter = {'customer._id': req.user._id};
+                
+                Orders.find(filter, null, function(err, products) {
+        
+                        if (err) {
+                                res.send(err);       
+                        }
+        
+                        res.json(products);
+        
+                });
 
         });
-
-
+                
     });
     
     app.get('/v1/order/:product_id', function(req, res) {
