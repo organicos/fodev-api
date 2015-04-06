@@ -34,6 +34,4 @@ build/Release
 node_modules
 
 # config file
-config/development
-config/production
-config/staging
+config/env_config.js

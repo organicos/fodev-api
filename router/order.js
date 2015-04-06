@@ -144,15 +144,17 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
 
         utils.getUserKind(req, function(userKind){
             
-            var filter = {'customer._id': req.user._id};
+            var filter = {status: 1};
+            
+            if(userKind != 'admin') filter['customer._id'] = req.user._id;
                 
                 Orders.find(filter, null, function(err, products) {
         
-                        if (err) {
-                                res.send(err);       
-                        }
-        
-                        res.json(products);
+                    if (err) {
+                            res.send(err);       
+                    }
+    
+                    res.json(products);
         
                 });
 
