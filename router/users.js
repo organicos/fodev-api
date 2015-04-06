@@ -4,6 +4,8 @@ module.exports=function(app, mongoose, utils, config) {
         
         var jwt = require("jsonwebtoken");
         
+        var crypto = require('crypto');
+        
         var Users = require('./../modules/Users.js');
 
         app.get('/v1/users', utils.ensureAdmin, function(req, res) {
@@ -46,8 +48,67 @@ module.exports=function(app, mongoose, utils, config) {
 
         });
 
+        app.post('/v1/retrievePassword', function(req, res) {
+                Users.findOne({email: req.body.email}, function(err, user) {
+                        if (err) {
+                            
+                            res.statusCode = 400;
+                            
+                            res.json({
+                                type: false,
+                                data: "Erro: " + err
+                            });
+                        } else {
+
+                            if (user) {
+                                
+                                var newPassword = String(Date.now());
+                                
+                                console.log(newPassword);
+                                
+                                user.password = crypto.createHash('md5').update(newPassword).digest('hex');
+                                
+                                user.save(function(err, updated_user) {
+                                
+                                        if(err) {
+                                            
+                                            res.statusCode = 400;
+
+                                            res.send(err);
+
+                                        } else {
+                                            
+                                            updated_user = updated_user.toObject(); // swap for a plain javascript object instance
+                                            
+                                            updated_user.password = newPassword;
+                                            
+                                            send_retrieve_email(updated_user);
+
+                                            res.json(true);
+
+                                        }
+                                
+                                });
+                                    
+                            } else {
+                                
+                                res.statusCode = 400;
+                                
+                                res.json({
+                                    type: false,
+                                    data: "E-mailnão cadastrado! Verifique o e-mail informado e tente novamente."
+                                });
+
+                            }
+
+                        }
+
+                });
+
+        });
+        
         app.post('/v1/signin', function(req, res) {
-                Users.findOne({email: req.body.email, password: req.body.password}, function(err, user) {
+                Users.findOne({email: req.body.email, password: crypto.createHash('md5').update(req.body.password).digest('hex')}, function(err, user) {
                         if (err) {
                             
                             res.statusCode = 400;
@@ -135,7 +196,7 @@ module.exports=function(app, mongoose, utils, config) {
                 
                                         email : req.body.email,
                                         
-                                        password : req.body.password
+                                        password : crypto.createHash('md5').update(req.body.password).digest('hex')
                 
                                 }, function(err, user) {
                 
@@ -203,6 +264,57 @@ module.exports=function(app, mongoose, utils, config) {
                         }
                 });
         });
+        
+    var send_retrieve_email = function (user){
+        
+        var nodemailer = require('nodemailer');
+        var path = require('path');
+        var templatesDir   = path.join(__dirname, '../templates');
+        var emailTemplates = require('email-templates');
+
+        var transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465, // 465
+            secure: true, // true
+            debug : true,
+            auth: {
+                user: 'bruno@tzadi.com',
+                pass: 'Dublin2010ireland'
+            }
+        });
+
+        emailTemplates(templatesDir, function(err, template) {
+             
+            if (err) {
+                console.log(err);
+            } else {
+              
+                template('users/retrieve', user, function(err, html, text) {
+                    
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        var mailOptions = {
+                            from: 'Feira Orgânica Delivery <info@feiraorganica.com>', //sender address
+                            replyTo: "info@feiraorganica.com",
+                            to: user.email, // list of receivers
+                            cc: 'info@feiraorganica.com', // lredirects to 'bruno@tzadi.com, denisefaccin@gmail.com'
+                            subject: 'Nova senha',
+                            text: text,
+                            html: html
+                        };
+                        transporter.sendMail(mailOptions, function(error, info){
+                            if(error){
+                                console.log(error);
+                            }else{
+                                console.log('Message sent: ' + info.response);
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
 
     var send_user_email = function(user){
         
