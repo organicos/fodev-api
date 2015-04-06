@@ -22,7 +22,7 @@ var methodOverride = require('method-override'); // simulate DELETE and PUT (exp
 
 var argv = require('optimist').argv;
 
-var config = require('./config/development/config');
+var config = require('./config/env_config');
 
 var utils = require('./helpers/utils');
 
