@@ -413,13 +413,132 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
 
     });
 
+    app.get('/v1/check_pagseguro_payment/:reference', function(req, res) {
+       
+       var reference = req.params.reference;
+       
+       if(reference){
+           
+             Orders.findOne({ _id: reference }, function (err, order){
+                
+                if (err) {
+                        
+                    res.statusCode = 400;
+
+                    return res.send(err);
+                        
+                } else {
+                    
+                    if(order){
+                        
+                        var request = require('request');
+                        
+                        var initialDate = '2015-03-09T00:00';
+                        var finalDate = '2015-04-06T23:59';
+                        
+                        request.get({
+                            url:'https://ws.pagseguro.uol.com.br'+'/v2/transactions',
+                            qs : {
+                                initialDate: initialDate,
+                                finalDate: finalDate,
+                                page: 1,
+                                maxPageResults: 100,
+                                email: config.pagseguro.email,
+                                token: config.pagseguro.toke,
+                                reference: reference
+                            },
+                            headers: {'Content-Type' : 'application/json; charset=utf-8'}
+                        }, function(err,httpResponse,body){
+                
+                            if(err){
+                                
+                                res.statusCode = 400;
+            
+                                return res.send(err);
+            
+                            } else {
+
+                                var xml2js = require('xml2js');
+                                var parser = new xml2js.Parser();
+                                parser.parseString(body, function (err, result) {
+                                    
+                                    if (err) {
+                                            
+                                        res.statusCode = 400;
+    
+                                        return res.send(err);
+    
+                                    } else {
+                                        
+                                        console.log(result.transactionSearchResult.transactions[0].transaction);
+                                        
+                                        order.pagseguro = {
+                                            checkout: order.pagseguro.checkout,
+                                            transactions: result.transactionSearchResult.transactions ? result.transactionSearchResult.transactions[0].transaction : []
+                                        };
+                                        
+                                        order.save(function(err, updatedOrder) {
+                                            
+                                            if (err) {
+                                                    
+                                                res.statusCode = 400;
+            
+                                                return res.send(err);
+            
+                                            } else {
+                                                
+                                                res.json(updatedOrder);
+                                                    
+                                            }
+                
+                                        });
+                                            
+                                    }
+                                        
+                                });
+                                
+                            }
+                            
+                        });
+                        
+                    } else {
+                        
+                        res.statusCode = 400;
+                       
+                        res.send({errors: {
+                            city: {message: 'Pedido não encontrado.'}
+                        }});
+                        
+                    }
+                        
+                }
+
+            });
+
+       } else {
+       
+            res.statusCode = 400;
+           
+            res.send({errors: {
+                city: {message: 'Informe o código do pedido.'}
+            }});
+           
+       }
+       
+        
+    });
+
     app.post('/v1/notificacao_pagseguro', function(req, res) {
 
         var request = require('request');   
         
         request.get({
-            url:config.pagseguro.host+'/v2/transactions/notifications/'+req.body.notificationCode+'?email=' + config.pagseguro.email + '&token=' + config.pagseguro.token,
-            headers: {'Content-Type' : 'application/json; charset=utf-8'},
+            url:config.pagseguro.host+'/v2/transactions/notifications/'+req.body.notificationCode,
+            qs : {
+                email: config.pagseguro.email,
+                token: config.pagseguro.token
+            },
+            headers: {'Content-Type' : 'application/json; charset=utf-8'}
             }, function(err,httpResponse,body){
                 
                 if(err){
@@ -438,9 +557,15 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                         
                         Orders.findOne({ _id: reference }, function (err, doc){
                             
+                            if(doc.pagseguro.transactions.length){
+                                doc.pagseguro.transactions.push(result.transaction);
+                            } else {
+                                doc.pagseguro.transactions = [result.transaction];
+                            }
+                            
                             doc.pagseguro = {
                                 checkout: doc.pagseguro.checkout,
-                                transaction: result.transaction
+                                transaction: doc.pagseguro.transactions
                             };
                             
                             doc.save(function(err, updatedOrder) {
