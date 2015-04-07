@@ -15,12 +15,11 @@ module.exports=function(app, mongoose, moment, utils) {
                 img: {
                         type: String,
                         trim: true,
-                        unique: true,
-                        required: 'Forneça a url de imagem do produto.',
+                        required: 'Forneça uma url válida no campo imagem.',
                         match: [/[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/, 'Forneça uma url válida da imagem do produto.']
                 },
     
-                category : String,
+                category : { type: String, required: 'Informe a categoria!' },
                 
                 highlight : { type: Boolean, default: false },
                 

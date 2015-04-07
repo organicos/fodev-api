@@ -22,13 +22,20 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
             address_ref: { type: String, required: 'Informe alguma referência!' },
             deliveryOption: { type: String, required: 'Informe a data de entrega!' },
         },
-        pagseguro: { type: Object, default: {}, required: 'Identifique a ordem de pagamento!' },
-        payment_status: { type: String, default: 'order_created' },
+        pagseguro: {
+            checkout: { type: Object, default: {}, required: 'Os dados de checkout do Pagseguro não foram informados!' },
+            transactions: { type: Array, default: [] }
+        },
         active : { type: Boolean, default: true },
-        status : { type: Boolean, default: true },
+        status : { type: Number, default: 0 },
         invalid : { type: Boolean, default: false },
         updated: { type: Date, default: moment().format("MM/DD/YYYY") }
     });
+    
+    var payment_status_map = {
+        0: 'Pagamento pendente',
+        1: 'Pago'
+    };
 
     var validateOrder = function(basket, validationCallback){
         
@@ -335,13 +342,13 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
             data['itemQuantity'+ (i+1)] = order.products[i].quantity;
             data['itemWeight'+ (i+1)] = order.products[i].weight || 1;
         };
-        
-        data['itemId'+ (arrayLength+1)] = 'Shipping';
+
+        data['itemId'+ (arrayLength+1)] = 'Frete';
         data['itemDescription'+ (arrayLength+1)] = 'Frete';
-        data['itemAmount'+ (arrayLength+1)] = order.shipping.price.toFixed(2);
+        data['itemAmount'+ (arrayLength+1)] = order.shipping.price > 0 ? order.shipping.price.toFixed(2) : 0;
         data['itemQuantity'+ (arrayLength+1)] = 1;
         data['itemWeight'+ (arrayLength+1)] = 1;
-            
+
         var request = require('request');   
         
         request.post({
@@ -412,6 +419,20 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
         });
 
     });
+    
+    var getOrderStatusFromTransactions = function(transactions){
+
+        var arrayLength = transactions.length;
+
+        for (var i = 0; i < arrayLength; i++) {
+            
+            if (transactions[i].status[0] == 3) return 1;
+
+        };
+
+        return 0;
+        
+    }
 
     app.get('/v1/check_pagseguro_payment/:reference', function(req, res) {
        
@@ -434,17 +455,17 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                         var request = require('request');
                         
                         var initialDate = '2015-03-09T00:00';
-                        var finalDate = '2015-04-06T23:59';
+                        var finalDate = '2015-04-07T14:55';
                         
                         request.get({
-                            url:'https://ws.pagseguro.uol.com.br'+'/v2/transactions',
+                            url:config.pagseguro.host+'/v2/transactions',
                             qs : {
                                 initialDate: initialDate,
                                 finalDate: finalDate,
                                 page: 1,
                                 maxPageResults: 100,
                                 email: config.pagseguro.email,
-                                token: config.pagseguro.toke,
+                                token: config.pagseguro.token,
                                 reference: reference
                             },
                             headers: {'Content-Type' : 'application/json; charset=utf-8'}
@@ -470,13 +491,20 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
     
                                     } else {
                                         
-                                        console.log(result.transactionSearchResult.transactions[0].transaction);
+                                        var transactions = result.transactionSearchResult.transactions ? result.transactionSearchResult.transactions[0].transaction : null;
                                         
-                                        order.pagseguro = {
-                                            checkout: order.pagseguro.checkout,
-                                            transactions: result.transactionSearchResult.transactions ? result.transactionSearchResult.transactions[0].transaction : []
-                                        };
+                                        var old_status = order.status;
                                         
+                                        order.pagseguro = { checkout: order.pagseguro.checkout };
+                                        
+                                        if (transactions) {
+                                            
+                                                order.pagseguro.transactions =  transactions;
+                                                
+                                                order.status = getOrderStatusFromTransactions(transactions);
+                                            
+                                        }
+
                                         order.save(function(err, updatedOrder) {
                                             
                                             if (err) {
@@ -486,6 +514,8 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                                                 return res.send(err);
             
                                             } else {
+                                                
+                                                if(old_status != 1 && order.status == 1) send_paid_email(updatedOrder);
                                                 
                                                 res.json(updatedOrder);
                                                     
@@ -527,7 +557,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
        
         
     });
-
+    
     app.post('/v1/notificacao_pagseguro', function(req, res) {
 
         var request = require('request');   
@@ -553,40 +583,53 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                     var parser = new xml2js.Parser();
                     parser.parseString(body, function (err, result) {
                         
-                        var reference = result.transaction.reference[0];
-                        
-                        Orders.findOne({ _id: reference }, function (err, doc){
+                        if (err) {
+                                
+                            res.statusCode = 400;
+
+                            return res.send(err);
+
+                        } else {
+                                        
+                            var reference = result.transaction.reference[0];
                             
-                            if(doc.pagseguro.transactions.length){
-                                doc.pagseguro.transactions.push(result.transaction);
-                            } else {
-                                doc.pagseguro.transactions = [result.transaction];
-                            }
-                            
-                            doc.pagseguro = {
-                                checkout: doc.pagseguro.checkout,
-                                transaction: doc.pagseguro.transactions
-                            };
-                            
-                            doc.save(function(err, updatedOrder) {
+                            Orders.findOne({ _id: reference }, function (err, order){
                                 
                                 if (err) {
                                         
                                     res.statusCode = 400;
-
+        
                                     return res.send(err);
-
+        
                                 } else {
+                                
+                                    order.pagseguro.transactions.push(result.transaction);
+
+                                    order.status = getOrderStatusFromTransactions([result.transaction]);
+
+                                    order.save(function(err, updatedOrder) {
+                                        
+                                        if (err) {
+                                                
+                                            res.statusCode = 400;
+        
+                                            return res.send(err);
+        
+                                        } else {
+                                            
+                                            if(order.status == 1) send_paid_email(updatedOrder);
+                                                
+                                            res.json(true);
+                                                
+                                        }
+            
+                                    });
                                     
-                                    send_paid_email(updatedOrder);
-                                        
-                                    res.json(true);
-                                        
                                 }
-    
+                                
                             });
                             
-                        });
+                        }
 
                     });
                     
