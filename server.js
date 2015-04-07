@@ -84,7 +84,7 @@ process.on('uncaughtException', function(err) {
 
 // listen (start app with node server.js) ======================================
 
-http.createServer(app).listen(process.env.PORT || 3000, function(){
+http.createServer(app).listen(process.env.PORT || 80, function(){
 
         console.log('HTTP iniciado');
 
@@ -102,7 +102,7 @@ https.createServer({
 
     rejectUnauthorized: false
 
-}, app).listen(process.env.PORT + 1 || 3001, function() {
+}, app).listen(process.env.PORT + 1 || 443, function() {
 
     console.log("HTTPS - SSL iniciado");
 
