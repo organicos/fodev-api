@@ -10,7 +10,7 @@ var http = require('http');
 
 var fs = require('fs');
 
-var app      = express();                                                               // create our app w/ express
+var app = express();                                                               // create our app w/ express
 
 var mongoose = require('mongoose');                                     // mongoose for mongodb
 
@@ -26,9 +26,14 @@ var config = require('./config/env_config');
 
 var utils = require('./helpers/utils');
 
+var compression = require('compression');
+
+var errorHandler = require('errorhandler');
+
 
 // Add headers
 app.use(function (req, res, next) {
+    
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', "*");
     // Request methods you wish to allow
@@ -61,9 +66,16 @@ app.use(bodyParser.json({ type: 'application/vnd.api+json' })); // parse applica
 
 app.use(methodOverride());
 
-// load the routes
+app.use(compression());
 
-require('./router/main')(app);
+if(['dev', 'stg'].indexOf(config.env)){
+    app.use(errorHandler({
+        dumpExceptions: true, 
+        showStack: true
+    }));
+};
+
+// load the routes
 
 require('./router/products')(app, mongoose, moment, utils);
 
@@ -76,6 +88,8 @@ require('./router/articles')(app, mongoose, moment, utils);
 require('./router/order')(app, mongoose, moment, utils, config, https);
 
 require('./router/users')(app, mongoose, utils, config);
+
+require('./router/app')(app, express);
 
 // avoid server stop =====================================
 process.on('uncaughtException', function(err) {
