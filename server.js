@@ -77,6 +77,8 @@ if(['dev', 'stg'].indexOf(config.env)){
 
 // load the routes
 
+require('./router/main')(app, express);
+
 require('./router/products')(app, mongoose, moment, utils);
 
 require('./router/payments')(app, mongoose, moment, config);
