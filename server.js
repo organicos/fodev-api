@@ -108,9 +108,9 @@ http.createServer(app).listen(process.env.PORT || 80, function(){
 
 https.createServer({
 
-    key: fs.readFileSync('./ssl-data/server.key'),
+    key: fs.readFileSync('./ssl-data/key.key'),
 
-    cert: fs.readFileSync('./ssl-data/server.crt'),
+    cert: fs.readFileSync('./ssl-data/cert.crt'),
 
     ca: fs.readFileSync('./ssl-data/ca.crt'),
 
