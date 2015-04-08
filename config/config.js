@@ -1,6 +1,8 @@
 "use strict";
 
-var config = {};
+var config = {
+    env: 'dev'
+};
 
 config.database = {
     host: 'x.x.x.x'
