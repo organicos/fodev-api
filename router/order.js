@@ -151,7 +151,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
 
         utils.getUserKind(req, function(userKind){
             
-            var filter = {status: 1};
+            var filter = {active: 1};
             
             if(userKind != 'admin') filter['customer._id'] = req.user._id;
                 
