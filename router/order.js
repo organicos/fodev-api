@@ -457,8 +457,8 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                         // var finalDate = '2015-04-07T14:55';
 
                         
-                        var initialDate = moment().subtract('days', 30).format("YYYY-MM-DDThh:mm");
-                        var finalDate = moment().format("YYYY-MM-DDThh:mm");
+                        var initialDate = moment().subtract('days', 30).format("YYYY-MM-DDTHH:mm");
+                        var finalDate = moment().format("YYYY-MM-DDTHH:mm");
                         
                         console.log(initialDate);
                         console.log(finalDate);
