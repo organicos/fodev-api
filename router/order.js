@@ -454,14 +454,17 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                         
                         var request = require('request');
                         
-                        // var finalDate = '2015-04-07T14:55';
+                        console.log(moment().format("YYYY-MM-DDTHH:mm"));
+                        console.log(moment().format("YYYY-MM-DD"));
+                        console.log(moment().format("YYYY-MM-DD HH:mm"));
+                        console.log(moment().format("YYYY-mm-ddTHH:mm"));
+                        console.log(moment().format("YYYY-mm-dd"));
+                        console.log(moment().format("YYYY-mm-dd HH:mm"));
 
-                        
-                        var initialDate = moment().subtract('days', 30).format("YYYY-MM-DDT HH:mm");
-                        var finalDate = moment().format("YYYY-MM-DDT hh:mm");
+                        var initialDate = moment().subtract('days', 29).format("YYYY-MM-DDTHH:mm"); // 2015-04-07T14:55
+                        var finalDate = moment().subtract('minutes', 5).format("YYYY-MM-DDTHH:mm"); // 2015-04-07T14:55
                         
                         console.log(initialDate);
-                        console.log(finalDate);
                         
                         request.get({
                             url:config.pagseguro.host+'/v2/transactions',
@@ -489,6 +492,8 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                                 var parser = new xml2js.Parser();
                                 parser.parseString(body, function (err, result) {
                                     
+                                    console.log(body);
+                                    
                                     if (err) {
                                             
                                         res.statusCode = 400;
@@ -505,7 +510,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                                         
                                         if (transactions) {
                                             
-                                                order.pagseguro.transactions =  transactions;
+                                                order.pagseguro.transactions = transactions;
                                                 
                                                 order.status = getOrderStatusFromTransactions(transactions);
                                             
