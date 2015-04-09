@@ -68,11 +68,15 @@ app.use(methodOverride());
 
 app.use(compression());
 
-if(['dev', 'stg'].indexOf(config.env)){
+if(['dev', 'stg'].indexOf(config.env) > -1){
     app.use(errorHandler({
         dumpExceptions: true, 
         showStack: true
     }));
+    
+    // tag para adicionar no titulo dos emails para diferenciar testes de produção
+    config.envTag = config.env + ' - ';
+    
 };
 
 // load the routes
@@ -83,7 +87,7 @@ require('./router/products')(app, mongoose, moment, utils);
 
 require('./router/payments')(app, mongoose, moment, config);
 
-require('./router/tickets')(app, mongoose);
+require('./router/tickets')(app, mongoose, config);
 
 require('./router/articles')(app, mongoose, moment, utils);
 

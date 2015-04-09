@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports=function(app, mongoose) {
+module.exports=function(app, mongoose, config) {
 
     var Tickets = mongoose.model('Tickets', {
         kind : String,
@@ -111,7 +111,7 @@ module.exports=function(app, mongoose) {
                             replyTo: "info@feiraorganica.com",
                             to: ticket.email, // list of receivers
                             cc: 'info@feiraorganica.com', // list of BCC receivers 'bruno@tzadi.com, denisefaccin@gmail.com'
-                            subject: 'Contato recebido',
+                            subject: config.envTag + 'Contato recebido',
                             text: text,
                             html: html
                         };

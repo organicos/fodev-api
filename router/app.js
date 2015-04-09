@@ -11,6 +11,7 @@ module.exports=function(app, express) {
 	app.use("/components", express.static(__dirname + "../../../fodev-app/components"));
 	app.use("/partials", express.static(__dirname + "../../../fodev-app/partials"));
 	app.use("/template", express.static(__dirname + "../../../fodev-app/template"));
+	app.use("/config", express.static(__dirname + "../../../fodev-app/config"));
 
 	// application -------------------------------------------------------------
 	app.all('/*', function(req, res) {

@@ -356,7 +356,7 @@ module.exports=function(app, mongoose, utils, config) {
                             replyTo: "info@feiraorganica.com",
                             to: user.email, // list of receivers
                             cc: 'info@feiraorganica.com', // lredirects to 'bruno@tzadi.com, denisefaccin@gmail.com'
-                            subject: 'Nova senha',
+                            subject: config.envTag + 'Nova senha',
                             text: text,
                             html: html
                         };
@@ -407,7 +407,7 @@ module.exports=function(app, mongoose, utils, config) {
                             replyTo: "info@feiraorganica.com",
                             to: user.email, // list of receivers
                             cc: 'info@feiraorganica.com', // lredirects to 'bruno@tzadi.com, denisefaccin@gmail.com'
-                            subject: 'Bem vindo a Feira Orgânica Delivery',
+                            subject: config.envTag + 'Bem vindo a Feira Orgânica Delivery',
                             text: text,
                             html: html
                         };

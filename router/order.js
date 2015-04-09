@@ -354,31 +354,33 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
         request.post({
             url:config.pagseguro.host+'/v2/checkout',
             form: data,
-            headers: {'Content-Type' : 'application/json; charset=utf-8'},
-            }, function(err,httpResponse,body){
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8'
+            }
+        }, function(err,httpResponse,body){
+
+            if(err){
+
+                callback(err, null);
+
+            } else {
                 
-                if(err){
-
-                    callback(err, null);
-
-                } else {
+                var xml2js = require('xml2js');
+                var parser = new xml2js.Parser();
+                parser.parseString(body, function (err, result) {
                     
-                    var xml2js = require('xml2js');
-                    var parser = new xml2js.Parser();
-                    parser.parseString(body, function (err, result) {
-                        
-                        var checkout = {
-                            code: result.checkout.code[0]
-                            , date: result.checkout.date[0]
-                        };
-                        
-                        callback(null, checkout);
-
-                    });
+                    var checkout = {
+                        code: result.checkout.code[0]
+                        , date: result.checkout.date[0]
+                    };
                     
-                }
+                    callback(null, checkout);
+
+                });
                 
             }
+            
+        }
             
         );
         
@@ -453,18 +455,9 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                     if(order){
                         
                         var request = require('request');
-                        
-                        console.log(moment().format("YYYY-MM-DDTHH:mm"));
-                        console.log(moment().format("YYYY-MM-DD"));
-                        console.log(moment().format("YYYY-MM-DD HH:mm"));
-                        console.log(moment().format("YYYY-mm-ddTHH:mm"));
-                        console.log(moment().format("YYYY-mm-dd"));
-                        console.log(moment().format("YYYY-mm-dd HH:mm"));
 
                         var initialDate = moment().subtract('days', 29).format("YYYY-MM-DDTHH:mm"); // 2015-04-07T14:55
                         var finalDate = moment().subtract('minutes', 5).format("YYYY-MM-DDTHH:mm"); // 2015-04-07T14:55
-                        
-                        console.log(initialDate);
                         
                         request.get({
                             url:config.pagseguro.host+'/v2/transactions',
@@ -685,7 +678,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                             replyTo: "info@feiraorganica.com",
                             to: order.customer.email, // list of receivers
                             cc: 'info@feiraorganica.com', // lredirects to 'bruno@tzadi.com, denisefaccin@gmail.com'
-                            subject: 'Pedido ' + order._id,
+                            subject: config.envTag + 'Pedido ' + order._id,
                             text: text,
                             html: html
                         };
@@ -736,7 +729,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                             replyTo: "info@feiraorganica.com",
                             to: order.customer.email, // list of receivers
                             cc: 'info@feiraorganica.com', // lredirects to 'bruno@tzadi.com, denisefaccin@gmail.com'
-                            subject: 'Pedido ' + order._id,
+                            subject: config.envTag + 'Pedido ' + order._id,
                             text: text,
                             html: html
                         };
