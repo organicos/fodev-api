@@ -454,8 +454,11 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                         
                         var request = require('request');
                         
-                        var initialDate = '2015-03-09T00:00';
-                        var finalDate = '2015-04-07T14:55';
+                        var initialDate = moment().format("YYYYY-MM-DD").subtract('days', 30);
+                        var finalDate = moment().format("YYYYY-MM-DD");
+                        
+                        console.log(initialDate);
+                        console.log(finalDate);
                         
                         request.get({
                             url:config.pagseguro.host+'/v2/transactions',
