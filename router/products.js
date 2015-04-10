@@ -85,7 +85,44 @@ module.exports=function(app, mongoose, moment, utils) {
 
 
         });
+        
+        app.get('/fair/product/:product_id', function(req, res) {
+                
+                var path = require('path');
+                
+                var isBoot = req.headers['user-agent'].search(/Google|Twitterbot|facebookexternalhit|bot|crawler|baiduspider|80legs|ia_archiver|voyager|curl|wget|yahoo! slurp|mediapartners-google/i) > -1;
+                
+		if (isBoot) {
+		
+                        utils.getUserKind(req, function(userKind){
+                                
+                                var filter = {_id: req.params.product_id, active: 1};
 
+                                Products.findOne(filter, null, function(err, product) {
+                
+                                        if (err){
+                                                res.statusCode = 400;
+                                                res.send(err);
+                                        } else {
+                                                
+                                                res.render('products/product_meta_tags', {product:product});
+                                                
+                                        }
+                
+                                });
+        
+                        });
+
+		} else {
+		        
+                        var file = path.resolve(__dirname+'../../../fodev-app/index.html');
+                        
+                        res.sendFile(file);
+		        
+		}
+
+        });
+        
         app.post('/v1/products', utils.ensureAuthorized, function(req, res) {
 
                 Products.create({

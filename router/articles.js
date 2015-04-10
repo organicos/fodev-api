@@ -98,6 +98,109 @@ module.exports=function(app, mongoose, moment, utils) {
 
         });
 
+        app.get('/blog/:encoded_url', function(req, res) {
+
+                var path = require('path');
+                
+                var isBoot = req.headers['user-agent'].search(/Google|Twitterbot|facebookexternalhit|bot|crawler|baiduspider|80legs|ia_archiver|voyager|curl|wget|yahoo! slurp|mediapartners-google/i) > -1;
+                
+		if (isBoot) {
+		
+                        utils.getUserKind(req, function(userKind){
+                                
+                                var article_id_url = req.params.encoded_url;
+                                
+                                var isObjectId = mongoose.Types.ObjectId.isValid(article_id_url);
+                                
+                                var filter = {};
+                                
+                                if(userKind != 'admin') filter.active = 1;
+                                
+                                if(isObjectId){
+                                        
+                                        filter._id = article_id_url;
+                                        
+                                        Articles.findOne(filter, null, function(err, article) {
+                        
+                                                if (err){
+                                                        res.statusCode = 400;
+                                                        res.send(err);
+                                                } else {
+                                                        
+                                                        res.render('articles/article_meta_tags', {article:article});
+                                                        
+                                                }
+                        
+                                        });
+                                        
+                                } else {
+                                        
+                                        filter.encoded_url = article_id_url;
+                                        
+                                        Articles.findOne(filter, null, function(err, article) {
+                        
+                                                if (err){
+                                                        res.statusCode = 400;
+                                                        res.send(err);
+                                                } else {
+                                                        
+                                                        res.render('articles/article_meta_tags', {article:article});
+                                                        
+                                                }
+                        
+                                        });
+                                        
+                                }
+        
+                        });
+                
+		} else {
+		        
+                        var file = path.resolve(__dirname+'../../../fodev-app/index.html');
+                        
+                        res.sendFile(file);
+		        
+		}
+
+        });
+        
+        app.get('/fair/product/:product_id', function(req, res) {
+                
+                var path = require('path');
+                
+                var isBoot = req.headers['user-agent'].search(/Google|Twitterbot|facebookexternalhit|bot|crawler|baiduspider|80legs|ia_archiver|voyager|curl|wget|yahoo! slurp|mediapartners-google/i) > -1;
+                
+		if (isBoot) {
+		
+                        utils.getUserKind(req, function(userKind){
+                                
+                                var filter = {_id: req.params.product_id, active: 1};
+
+                                Products.findOne(filter, null, function(err, product) {
+                
+                                        if (err){
+                                                res.statusCode = 400;
+                                                res.send(err);
+                                        } else {
+                                                
+                                                res.render('products/product_meta_tags', {product:product});
+                                                
+                                        }
+                
+                                });
+        
+                        });
+
+		} else {
+		        
+                        var file = path.resolve(__dirname+'../../../fodev-app/index.html');
+                        
+                        res.sendFile(file);
+		        
+		}
+
+        });
+
         app.post('/v1/articles', utils.ensureAuthorized, function(req, res) {
 
                 Articles.create({

@@ -68,6 +68,10 @@ app.use(methodOverride());
 
 app.use(compression());
 
+app.use(express.static(__dirname + '../public'));
+
+app.set('view engine', 'jade');
+
 if(['dev', 'stg'].indexOf(config.env) > -1){
     app.use(errorHandler({
         dumpExceptions: true, 
