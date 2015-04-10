@@ -26,7 +26,7 @@ html(lang="en")
 
         meta(property='og:title', content='#{article.title}')
         meta(property='og:type', content='article')
-        meta(property='og:url', content='https://feiraorganica.com/blog/#{article._id}')
+        meta(property='og:url', content='https://feiraorganica.com/blog/#{article.encoded_url}')
         meta(property='og:image:url', content='#{article.img}')
         meta(property='og:image:secure_url', content='#{article.img}')
         meta(property='og:description', content='#{article.content}')
