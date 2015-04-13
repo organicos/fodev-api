@@ -2,7 +2,7 @@
 
 module.exports=function(app, mongoose, moment, utils, config, https) {
 
-    var Products = mongoose.model('Products');
+    var Products = require('./../modules/Products.js');
 
     var Orders = mongoose.model('Orders', {
         name : { type: String, required: 'Informe o nome da cesta!' },

@@ -1,24 +1,10 @@
 "use strict";
 
 module.exports=function(app, mongoose, moment, utils) {
-
-        var Articles = mongoose.model('Articles', {
-
-                title : { type: String, required: 'Informe o nome do artigo!' },
-
-                content: { type: String, required: 'Informe conteúdo do artigo!' },
-                
-                encoded_url: { type: String, required: 'Informe a url codificada!' },
-                
-                img: { type: String },
-                
-                highlight : { type: Boolean, default: false },
-                
-                active : { type: Boolean, default: true },
-                
-                updated: { type: Date, default: moment().format("MM/DD/YYYY") }
-
-        });
+        
+        var Articles = require('./../modules/Articles.js');
+        
+        var Products = require('./../modules/Products.js');
 
         app.get('/v1/articles', function(req, res) {
                 
@@ -95,109 +81,6 @@ module.exports=function(app, mongoose, moment, utils) {
                 });
                 
 
-
-        });
-
-        app.get('/blog/:encoded_url', function(req, res) {
-
-                var path = require('path');
-                
-                var isBoot = req.headers['user-agent'].search(/Google|Twitterbot|facebookexternalhit|bot|crawler|baiduspider|80legs|ia_archiver|voyager|curl|wget|yahoo! slurp|mediapartners-google/i) > -1;
-                
-		if (isBoot) {
-		
-                        utils.getUserKind(req, function(userKind){
-                                
-                                var article_id_url = req.params.encoded_url;
-                                
-                                var isObjectId = mongoose.Types.ObjectId.isValid(article_id_url);
-                                
-                                var filter = {};
-                                
-                                if(userKind != 'admin') filter.active = 1;
-                                
-                                if(isObjectId){
-                                        
-                                        filter._id = article_id_url;
-                                        
-                                        Articles.findOne(filter, null, function(err, article) {
-                        
-                                                if (err){
-                                                        res.statusCode = 400;
-                                                        res.send(err);
-                                                } else {
-                                                        
-                                                        res.render('articles/article_meta_tags', {article:article});
-                                                        
-                                                }
-                        
-                                        });
-                                        
-                                } else {
-                                        
-                                        filter.encoded_url = article_id_url;
-                                        
-                                        Articles.findOne(filter, null, function(err, article) {
-                        
-                                                if (err){
-                                                        res.statusCode = 400;
-                                                        res.send(err);
-                                                } else {
-                                                        
-                                                        res.render('articles/article_meta_tags', {article:article});
-                                                        
-                                                }
-                        
-                                        });
-                                        
-                                }
-        
-                        });
-                
-		} else {
-		        
-                        var file = path.resolve(__dirname+'../../../fodev-app/index.html');
-                        
-                        res.sendFile(file);
-		        
-		}
-
-        });
-        
-        app.get('/fair/product/:product_id', function(req, res) {
-                
-                var path = require('path');
-                
-                var isBoot = req.headers['user-agent'].search(/Google|Twitterbot|facebookexternalhit|bot|crawler|baiduspider|80legs|ia_archiver|voyager|curl|wget|yahoo! slurp|mediapartners-google/i) > -1;
-                
-		if (isBoot) {
-		
-                        utils.getUserKind(req, function(userKind){
-                                
-                                var filter = {_id: req.params.product_id, active: 1};
-
-                                Products.findOne(filter, null, function(err, product) {
-                
-                                        if (err){
-                                                res.statusCode = 400;
-                                                res.send(err);
-                                        } else {
-                                                
-                                                res.render('products/product_meta_tags', {product:product});
-                                                
-                                        }
-                
-                                });
-        
-                        });
-
-		} else {
-		        
-                        var file = path.resolve(__dirname+'../../../fodev-app/index.html');
-                        
-                        res.sendFile(file);
-		        
-		}
 
         });
 
@@ -315,4 +198,134 @@ module.exports=function(app, mongoose, moment, utils) {
 
         });
 
+        // for boots
+        app.get('/blog/:encoded_url', function(req, res) {
+
+                var path = require('path');
+                
+                var isBoot = req.headers['user-agent'].search(/Google|Twitterbot|facebookexternalhit|bot|crawler|baiduspider|80legs|ia_archiver|voyager|curl|wget|yahoo! slurp|mediapartners-google/i) > -1;
+                
+		if (isBoot) {
+		
+                        utils.getUserKind(req, function(userKind){
+                                
+                                var article_id_url = req.params.encoded_url;
+                                
+                                var isObjectId = mongoose.Types.ObjectId.isValid(article_id_url);
+                                
+                                var filter = {};
+                                
+                                if(userKind != 'admin') filter.active = 1;
+                                
+                                if(isObjectId){
+                                        
+                                        filter._id = article_id_url;
+                                        
+                                        Articles.findOne(filter, null, function(err, article) {
+                        
+                                                if (err){
+                                                        res.statusCode = 400;
+                                                        res.send(err);
+                                                } else {
+                                                        
+                                                        res.render('articles/article_meta_tags', {article:article});
+                                                        
+                                                }
+                        
+                                        });
+                                        
+                                } else {
+                                        
+                                        filter.encoded_url = article_id_url;
+                                        
+                                        Articles.findOne(filter, null, function(err, article) {
+                        
+                                                if (err){
+                                                        res.statusCode = 400;
+                                                        res.send(err);
+                                                } else {
+                                                        
+                                                        res.render('articles/article_meta_tags', {article:article});
+                                                        
+                                                }
+                        
+                                        });
+                                        
+                                }
+        
+                        });
+                
+		} else {
+		        
+                        var file = path.resolve(__dirname+'../../../fodev-app/index.html');
+                        
+                        res.sendFile(file);
+		        
+		}
+
+        });
+        
+        app.get('/v1/article/:encoded_url/products', function(req, res) {
+                
+                utils.getUserKind(req, function(userKind){
+                        
+                        var article_id_url = req.params.encoded_url;
+                        
+                        var isObjectId = mongoose.Types.ObjectId.isValid(article_id_url);
+                        
+                        var filter = {};
+                        
+                        if(userKind != 'admin') filter.active = 1;
+                        
+                        if(isObjectId){
+                                
+                                filter._id = article_id_url;
+                                
+                        } else {
+                                
+                                filter.encoded_url = article_id_url;
+                        }
+                                
+                        Articles.findOne(filter, null, function(err, article) {
+        
+                                if (err){
+                                        res.statusCode = 400;
+                                        res.send(err);
+                                } else {
+                                        
+                                        console.log(article.products);
+                                        
+                                        if(article.products){
+                                                
+                                                Products.find({
+                                                        _id: { $in : article.products }
+                                                }, null, function(err, products) {
+                                
+                                                        if (err){
+                                                                res.statusCode = 400;
+                                                                res.send(err);
+                                                        } else {
+                                                                
+                                                                res.json(products);
+                                                                
+                                                        }
+                                
+                                                });
+                                                
+                                        } else {
+                                                
+                                                res.json([]);
+
+                                        }
+                                        
+
+                                }
+        
+                        });
+                                
+                });
+                
+        
+        
+        });
 }

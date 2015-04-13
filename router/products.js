@@ -1,47 +1,19 @@
 "use strict";
 
 module.exports=function(app, mongoose, moment, utils) {
-
-        var Products = mongoose.model('Products', {
-
-                name : { type: String, required: 'Informe o nome do produto!' },
-
-                price: Number,
-                
-                cost: Number,
-                
-                dscr : String,
-
-                img: {
-                        type: String,
-                        trim: true,
-                        required: 'Forneça uma url válida no campo imagem.',
-                        match: [/[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/, 'Forneça uma url válida da imagem do produto.']
-                },
-    
-                category : { type: String, required: 'Informe a categoria!' },
-                
-                highlight : { type: Boolean, default: false },
-                
-                active : { type: Boolean, default: true },
-                
-                supplier: String,
-                
-                season: String,
-                
-                recipes: String,
-                
-                updated: { type: Date, default: moment().format("MM/DD/YYYY") }
-
-        });
+        
+        var Products = require('./../modules/Products.js');
 
         app.get('/v1/products', function(req, res) {
                 
+                console.log(req.query.highlight);
                 utils.getUserKind(req, function(userKind){
                         
                         var filter = {};
                         
                         if(userKind != 'admin') filter.active = 1;
+                        
+                        if(req.query.highlight) filter.highlight = 1;
                         
                         Products.find(filter, null, {sort: {name: 1}}, function(err, products) {
 
