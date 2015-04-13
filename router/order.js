@@ -399,7 +399,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                         
                 } else {
                         
-                        order.active = 0;
+                        order.active = false;
                         
                         return order.save(function(err, updatedProduct) {
 
