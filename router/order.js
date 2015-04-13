@@ -27,14 +27,15 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
             transactions: { type: Array, default: [] }
         },
         active : { type: Boolean, default: true },
-        status : { type: Number, default: 0 },
+        status : { type: Number, default: 0 }, // payment_status_map
         invalid : { type: Boolean, default: false },
         updated: { type: Date, default: moment().format("MM/DD/YYYY") }
     });
     
     var payment_status_map = {
         0: 'Pagamento pendente',
-        1: 'Pago'
+        1: 'Pago',
+        2: 'Entregue'
     };
 
     var validateOrder = function(basket, validationCallback){
@@ -398,7 +399,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                         
                 } else {
                         
-                        order.status = 0;
+                        order.active = 0;
                         
                         return order.save(function(err, updatedProduct) {
 
