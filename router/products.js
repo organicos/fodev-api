@@ -6,7 +6,6 @@ module.exports=function(app, mongoose, moment, utils) {
 
         app.get('/v1/products', function(req, res) {
                 
-                console.log(req.query.highlight);
                 utils.getUserKind(req, function(userKind){
                         
                         var filter = {};
@@ -14,6 +13,8 @@ module.exports=function(app, mongoose, moment, utils) {
                         if(userKind != 'admin') filter.active = 1;
                         
                         if(req.query.highlight) filter.highlight = 1;
+                        
+                        if(req.query.name) filter.name = new RegExp(req.query.name, "i");
                         
                         Products.find(filter, null, {sort: {name: 1}}, function(err, products) {
 

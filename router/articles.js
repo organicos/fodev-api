@@ -98,6 +98,8 @@ module.exports=function(app, mongoose, moment, utils) {
                         
                         highlight : req.body.highlight,
                         
+                        products : req.body.products,
+                        
                         active : req.body.active
 
                 }, function(err, article) {
@@ -139,6 +141,8 @@ module.exports=function(app, mongoose, moment, utils) {
                                 article.encoded_url = req.body.encoded_url;
                                 
                                 article.highlight = req.body.highlight;
+                                
+                                article.products = req.body.products;
                                 
                                 article.active = req.body.active;
                                 
