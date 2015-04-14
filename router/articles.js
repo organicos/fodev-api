@@ -14,7 +14,7 @@ module.exports=function(app, mongoose, moment, utils) {
                         
                         if(userKind != 'admin') filter.active = 1;
                         
-                        Articles.find(filter, null, {sort: {date: 1}}, function(err, articles) {
+                        Articles.find(filter, null, {sort: {updated: 1}}, function(err, articles) {
 
                                 if (err) {
                                         
