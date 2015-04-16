@@ -2,6 +2,8 @@
 
 var express  = require('express');
 
+var app = express(); // create our app w/ express
+
 var moment  = require('moment');
 
 var https = require('https');
@@ -9,8 +11,6 @@ var https = require('https');
 var http = require('http');
 
 var fs = require('fs');
-
-var app = express();                                                               // create our app w/ express
 
 var mongoose = require('mongoose');                                     // mongoose for mongodb
 
@@ -26,10 +26,13 @@ var config = require('./config/env_config');
 
 var utils = require('./helpers/utils');
 
-var compression = require('compression');
-
 var errorHandler = require('errorhandler');
 
+var compression = require('compression');
+
+app.use(compression());
+
+app.use(express.static(__dirname + "../fodev-app", { maxAge: 86400000 }));
 
 // Add headers
 app.use(function (req, res, next) {
@@ -52,10 +55,6 @@ app.use(function (req, res, next) {
 
 mongoose.connect('mongodb://' + config.database.host);
 
-app.use('/js', express.static(__dirname + '/js'));
-
-app.use('/bower_components', express.static(__dirname + '/bower_components'));
-
 app.use(morgan('dev'));                                                                                 // log every request to the console
 
 app.use(bodyParser.urlencoded({'extended':'true'}));                    // parse application/x-www-form-urlencoded
@@ -65,10 +64,6 @@ app.use(bodyParser.json());                                                     
 app.use(bodyParser.json({ type: 'application/vnd.api+json' })); // parse application/vnd.api+json as json
 
 app.use(methodOverride());
-
-app.use(compression());
-
-app.use(express.static(__dirname + '../public'));
 
 app.set('view engine', 'jade');
 
