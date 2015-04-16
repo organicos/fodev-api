@@ -12,6 +12,7 @@ module.exports=function(app, express) {
 	app.use("/partials", express.static(__dirname + "../../../fodev-app/partials"));
 	app.use("/template", express.static(__dirname + "../../../fodev-app/template"));
 	app.use("/config", express.static(__dirname + "../../../fodev-app/config"));
+	app.use("/sitemap.xml", express.static(__dirname + "../../../sitemap.xml"));
 
 	// application -------------------------------------------------------------
 	app.all('/*', function(req, res) {
