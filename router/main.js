@@ -10,7 +10,7 @@ module.exports = function (app, express) {
             
             var hostname = ( host.match(/:/g) ) ? host.slice( 0, host.indexOf(":") ) : host;
             
-            res.setHeader(301);
+            res.statusCode = 400;
             
             res.redirect('https://' + hostname + req.url);
             
