@@ -67,25 +67,21 @@ module.exports=function(app, mongoose, moment, utils) {
                 
 		if (isBoot) {
 		
-                        utils.getUserKind(req, function(userKind){
-                                
-                                var filter = {_id: req.params.product_id, active: 1};
+                        var filter = {_id: req.params.product_id, active: 1};
 
-                                Products.findOne(filter, null, function(err, product) {
-                
-                                        if (err){
-                                                res.statusCode = 400;
-                                                res.send(err);
-                                        } else {
-                                                
-                                                res.render('products/product_meta_tags', {product:product});
-                                                
-                                        }
-                
-                                });
+                        Products.findOne(filter, null, function(err, product) {
+        
+                                if (err){
+                                        res.statusCode = 400;
+                                        res.send(err);
+                                } else {
+                                        
+                                        res.render('products/product_meta_tags', {product:product});
+                                        
+                                }
         
                         });
-
+        
 		} else {
 		        
                         var file = path.resolve(__dirname+'../../../fodev-app/index.html');
@@ -96,7 +92,7 @@ module.exports=function(app, mongoose, moment, utils) {
 
         });
         
-        app.post('/v1/products', utils.ensureAuthorized, function(req, res) {
+        app.post('/v1/products', utils.ensureAdmin, function(req, res) {
 
                 Products.create({
 
@@ -140,7 +136,7 @@ module.exports=function(app, mongoose, moment, utils) {
 
         });
 
-        app.put('/v1/products/:product_id', utils.ensureAuthorized, function(req, res){
+        app.put('/v1/products/:product_id', utils.ensureAdmin, function(req, res){
 
                 return Products.findById(req.params.product_id, function(err, product) {
                         
@@ -198,7 +194,7 @@ module.exports=function(app, mongoose, moment, utils) {
 
         });
 
-        app.delete('/v1/products/:product_id', utils.ensureAuthorized, function(req, res) {
+        app.delete('/v1/products/:product_id', utils.ensureAdmin, function(req, res) {
 
                 Products.remove({
 

@@ -18,6 +18,8 @@ var Articles = new Schema({
         
         active : { type: Boolean, default: true },
         
+        clicks: { type: Number, default: 0 },
+        
         updated: { type: Date, default: moment().format("MM/DD/YYYY") }
 
 });

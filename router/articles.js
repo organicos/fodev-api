@@ -5,6 +5,30 @@ module.exports=function(app, mongoose, moment, utils) {
         var Articles = require('./../modules/Articles.js');
         
         var Products = require('./../modules/Products.js');
+        
+        app.get('/v1/articles', function(req, res) {
+                
+                utils.getUserKind(req, function(userKind){
+                        
+                        var filter = {};
+                        
+                        if(userKind != 'admin') filter.active = 1;
+                        
+                        Articles.find(filter, null, {sort: {updated: -1}}, function(err, articles) {
+
+                                if (err) {
+                                        
+                                        res.statusCode = 400;
+                                        res.send(err);       
+                                }
+        
+                                res.json(articles);
+        
+                        });
+
+                });
+
+        });
 
         app.get('/v1/articles', function(req, res) {
                 
@@ -84,7 +108,7 @@ module.exports=function(app, mongoose, moment, utils) {
 
         });
 
-        app.post('/v1/articles', utils.ensureAuthorized, function(req, res) {
+        app.post('/v1/articles', utils.ensureAdmin, function(req, res) {
 
                 Articles.create({
 
@@ -120,7 +144,7 @@ module.exports=function(app, mongoose, moment, utils) {
 
         });
 
-        app.put('/v1/articles/:article_id', utils.ensureAuthorized, function(req, res){
+        app.put('/v1/articles/:article_id', utils.ensureAdmin, function(req, res){
 
                 return Articles.findById(req.params.article_id, function(err, article) {
                         
@@ -146,6 +170,8 @@ module.exports=function(app, mongoose, moment, utils) {
                                 
                                 article.active = req.body.active;
                                 
+                                article.updated = moment().format("MM/DD/YYYY");
+                                
                                 return article.save(function(err, updatedArticle) {
         
                                         if (err) {
@@ -168,7 +194,7 @@ module.exports=function(app, mongoose, moment, utils) {
 
         });
 
-        app.delete('/v1/articles/:article_id', utils.ensureAuthorized, function(req, res) {
+        app.delete('/v1/articles/:article_id', utils.ensureAdmin, function(req, res) {
 
                 Articles.remove({
 
@@ -332,4 +358,5 @@ module.exports=function(app, mongoose, moment, utils) {
         
         
         });
+        
 }

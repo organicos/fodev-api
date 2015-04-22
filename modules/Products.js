@@ -31,6 +31,8 @@ var Products = new Schema({
     
     recipes: String,
     
+    clicks: { type: Number, default: 0 },
+    
     updated: { type: Date, default: moment().format("MM/DD/YYYY") }
 });
 

@@ -114,7 +114,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
         return this;
     }
 
-    app.post('/v1/order_review', function(req, res) {
+    app.post('/v1/order_review', utils.ensureAuthorized, function(req, res) {
         // verifica se existe produtos na cesta
         if(req.body.basket.products && req.body.basket.products.length > 0){
             
@@ -189,7 +189,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
 
     });
         
-    app.post('/v1/order', utils.getRequestUser, function(req, res) {
+    app.post('/v1/order', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
         
         if(req.body.basket.total >= 35){
             // verifica se existe produtos na cesta
@@ -388,7 +388,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
         
     };
 
-    app.delete('/v1/order/:order_id', utils.ensureAuthorized, function(req, res) {
+    app.delete('/v1/order/:order_id', utils.ensureAdmin, function(req, res) {
 
         return Orders.findById(req.params.order_id, function(err, order) {
                 
