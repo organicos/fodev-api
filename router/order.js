@@ -21,6 +21,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
             country: { type: String, default: 'Brasil', required: 'Informe o país!' },
             address_ref: { type: String, required: 'Informe alguma referência!' },
             deliveryOption: { type: String, required: 'Informe a data de entrega!' },
+            phone: { type: String, required: 'Informe um telefone para contato!' }
         },
         pagseguro: {
             checkout: { type: Object, default: {}, required: 'Os dados de checkout do Pagseguro não foram informados!' },
@@ -457,8 +458,8 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                         
                         var request = require('request');
 
-                        var initialDate = moment().subtract('days', 29).format("YYYY-MM-DDTHH:mm"); // 2015-04-07T14:55
-                        var finalDate = moment().subtract('minutes', 5).format("YYYY-MM-DDTHH:mm"); // 2015-04-07T14:55
+                        var initialDate = moment().subtract(29, 'days').format("YYYY-MM-DDTHH:mm"); // 2015-04-07T14:55
+                        var finalDate = moment().subtract(5, 'minutes').format("YYYY-MM-DDTHH:mm"); // 2015-04-07T14:55
                         
                         request.get({
                             url:config.pagseguro.host+'/v2/transactions',
@@ -485,8 +486,6 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                                 var xml2js = require('xml2js');
                                 var parser = new xml2js.Parser();
                                 parser.parseString(body, function (err, result) {
-                                    
-                                    console.log(body);
                                     
                                     if (err) {
                                             
