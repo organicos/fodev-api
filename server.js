@@ -76,6 +76,8 @@ if(['dev', 'stg'].indexOf(config.env) > -1){
     // tag para adicionar no titulo dos emails para diferenciar testes de produção
     config.envTag = config.env + ' - ';
     
+} else {
+    config.envTag = '';
 };
 
 // load the routes
