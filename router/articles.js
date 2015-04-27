@@ -169,9 +169,7 @@ module.exports=function(app, mongoose, moment, utils) {
                                 article.products = req.body.products;
                                 
                                 article.active = req.body.active;
-                                
-                                article.updated = moment().format("MM/DD/YYYY");
-                                
+
                                 return article.save(function(err, updatedArticle) {
         
                                         if (err) {

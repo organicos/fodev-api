@@ -272,6 +272,10 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                         
                                                         } else {
                                                             
+                                                            updatedOrder.total = updatedOrder.total.toFixed(2);
+                                                            
+                                                            updatedOrder.shipping.price = updatedOrder.shipping.price.toFixed(2);
+                                                            
                                                             send_new_order_email(updatedOrder);
                                                                 
                                                             res.json(updatedOrder);
@@ -520,7 +524,11 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                                             } else {
                                                 
                                                 if(old_status != 1 && order.status == 1) send_paid_email(updatedOrder);
+
+                                                updatedOrder.total = updatedOrder.total.toFixed(2);
                                                 
+                                                updatedOrder.shipping.price = updatedOrder.shipping.price.toFixed(2);
+                                                            
                                                 res.json(updatedOrder);
                                                     
                                             }

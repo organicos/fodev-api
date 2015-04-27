@@ -25,8 +25,12 @@ block content
   h2 Detalhes
   
   p 
-    b Identificador: 
+    b Pedido: 
     a(href="https://feiraorganica.com/order/#{_id}" style="text-decoration: none;") #{_id}
+    
+  b Entrega: 
+  | #{shipping.deliveryOption}
+  br
   b CEP: 
   | #{shipping.cep}
   br
@@ -47,9 +51,6 @@ block content
   br
   b Estado: 
   | #{shipping.state}
-  br
-  b Entrega: 
-  | #{shipping.deliveryOption}
   br
   b Referência: 
   | #{shipping.address_ref}
