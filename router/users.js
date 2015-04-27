@@ -94,7 +94,7 @@ module.exports=function(app, mongoose, utils, config) {
                     
                     res.json({
                         type: false,
-                        data: "E-mailnão cadastrado! Verifique o e-mail informado e tente novamente."
+                        data: "E-mail não cadastrado! Verifique o e-mail informado e tente novamente."
                     });
 
                 }
@@ -168,7 +168,7 @@ module.exports=function(app, mongoose, utils, config) {
                     
                     res.json({
                         type: false,
-                        data: "E-mailnão cadastrado! Verifique o e-mail informado e tente novamente."
+                        data: "E-mail não cadastrado! Verifique o e-mail informado e tente novamente."
                     });
 
                 }
@@ -211,8 +211,7 @@ module.exports=function(app, mongoose, utils, config) {
 
                                             res.json({
                                                     type: true,
-                                                    data: updated_user,
-                                                    token: updated_user.token
+                                                    data: updated_user
                                             });       
 
                                     }
@@ -225,7 +224,7 @@ module.exports=function(app, mongoose, utils, config) {
                             
                             res.json({
                                 type: false,
-                                data: "E-mail e senha não combinam! Tente novamente."
+                                data: "E-mail e senha não combinam! Verifique os dados informados e tente novamente."
                             });
 
                         }
@@ -238,88 +237,150 @@ module.exports=function(app, mongoose, utils, config) {
 
     app.post('/v1/signup', function(req, res) {
 
-            Users.findOne({email: req.body.email, password: req.body.password}, function(err, user) {
+        Users.findOne({email: req.body.email, password: req.body.password}, function(err, user) {
 
-                    if (err) {
+                if (err) {
+                    
+                    res.statusCode = 400;
+                        
+                    res.json({
+                        type: false,
+                        data: "Erro: " + err
+                    });
+                    
+                } else {
+                        
+                    if (user) {
                         
                         res.statusCode = 400;
                             
                         res.json({
                             type: false,
-                            data: "Erro: " + err
+                            data: "E-mail já foi cadastrado. Tente <a href='#/reset_password'>recuperar sua senha</a>!"
                         });
                         
                     } else {
                             
-                        if (user) {
-                            
-                            res.statusCode = 400;
+                        Users.create({
+        
+                                name : req.body.name,
+        
+                                email : req.body.email,
                                 
-                            res.json({
-                                type: false,
-                                data: "E-mail já foi cadastrado. Tente <a href='#/reset_password'>recuperar sua senha</a>!"
-                            });
-                            
-                        } else {
+                                newsletter : req.body.newsletter,
                                 
-                            Users.create({
-            
-                                    name : req.body.name,
-            
-                                    email : req.body.email,
+                                password : crypto.createHash('md5').update(req.body.password).digest('hex')
+        
+                        }, function(err, user) {
+        
+                                if (err) {
                                     
-                                    password : crypto.createHash('md5').update(req.body.password).digest('hex')
-            
-                            }, function(err, user) {
-            
-                                    if (err) {
-                                        
-                                        res.statusCode = 400;
-            
-                                        res.send(err);
+                                    res.statusCode = 400;
+        
+                                    res.send(err);
+                                
+                                } else {
                                     
-                                    } else {
+                                    user.token = '';
                                         
-                                        user.token = '';
+                                    user.token = jwt.sign(user, config.APP_PRIVATE_KEY);
+                                
+                                    user.save(function(err, new_user) {
                                             
-                                        user.token = jwt.sign(user, config.APP_PRIVATE_KEY);
-                                    
-                                        user.save(function(err, new_user) {
+                                            if(err) {
                                                 
-                                                if(err) {
-                                                    
-                                                    res.statusCode = 400;
-                                                    
-                                                    res.send(err);
-                                                    
-                                                } else {
-                                                    new_user = new_user.toObject(); // swap for a plain javascript object instance
-                                                    send_user_email(new_user);
-                                                    delete new_user["_id"];
-                                                    delete new_user["password"];
-                                                    res.json({
-                                                        type: true,
-                                                        data: new_user,
-                                                        token: new_user.token
-                                                    });       
-                                                }
+                                                res.statusCode = 400;
+                                                
+                                                res.send(err);
+                                                
+                                            } else {
+                                                new_user = new_user.toObject(); // swap for a plain javascript object instance
+                                                send_user_email(new_user);
+                                                delete new_user["_id"];
+                                                delete new_user["password"];
+                                                res.json({
+                                                    type: true,
+                                                    data: new_user,
+                                                    token: new_user.token
+                                                });       
+                                            }
 
-                                        });
-                                            
-                                    }
-            
-                            });
+                                    });
+                                        
+                                }
+        
+                        });
 
-                        }
                     }
-            });
+                }
+        });
     });
     
+    app.put('/v1/user/:user_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res){
+
+            Users.findById(req.params.user_id, function(err, user) {
+                    
+                if (err) {
+                        
+                    res.statusCode = 400;
+
+                    res.send(err);
+                        
+                } else {
+                        
+                    user.name = req.body.name;
+                    user.email = req.body.email;
+                    user.newsletter = req.body.newsletter;
+                    user.updated = Date.now();
+                    
+                    if(req.user.kind == 'admin') user.kind = req.body.kind;
+                        
+                    user.save(function(err, updatedProduct) {
+
+                        if (err) {
+                                
+                            res.statusCode = 400;
+
+                            res.send(err);
+
+                        } else {
+                                
+                            res.send(updatedProduct);
+                                
+                        }
+
+                    });
+                        
+                }
+
+            });
+
+    });
+        
     app.get('/v1/me', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
-        res.json({
-            type: true,
-            data: req.user
+        
+        Users.findOne({_id: req.user._id}, function(err, user) {
+
+                if (err) {
+                    
+                    res.statusCode = 400;
+                        
+                    res.json({
+                        type: false,
+                        data: "Erro: " + err
+                    });
+                    
+                } else {
+                    
+                    res.json({
+                        type: true,
+                        data: user
+                    });
+                    
+                }
+                
         });
+
     });
         
     var send_retrieve_email = function (user){

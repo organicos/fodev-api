@@ -90,6 +90,8 @@ require('./router/payments')(app, mongoose, moment, config);
 
 require('./router/tickets')(app, mongoose, config);
 
+require('./router/newsletter')(app, mongoose, config);
+
 require('./router/articles')(app, mongoose, moment, utils);
 
 require('./router/shipping')(app, moment);
