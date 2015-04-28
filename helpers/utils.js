@@ -62,8 +62,6 @@ function getRequestUser(req, res, next){
         // verify a token symmetric
         jwt.verify( bearer[1], config.APP_PRIVATE_KEY, function(err, decoded) {
             
-            console.log(decoded);
-
             req.user = decoded;
             next();
 
