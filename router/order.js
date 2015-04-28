@@ -157,7 +157,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
             
             if(userKind != 'admin') filter['customer._id'] = req.user._id;
                 
-                Orders.find(filter, null, function(err, products) {
+                Orders.find(filter, null, {sort: {updated: -1}}, function(err, products) {
         
                     if (err) {
                             res.send(err);       

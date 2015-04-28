@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports=function(app, mongoose, config) {
+module.exports=function(app, mongoose, config, utils) {
 
     var Tickets = mongoose.model('Tickets', {
         kind : String,
@@ -22,10 +22,10 @@ module.exports=function(app, mongoose, config) {
 
     Tickets.schema.path('msg').validate(function (value) {
         return value.length > 20;
-    }, 'A mensgaem deve possuir ao menos 20 caracteres.');
+    }, 'A mensagem deve possuir ao menos 20 caracteres.');
 
-    app.get('/v1/tickets', function(req, res) {
-        Tickets.find(function(err, tickets) {
+    app.get('/v1/tickets', utils.ensureAuthorized, function(req, res) {
+        Tickets.find({}, null, {sort: {updated: -1}}, function(err, tickets) {
             if (err){
                 res.statusCode = 400;
                 res.send(err);
@@ -35,7 +35,27 @@ module.exports=function(app, mongoose, config) {
         });
     });
     
-    app.post('/v1/tickets', function(req, res) {
+    app.get('/v1/ticket/:ticket_id', utils.ensureAuthorized, function(req, res) {
+
+        Tickets.findOne({_id: req.params.ticket_id}, function(err, user) {
+
+            if (err) {
+                
+                res.statusCode = 400;
+                
+                res.send(err)
+                
+            } else {
+                
+                res.json(user);
+                
+            }
+
+        });
+
+    });
+    
+    app.post('/v1/ticket', function(req, res) {
         
         Tickets.create({
 
