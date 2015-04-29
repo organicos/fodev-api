@@ -231,6 +231,8 @@ module.exports=function(app, mongoose, moment, utils) {
 
                 var path = require('path');
                 
+                console.log(req.headers);
+                
                 var isBoot = req.headers['user-agent'].search(/Google|Twitterbot|facebookexternalhit|bot|crawler|baiduspider|80legs|ia_archiver|voyager|curl|wget|yahoo! slurp|mediapartners-google/i) > -1;
                 
 		if (isBoot) {

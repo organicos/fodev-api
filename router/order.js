@@ -316,6 +316,44 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
             }});
         }
     });
+    
+    app.put('/v1/order/:order_id', utils.ensureAdmin, function(req, res){
+
+        return Orders.findById(req.params.order_id, function(err, order) {
+                
+            if (err) {
+                    
+                res.statusCode = 400;
+
+                return res.send(err);
+                    
+            } else {
+                
+                order.shipping.phone = order.shipping.phone || "9";
+                    
+                order.status = req.body.status;
+                
+                return order.save(function(err, updatedOrder) {
+
+                        if (err) {
+                                
+                                res.statusCode = 400;
+
+                                return res.send(err);
+
+                        } else {
+                                
+                                return res.send(updatedOrder);
+                                
+                        }
+
+                });
+                    
+            }
+
+        });
+
+    });
 
     var createPaymentOrder = function(order, callback) {
         
