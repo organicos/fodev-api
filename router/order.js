@@ -154,7 +154,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
             
         var filter = {active: 1};
         
-        if(res.user.kind != 'admin') filter['customer._id'] = req.user._id;
+        if(req.user.kind != 'admin') filter['customer._id'] = req.user._id;
             
         Orders.find(filter, null, {sort: {updated: -1}}, function(err, products) {
 
