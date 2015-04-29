@@ -152,25 +152,20 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
 
     app.get('/v1/orders', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
             
+        var filter = {active: 1};
+        
+        if(res.user.kind != 'admin') filter['customer._id'] = req.user._id;
+            
+        Orders.find(filter, null, {sort: {updated: -1}}, function(err, products) {
 
-        utils.getUserKind(req, function(userKind){
-            
-            var filter = {active: 1};
-            
-            if(userKind != 'admin') filter['customer._id'] = req.user._id;
-                
-                Orders.find(filter, null, {sort: {updated: -1}}, function(err, products) {
-        
-                    if (err) {
-                            res.send(err);       
-                    }
-    
-                    res.json(products);
-        
-                });
+            if (err) {
+                    res.send(err);       
+            }
+
+            res.json(products);
 
         });
-                
+
     });
     
     app.get('/v1/order/:product_id', function(req, res) {

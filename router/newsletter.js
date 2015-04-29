@@ -56,7 +56,7 @@ module.exports=function(app, mongoose, config) {
                             
                             newsletter : true,
                             
-                            kind : 'prospect',
+                            kind : 'newsletter',
                             
                             password : crypto.createHash('md5').update(req.body.email).digest('hex')
     
