@@ -85,7 +85,7 @@ module.exports=function(app, mongoose, config, utils) {
                     
                     Users.create({
     
-                            name : req.body.email,
+                            name : req.body.name,
     
                             email : req.body.email,
                             
