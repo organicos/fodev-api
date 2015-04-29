@@ -29,7 +29,6 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
         },
         active : { type: Boolean, default: true },
         status : { type: Number, default: 0 }, // payment_status_map
-        invalid : { type: Boolean, default: false },
         updated: { type: Date, default: moment().format("MM/DD/YYYY") }
     });
     
@@ -38,7 +37,8 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
         1: 'Pago',
         2: 'Entregue',
         3: 'Cancelado',
-        4: 'Problemas com o pagamento.'
+        4: 'Problemas com o pagamento.',
+        5: 'Inválido.'
     };
 
     var validateOrder = function(basket, validationCallback){
@@ -224,7 +224,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                             total:  basket.total,
                             products:  basket.products,
                             shipping:  basket.shipping,
-                            invalid: invalidCity
+                            status: invalidCity ? 5 : 0
                             
                         };
                         
