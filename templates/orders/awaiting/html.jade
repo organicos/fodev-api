@@ -2,22 +2,21 @@ extends ../../layout/layout.jade
 
 block content
 
-  h1 Novo pedido recebido.
+  h1 Pedido pendente.
   
   p Olá #{customer.name}.
   
-  p Recebemos seu novo pedido e já preparamos tudo para que você possa 
-   a(href="https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{pagseguro.checkout.code}" style="text-decoration: none;") pagar 
-   | da maneira mais simples e segura.
-   
-  p Clique 
+  p O status do seu pedido continua como Aguardando pagamento.
+  
+  p Você ainda pode efetuar o pagamento clicando 
     a(href="https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{pagseguro.checkout.code}" style="text-decoration: none;") aqui 
-    | para pagar ou copie o endereço abaixo e cole em seu navegador:
-    
-  p 
-    a(href="https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{pagseguro.checkout.code}" style="text-decoration: none;") https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{pagseguro.checkout.code}
-    
-  p Para acompanhar o seu pedido acesse: 
+    |  ou copiando o endereço abaixo e colando em seu navegador:
+  
+  p As formas de pagamento disponibilizadas se encaixam em suas necessidades?
+  
+  p Em caso de dúvidas ou sugestões, responda a este email.
+  
+  p Para ver o seu pedido acesse: 
   
   p 
     a(href="https://feiraorganica.com/meu/pedido/#{_id}" style="text-decoration: none;") https://feiraorganica.com/meu/pedido/#{_id}
@@ -26,7 +25,7 @@ block content
   
   p 
     b Pedido: 
-    a(href="https://feiraorganica.com/meu/pedido/#{_id}" style="text-decoration: none;") #{_id}
+    a(href="https://feiraorganica.com/minha/pedido/#{_id}" style="text-decoration: none;") #{_id}
     
   b Entrega: 
   | #{shipping.deliveryOption}

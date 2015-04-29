@@ -36,7 +36,9 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
     var payment_status_map = {
         0: 'Pagamento pendente',
         1: 'Pago',
-        2: 'Entregue'
+        2: 'Entregue',
+        3: 'Cancelado',
+        4: 'Problemas com o pagamento.'
     };
 
     var validateOrder = function(basket, validationCallback){
@@ -329,6 +331,8 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                     
             } else {
                 
+                var statusChanged = order.status != req.body.status;
+                
                 order.shipping.phone = order.shipping.phone || "9";
                     
                 order.status = req.body.status;
@@ -337,13 +341,32 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
 
                         if (err) {
                                 
-                                res.statusCode = 400;
+                            res.statusCode = 400;
 
-                                return res.send(err);
+                            return res.send(err);
 
                         } else {
+                            
+                            if(statusChanged){
                                 
-                                return res.send(updatedOrder);
+                                switch (updatedOrder.status) {
+                                    case 1: // pago
+                                        send_paid_email(updatedOrder);
+                                        break;
+                                    case 2: // entregue
+                                        send_delivered_email(updatedOrder);
+                                        break;         
+                                    case 3: // cancelado
+                                        send_canceled_email(updatedOrder);
+                                        break;                                                 
+                                    case 4: // aguardando pagamento
+                                        send_awaiting_email(updatedOrder);
+                                        break;
+                                }
+                                
+                            }
+                                
+                            return res.send(updatedOrder);
                                 
                         }
 
@@ -740,7 +763,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
             }
         });
     }
-    
+
     var send_paid_email = function(order){
         
         var nodemailer = require('nodemailer');
@@ -791,5 +814,157 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
             }
         });
     }
+
+    var send_delivered_email = function(order){
+        
+        var nodemailer = require('nodemailer');
+        var path = require('path');
+        var templatesDir   = path.join(__dirname, '../templates');
+        var emailTemplates = require('email-templates');
+
+        var transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465, // 465
+            secure: true, // true
+            debug : true,
+            auth: {
+                user: 'bruno@tzadi.com',
+                pass: 'Dublin2010ireland'
+            }
+        });
+
+        emailTemplates(templatesDir, function(err, template) {
+             
+            if (err) {
+                console.log(err);
+            } else {
+              
+                template('orders/delivered', order, function(err, html, text) {
+                    
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        var mailOptions = {
+                            from: 'Feira Orgânica Delivery <info@feiraorganica.com>', //sender address
+                            replyTo: "info@feiraorganica.com",
+                            to: order.customer.email, // list of receivers
+                            cc: 'info@feiraorganica.com', // lredirects to 'bruno@tzadi.com, denisefaccin@gmail.com'
+                            subject: config.envTag + 'Pedido ' + order._id,
+                            text: text,
+                            html: html
+                        };
+                        transporter.sendMail(mailOptions, function(error, info){
+                            if(error){
+                                console.log(error);
+                            }else{
+                                console.log('Message sent: ' + info.response);
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    var send_awaiting_email = function(order){
+        
+        var nodemailer = require('nodemailer');
+        var path = require('path');
+        var templatesDir   = path.join(__dirname, '../templates');
+        var emailTemplates = require('email-templates');
+
+        var transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465, // 465
+            secure: true, // true
+            debug : true,
+            auth: {
+                user: 'bruno@tzadi.com',
+                pass: 'Dublin2010ireland'
+            }
+        });
+
+        emailTemplates(templatesDir, function(err, template) {
+             
+            if (err) {
+                console.log(err);
+            } else {
+              
+                template('orders/awaiting', order, function(err, html, text) {
+                    
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        var mailOptions = {
+                            from: 'Feira Orgânica Delivery <info@feiraorganica.com>', //sender address
+                            replyTo: "info@feiraorganica.com",
+                            to: order.customer.email, // list of receivers
+                            cc: 'info@feiraorganica.com', // lredirects to 'bruno@tzadi.com, denisefaccin@gmail.com'
+                            subject: config.envTag + 'Pedido ' + order._id,
+                            text: text,
+                            html: html
+                        };
+                        transporter.sendMail(mailOptions, function(error, info){
+                            if(error){
+                                console.log(error);
+                            }else{
+                                console.log('Message sent: ' + info.response);
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
     
+    var send_canceled_email = function(order){
+        
+        var nodemailer = require('nodemailer');
+        var path = require('path');
+        var templatesDir   = path.join(__dirname, '../templates');
+        var emailTemplates = require('email-templates');
+
+        var transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465, // 465
+            secure: true, // true
+            debug : true,
+            auth: {
+                user: 'bruno@tzadi.com',
+                pass: 'Dublin2010ireland'
+            }
+        });
+
+        emailTemplates(templatesDir, function(err, template) {
+             
+            if (err) {
+                console.log(err);
+            } else {
+              
+                template('orders/canceled', order, function(err, html, text) {
+                    
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        var mailOptions = {
+                            from: 'Feira Orgânica Delivery <info@feiraorganica.com>', //sender address
+                            replyTo: "info@feiraorganica.com",
+                            to: order.customer.email, // list of receivers
+                            cc: 'info@feiraorganica.com', // lredirects to 'bruno@tzadi.com, denisefaccin@gmail.com'
+                            subject: config.envTag + 'Pedido ' + order._id,
+                            text: text,
+                            html: html
+                        };
+                        transporter.sendMail(mailOptions, function(error, info){
+                            if(error){
+                                console.log(error);
+                            }else{
+                                console.log('Message sent: ' + info.response);
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
 }

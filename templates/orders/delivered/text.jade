@@ -1,0 +1,82 @@
+extends ../../layout/layout.jade
+
+block content
+
+  h1 Pedido entregue.
+  
+  p Olá #{customer.name}.
+  
+  p O status do seu pedido foi alterado para Entregue.
+  
+  p Agradecemos sua compra!
+   
+  p ...e buscando melhorar a qualidade dos nossos serviços, pedimos que você nos conte um pouco da sua experiência com a 
+    a(href="https://feiraorganica.com" style="text-decoration: none;") Feira Orgânica Delivery 
+    | respondendo a este e-mail.
+  
+  p Abaixo, algumas sugestões do que gostaríamos de saber:
+  
+  ul
+    li Qual o maior benefício em adiquirir produtos na 
+      a(href="https://feiraorganica.com" style="text-decoration: none;") Feira Orgânica Delivery 
+      | ?
+    li Como ficou sabendo da 
+      a(href="https://feiraorganica.com" style="text-decoration: none;") Feira Orgânica Delivery 
+      | ?
+    li Como foi sua experiência de comprar na 
+      a(href="https://feiraorganica.com" style="text-decoration: none;") Feira Orgânica Delivery 
+      | ?
+    li As formas de pagamento disponibilizadas se encaixam em suas necessidades?
+    li A entrega foi feita de forma correta?
+    li Os produtos estavam bem acondicionados?
+    li Os produtos entregues são de boa qualidade?
+  
+  p Para ver o seu pedido acesse: 
+  
+  p 
+    a(href="https://feiraorganica.com/meu/pedido/#{_id}" style="text-decoration: none;") https://feiraorganica.com/meu/pedido/#{_id}
+  
+  h2 Detalhes
+  
+  p 
+    b Pedido: 
+    a(href="https://feiraorganica.com/minha/pedido/#{_id}" style="text-decoration: none;") #{_id}
+    
+  b Entrega: 
+  | #{shipping.deliveryOption}
+  br
+  b CEP: 
+  | #{shipping.cep}
+  br
+  b Rua: 
+  | #{shipping.street}
+  br
+  b Número: 
+  | #{shipping.number}
+  br
+  b Complemento: 
+  | #{shipping.complement}
+  br
+  b Bairro: 
+  | #{shipping.district}
+  br
+  b Cidade: 
+  | #{shipping.city}
+  br
+  b Estado: 
+  | #{shipping.state}
+  br
+  b Referência: 
+  | #{shipping.address_ref}
+  br
+  b Valor da cesta R$: 
+  | #{total}
+  br
+  b Valor do frete R$: 
+  | #{shipping.price}
+  br
+  b Valor final R$: 
+  | #{total+shipping.price}
+  br
+  b Data: 
+  | #{updated}
