@@ -148,8 +148,8 @@ module.exports=function(app, mongoose, config, utils, moment) {
                         
                                         } else {
                                             
-                                            if(!req.body.isCustomerMessage || req.user._id != updatedTicketPopulated.customer._id){
-                                            
+                                            if(!req.body.isCustomerMessage && req.user._id != updatedTicketPopulated.customer._id){
+                                                
                                                 send_reply_email(updatedTicketPopulated);
                                                 
                                             }
