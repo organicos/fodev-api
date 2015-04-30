@@ -25,3 +25,5 @@ body{background-color:#F0F0F0;}
 h1{color:#1D9E74; font-weight: bold;}
 h2{color:#A348A3;}
 h3{color:#A348A3;}
+
+p { white-space: pre; }

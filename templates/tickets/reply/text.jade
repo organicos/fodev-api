@@ -1,0 +1,23 @@
+extends ../../layout/layout.jade
+
+block content
+
+  p Olá #{customer.name},
+  
+  span(style="white-space: pre;")
+    p #{updates[updates.length - 1].msg}
+  
+  h2 Detalhes do seu ticket
+  
+  p 
+    b Nome: 
+    | #{customer.name}
+  p 
+    strong E-mail: 
+    | #{customer.email}
+  p 
+    strong Telefone: 
+    | #{customer.phone}
+  p 
+    strong Mensagem: 
+    | #{msg}

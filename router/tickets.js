@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports=function(app, mongoose, config, utils) {
+module.exports=function(app, mongoose, config, utils, moment) {
 
     var Users = require('./../modules/Users.js');
     var Tickets = mongoose.model('Tickets', {
@@ -17,6 +17,7 @@ module.exports=function(app, mongoose, config, utils) {
                 required: 'Favor informar a mensagem.',
                 match: [/^.{20,}$/, 'A mensagem deve possuir ao menos 20 caracteres.']
         },
+        updates: {type: Array, default: []},
         updated: { type: Date, default: Date.now }
     });
 
@@ -59,6 +60,65 @@ module.exports=function(app, mongoose, config, utils) {
         });
 
     });
+
+
+    app.post('/v1/ticket/:ticket_id/update', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
+
+        var filter = {_id: req.params.ticket_id};
+        
+        if(req.user.kind != 'admin') filter['customer._id'] = req.user._id;
+        
+        Tickets.findOne(filter, function (err, ticket){
+
+            if (err) {
+                
+                res.statusCode = 400;
+                    
+                res.json({
+                    type: false,
+                    data: "Erro: " + err
+                });
+                
+            } else {
+                
+                var update = {
+                    _id: mongoose.Types.ObjectId()
+                    , msg: req.body.msg
+                    , user: req.body.customer ? ticket.customer : req.user
+                    , date: moment().format("YYYY-MM-DDTHH:mm")
+                    
+                }
+                
+                ticket.updates.push(update);
+                
+                ticket.save(function(err, updatedTicket) {
+    
+                    if (err) {
+                            
+                            res.statusCode = 400;
+    
+                            return res.send(err);
+    
+                    } else {
+                        
+                        if(!req.body.customer || req.user._id != updatedTicket.customer._id){
+                        
+                            send_reply_email(updatedTicket);
+                            
+                        }
+                        
+                        res.json(updatedTicket);
+                            
+                    }
+    
+                });
+                
+            }
+            
+        });
+
+    });
+    
     
     app.post('/v1/ticket', utils.getRequestUser, function(req, res) {
 
@@ -227,6 +287,56 @@ module.exports=function(app, mongoose, config, utils) {
             } else {
               
                 template('tickets/' + ticket.kind + '_new_customer', ticket, function(err, html, text) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        var mailOptions = {
+                            from: 'Feira Orgânica Delivery <info@feiraorganica.com>', //sender address
+                            replyTo: "info@feiraorganica.com",
+                            to: ticket.email, // list of receivers
+                            cc: 'info@feiraorganica.com', // list of BCC receivers 'bruno@tzadi.com, denisefaccin@gmail.com'
+                            subject: config.envTag + 'Contato recebido',
+                            text: text,
+                            html: html
+                        };
+                        transporter.sendMail(mailOptions, function(error, info){
+                            if(error){
+                                console.log(error);
+                            }else{
+                                console.log('Message sent: ' + info.response);
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+    
+    var send_reply_email = function(ticket){
+        
+        var nodemailer = require('nodemailer');
+        var path = require('path');
+        var templatesDir   = path.join(__dirname, '../templates');
+        var emailTemplates = require('email-templates');
+
+        var transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465, // 465
+            secure: true, // true
+            debug : true,
+            auth: {
+                user: 'bruno@tzadi.com',
+                pass: 'Dublin2010ireland'
+            }
+        });
+
+        emailTemplates(templatesDir, function(err, template) {
+             
+            if (err) {
+                console.log(err);
+            } else {
+              
+                template('tickets/reply', ticket, function(err, html, text) {
                     if (err) {
                         console.log(err);
                     } else {
