@@ -11,8 +11,8 @@ module.exports=function(app, mongoose, config, utils, moment) {
         , msg: {
                 type: String, 
                 trim: true, 
-                required: 'Favor informar a mensagem.',
-                match: [/^.{20,}$/, 'A nova mensagem deve possuir ao menos 20 caracteres.']
+                required: 'Favor informar a mensagem.'
+//                match: [/^.{20,}$/, 'A nova mensagem deve possuir ao menos 20 caracteres.']
         }
         , date: { type: Date, default: Date.now }
     });
