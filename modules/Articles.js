@@ -20,7 +20,7 @@ var Articles = new Schema({
         
         clicks: { type: Number, default: 0 },
         
-        updated: { type: Date, default: moment().format("MM/DD/YYYY") }
+        updated: { type: Date, default: Date.now }
 
 });
         

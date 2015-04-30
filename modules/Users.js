@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var moment = require('moment');
 var Schema = mongoose.Schema;
 
 var Users = new Schema({
@@ -14,9 +15,10 @@ var Users = new Schema({
         password: {type: String, trim: true, required: 'Favor informar a senha.'},
         kind: {type: String, default: 'customer'},
         newsletter: {type: Boolean, default: 0},
-        token: String
+        token: String,
+        updated: {type: Date, default: Date.now}
 });
 
-module.exports = mongoose.model('users', Users);
+module.exports = mongoose.model('Users', Users);
 
 

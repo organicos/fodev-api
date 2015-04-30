@@ -1,8 +1,22 @@
 "use strict";
 
 module.exports=function(app, mongoose, config, utils, moment) {
+    
+    var Schema = mongoose.Schema;
 
     var Users = require('./../modules/Users.js');
+    
+    var TicketUpdates = mongoose.model('TicketUpdates', {
+        msg: {
+                type: String, 
+                trim: true, 
+                required: 'Favor informar a mensagem.',
+                match: [/^.{20,}$/, 'A mensagem deve possuir ao menos 20 caracteres.']
+        }
+        , user: { type : Schema.Types.ObjectId, ref: 'Users', required: 'O responsável pela mensagem não foi informado!' }
+        , date: { type: Date, default: Date.now }
+    });
+    
     var Tickets = mongoose.model('Tickets', {
         kind: {
                 type: String, 
@@ -10,41 +24,29 @@ module.exports=function(app, mongoose, config, utils, moment) {
                 required: 'Favor informar o tipo de ticket.',
                 match: [/contact|support|improvment/i, 'Tipo de ticket inválido.']
         },
-        customer: { type: Object, required: 'Identifique o cliente!' },
+        customer: { type : Schema.Types.ObjectId, ref: 'Users', required: 'Identifique o cliente!' },
         msg: {
                 type: String, 
                 trim: true, 
                 required: 'Favor informar a mensagem.',
                 match: [/^.{20,}$/, 'A mensagem deve possuir ao menos 20 caracteres.']
         },
-        updates: {type: Array, default: []},
+        updates: [{ type : Schema.Types.ObjectId, ref: 'TicketUpdates' }],
         updated: { type: Date, default: Date.now }
     });
-
+    
     app.get('/v1/tickets', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
         
-        var filter = {active: 1};
+        var filter = {};
         
         if(req.user.kind != 'admin') filter['customer._id'] = req.user._id;
         
-        Tickets.find({}, null, {sort: {updated: -1}}, function(err, tickets) {
-            if (err){
-                res.statusCode = 400;
-                res.send(err);
-            } else {
-                res.json(tickets);
-            }
-        });
-    });
-    
-    app.get('/v1/ticket/:ticket_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
-
-        var filter = {active: 1};
-        
-        if(req.user.kind != 'admin') filter['customer._id'] = req.user._id;
-        
-        Tickets.findOne({_id: req.params.ticket_id}, function(err, user) {
-
+        Tickets
+        .find(filter, null, {sort: {updated: -1}})
+        .lean()
+        .populate(['customer'])
+        .exec(function(err, tickets) {
+                
             if (err) {
                 
                 res.statusCode = 400;
@@ -53,10 +55,35 @@ module.exports=function(app, mongoose, config, utils, moment) {
                 
             } else {
                 
-                res.json(user);
+                res.json(tickets);
                 
             }
+                
+        });
+    });
+    
+    app.get('/v1/ticket/:ticket_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
 
+        var filter = {_id: req.params.ticket_id};
+        
+        if(req.user.kind != 'admin') filter['customer._id'] = req.user._id;
+        
+        Tickets.findOne(filter)
+        .deepPopulate(['customer', 'updates.user', 'updates'])
+        .exec(function(err, ticket) {
+                
+            if (err) {
+                
+                res.statusCode = 400;
+                
+                res.send(err)
+                
+            } else {
+                
+                res.json(ticket);
+                
+            }
+                
         });
 
     });
@@ -68,7 +95,9 @@ module.exports=function(app, mongoose, config, utils, moment) {
         
         if(req.user.kind != 'admin') filter['customer._id'] = req.user._id;
         
-        Tickets.findOne(filter, function (err, ticket){
+        Tickets.findOne(filter)
+        .populate(['customer'])
+        .exec(function(err, ticket) {
 
             if (err) {
                 
@@ -81,36 +110,62 @@ module.exports=function(app, mongoose, config, utils, moment) {
                 
             } else {
                 
-                var update = {
-                    _id: mongoose.Types.ObjectId()
-                    , msg: req.body.msg
-                    , user: req.body.customer ? ticket.customer : req.user
-                    , date: moment().format("YYYY-MM-DDTHH:mm")
+                TicketUpdates.create({
+
+                    msg: req.body.msg
                     
-                }
-                
-                ticket.updates.push(update);
-                
-                ticket.save(function(err, updatedTicket) {
-    
-                    if (err) {
+                    , user: req.body.isCustomerMessage ? ticket.customer._id : req.user._id
+
+                }, function(err, ticketUpdate) {
+
+                        if (err) {
                             
                             res.statusCode = 400;
-    
-                            return res.send(err);
-    
-                    } else {
+
+                            res.send(err);
                         
-                        if(!req.body.customer || req.user._id != updatedTicket.customer._id){
+                        } else {
+                            
+                            ticket.updates.push(ticketUpdate._id);
+                            
+                            ticket.save(function(err, updatedTicket) {
+                
+                                if (err) {
+                                        
+                                        res.statusCode = 400;
+                
+                                        return res.send(err);
+                
+                                } else {
+                                    
+                                    Tickets.deepPopulate(updatedTicket, ['customer', 'updates.user', 'updates'], function(err, updatedTicketPopulated) {
+                                        
+                                        if (err) {
+                                                
+                                                res.statusCode = 400;
                         
-                            send_reply_email(updatedTicket);
+                                                return res.send(err);
+                        
+                                        } else {
+                                            
+                                            if(!req.body.isCustomerMessage || req.user._id != updatedTicketPopulated.customer._id){
+                                            
+                                                send_reply_email(updatedTicketPopulated);
+                                                
+                                            }
+                                            
+                                            res.json(updatedTicketPopulated);
+                                            
+                                        }
+                                        
+                                    });
+                                    
+                                }
+                
+                            });
                             
                         }
-                        
-                        res.json(updatedTicket);
-                            
-                    }
-    
+
                 });
                 
             }
@@ -167,7 +222,7 @@ module.exports=function(app, mongoose, config, utils, moment) {
                                 
                                 user.password = req.body.email;
                                 
-                                createTicket(user, true);
+                                createTicket(user._id, true);
                                 
                             }
     
@@ -177,7 +232,7 @@ module.exports=function(app, mongoose, config, utils, moment) {
             }
         });
         
-        var createTicket = function(customer, newCustomer){
+        var createTicket = function(customer_id, newCustomer){
 
             Tickets.create({
     
@@ -185,7 +240,7 @@ module.exports=function(app, mongoose, config, utils, moment) {
     
                 msg: req.body.msg,
                 
-                customer: customer
+                customer: customer_id
     
             }, function(err, ticket) {
     

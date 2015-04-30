@@ -153,6 +153,16 @@ module.exports=function(app, mongoose, moment, utils) {
                                 
                         } else {
                                 
+                                // save de history price when the price change
+                                if(product.price != req.body.price){
+                                        
+                                        product.price_history.unshift({
+                                                price: product.price
+                                                , date: Date.now
+                                        });
+                                        
+                                }
+                                
                                 product.name = req.body.name;
                                 
                                 product.price = req.body.price;

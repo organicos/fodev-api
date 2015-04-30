@@ -6,7 +6,7 @@ var Schema = mongoose.Schema;
 var Products = new Schema({
     name : { type: String, required: 'Informe o nome do produto!' },
 
-    price: Number,
+    price: {type: Array, default: []},
     
     cost: Number,
     
@@ -33,7 +33,7 @@ var Products = new Schema({
     
     clicks: { type: Number, default: 0 },
     
-    updated: { type: Date, default: moment().format("MM/DD/YYYY") }
+    updated: { type: Date, default: Date.now }
 });
 
 module.exports = mongoose.model('products', Products);

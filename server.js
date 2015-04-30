@@ -12,11 +12,15 @@ var http = require('http');
 
 var fs = require('fs');
 
-var mongoose = require('mongoose');                                     // mongoose for mongodb
+var deepPopulate = require('mongoose-deep-populate'); // deepPopulate for mongoose to populate multidimensional objects
 
-var morgan = require('morgan');                         // log requests to the console (express4)
+var mongoose = require('mongoose'); // mongoose for mongodb
 
-var bodyParser = require('body-parser');        // pull information from HTML POST (express4)
+mongoose.plugin(deepPopulate);
+    
+var morgan = require('morgan'); // log requests to the console (express4)
+
+var bodyParser = require('body-parser'); // pull information from HTML POST (express4)
 
 var methodOverride = require('method-override'); // simulate DELETE and PUT (express4)
 

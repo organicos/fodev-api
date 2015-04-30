@@ -30,7 +30,7 @@ module.exports=function(app, mongoose, moment, config) {
                 
                 recipes: String,
                 
-                updated: { type: Date, default: moment().format("MM/DD/YYYY") }
+                updated: { type: Date, default: Date.now }
 
         });
 

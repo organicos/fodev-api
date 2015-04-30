@@ -29,7 +29,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
         },
         active : { type: Boolean, default: true },
         status : { type: Number, default: 0 }, // payment_status_map
-        updated: { type: Date, default: moment().format("MM/DD/YYYY") }
+        updated: { type: Date, default: Date.now }
     });
     
     var payment_status_map = {
