@@ -59,7 +59,7 @@ module.exports=function(app, mongoose, moment, utils) {
 
         });
         
-        app.get('/fair/product/:product_id', function(req, res) {
+        app.get('/feira/:product_id', function(req, res) {
                 
                 var path = require('path');
                 
