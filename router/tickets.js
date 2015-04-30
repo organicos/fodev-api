@@ -11,7 +11,7 @@ module.exports=function(app, mongoose, config, utils, moment) {
                 type: String, 
                 trim: true, 
                 required: 'Favor informar a mensagem.',
-                match: [/^.{20,}$/, 'A mensagem deve possuir ao menos 20 caracteres.']
+                match: [/^.{20,}$/, 'A nova mensagem deve possuir ao menos 20 caracteres.']
         }
         , user: { type : Schema.Types.ObjectId, ref: 'Users', required: 'O responsável pela mensagem não foi informado!' }
         , date: { type: Date, default: Date.now }
