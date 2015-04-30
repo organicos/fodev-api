@@ -7,13 +7,13 @@ module.exports=function(app, mongoose, config, utils, moment) {
     var Users = require('./../modules/Users.js');
     
     var TicketUpdates = mongoose.model('TicketUpdates', {
-        msg: {
+        user: { type : Schema.Types.ObjectId, ref: 'Users', required: 'O responsável pela mensagem não foi informado!' }
+        , msg: {
                 type: String, 
                 trim: true, 
                 required: 'Favor informar a mensagem.',
                 match: [/^.{20,}$/, 'A nova mensagem deve possuir ao menos 20 caracteres.']
         }
-        , user: { type : Schema.Types.ObjectId, ref: 'Users', required: 'O responsável pela mensagem não foi informado!' }
         , date: { type: Date, default: Date.now }
     });
     
@@ -111,7 +111,7 @@ module.exports=function(app, mongoose, config, utils, moment) {
             } else {
                 
                 TicketUpdates.create({
-
+                    
                     msg: req.body.msg
                     
                     , user: req.body.isCustomerMessage ? ticket.customer._id : req.user._id
