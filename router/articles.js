@@ -6,105 +6,78 @@ module.exports=function(app, mongoose, moment, utils) {
         
         var Products = require('./../modules/Products.js');
         
-        app.get('/v1/articles', function(req, res) {
+        app.get('/v1/articles', utils.getRequestUser, function(req, res) {
+
+                var filter = {};
                 
-                utils.getUserKind(req, function(userKind){
+                if(!req.user || req.user.kind != 'admin') filter.active = 1;
                         
-                        var filter = {};
+                Articles
+                .find(filter, null, {sort: {updated: -1}})
+                .populate(['images'])
+                .exec(function(err, articles) {
                         
-                        if(userKind != 'admin') filter.active = 1;
-                        
-                        Articles.find(filter, null, {sort: {updated: -1}}, function(err, articles) {
-
-                                if (err) {
-                                        
-                                        res.statusCode = 400;
-                                        res.send(err);       
-                                }
-        
-                                res.json(articles);
-        
-                        });
-
-                });
-
-        });
-
-        app.get('/v1/articles', function(req, res) {
-                
-                utils.getUserKind(req, function(userKind){
-                        
-                        var filter = {};
-                        
-                        if(userKind != 'admin') filter.active = 1;
-                        
-                        Articles.find(filter, null, {sort: {updated: -1}}, function(err, articles) {
-
-                                if (err) {
-                                        
-                                        res.statusCode = 400;
-                                        res.send(err);       
-                                }
-        
-                                res.json(articles);
-        
-                        });
-
-                });
-
-        });
-
-        app.get('/v1/article/:encoded_url', function(req, res) {
-                
-                utils.getUserKind(req, function(userKind){
-                        
-                        var article_id_url = req.params.encoded_url;
-                        
-                        var isObjectId = mongoose.Types.ObjectId.isValid(article_id_url);
-                        
-                        var filter = {};
-                        
-                        if(userKind != 'admin') filter.active = 1;
-                        
-                        if(isObjectId){
+                        if (err) {
                                 
-                                filter._id = article_id_url;
-                                
-                                Articles.findOne(filter, null, function(err, article) {
-                
-                                        if (err){
-                                                res.statusCode = 400;
-                                                res.send(err);
-                                        } else {
-                                                
-                                                res.json(article);
-                                                
-                                        }
-                
-                                });
-                                
-                        } else {
-                                
-                                filter.encoded_url = article_id_url;
-                                
-                                Articles.findOne(filter, null, function(err, article) {
-                
-                                        if (err){
-                                                res.statusCode = 400;
-                                                res.send(err);
-                                        } else {
-                                                
-                                                res.json(article);
-                                                
-                                        }
-                
-                                });
-                                
+                                res.statusCode = 400;
+                                res.send(err);       
                         }
-
+        
+                        res.json(articles);
+                        
                 });
-                
+        
+        });
 
+        app.get('/v1/article/:encoded_url', utils.getRequestUser, function(req, res) {
+                
+                var article_id_url = req.params.encoded_url;
+                
+                var isObjectId = mongoose.Types.ObjectId.isValid(article_id_url);
+                
+                var filter = {};
+                
+                if(!req.user || req.user.kind != 'admin') filter.active = 1;
+                
+                if(isObjectId){
+                        
+                        filter._id = article_id_url;
+                        
+                        Articles
+                        .findOne(filter, null, {sort: {updated: -1}})
+                        .populate(['images', 'products'])
+                        .exec(function(err, articles) {
+                                
+                                if (err) {
+                                        
+                                        res.statusCode = 400;
+                                        res.send(err);       
+                                }
+                
+                                res.json(articles);
+                                
+                        });
+                        
+                } else {
+                        
+                        filter.encoded_url = article_id_url;
+                        
+                        Articles
+                        .findOne(filter, null, {sort: {updated: -1}})
+                        .populate(['images', 'products'])
+                        .exec(function(err, articles) {
+                                
+                                if (err) {
+                                        
+                                        res.statusCode = 400;
+                                        res.send(err);       
+                                }
+                
+                                res.json(articles);
+                                
+                        });
+                        
+                }
 
         });
 
@@ -117,6 +90,44 @@ module.exports=function(app, mongoose, moment, utils) {
                         content : req.body.content,
                         
                         img : req.body.img,
+                        
+                        encoded_url : req.body.encoded_url,
+                        
+                        highlight : req.body.highlight,
+                        
+                        products : req.body.products,
+                        
+                        active : req.body.active
+
+                }, function(err, article) {
+
+                        if (err){
+                                
+                                res.statusCode = 400;
+                                
+                                res.send(err);
+                                
+                        } else {
+                                
+                                res.json(article);
+                                
+                        }
+
+                });
+
+        });
+
+        app.post('/v1/article/:article_id/product', utils.ensureAdmin, function(req, res) {
+
+                Articles.create({
+
+                        title : req.body.title,
+
+                        content : req.body.content,
+                        
+                        img : req.body.img,
+                        
+                        images : req.body.images,
                         
                         encoded_url : req.body.encoded_url,
                         
@@ -161,6 +172,8 @@ module.exports=function(app, mongoose, moment, utils) {
                                 article.content = req.body.content;
                                 
                                 article.img = req.body.img;
+                                
+                                article.images = req.body.images;
                                 
                                 article.encoded_url = req.body.encoded_url;
                                 
@@ -227,63 +240,61 @@ module.exports=function(app, mongoose, moment, utils) {
         });
 
         // for boots
-        app.get('/blog/:encoded_url', function(req, res) {
+        app.get('/blog/:encoded_url', utils.getRequestUser, function(req, res) {
 
                 var path = require('path');
-                
-                console.log(req.headers);
                 
                 var isBoot = req.headers['user-agent'].search(/Google|Twitterbot|facebookexternalhit|bot|crawler|baiduspider|80legs|ia_archiver|voyager|curl|wget|yahoo! slurp|mediapartners-google/i) > -1;
                 
 		if (isBoot) {
 		
-                        utils.getUserKind(req, function(userKind){
-                                
-                                var article_id_url = req.params.encoded_url;
-                                
-                                var isObjectId = mongoose.Types.ObjectId.isValid(article_id_url);
-                                
-                                var filter = {};
-                                
-                                if(userKind != 'admin') filter.active = 1;
-                                
-                                if(isObjectId){
-                                        
-                                        filter._id = article_id_url;
-                                        
-                                        Articles.findOne(filter, null, function(err, article) {
+                        var article_id_url = req.params.encoded_url;
                         
-                                                if (err){
-                                                        res.statusCode = 400;
-                                                        res.send(err);
-                                                } else {
-                                                        
-                                                        res.render('articles/article_meta_tags', {article:article});
-                                                        
-                                                }
+                        var isObjectId = mongoose.Types.ObjectId.isValid(article_id_url);
                         
-                                        });
-                                        
-                                } else {
-                                        
-                                        filter.encoded_url = article_id_url;
-                                        
-                                        Articles.findOne(filter, null, function(err, article) {
+                        var filter = {};
                         
-                                                if (err){
-                                                        res.statusCode = 400;
-                                                        res.send(err);
-                                                } else {
-                                                        
-                                                        res.render('articles/article_meta_tags', {article:article});
-                                                        
-                                                }
+                        if(!req.user || req.user.kind != 'admin') filter.active = 1;
                         
-                                        });
+                        if(isObjectId){
+                                
+                                filter._id = article_id_url;
+                                
+                                Articles
+                                .findOne(filter, null, {sort: {updated: -1}})
+                                .populate(['images', 'products'])
+                                .exec(function(err, article) {
                                         
-                                }
-        
-                        });
+                                        if (err) {
+                                                
+                                                res.statusCode = 400;
+                                                res.send(err);       
+                                        }
+                                        
+                                        res.render('articles/article_meta_tags', {article:article});
+                                        
+                                });
+                                
+                        } else {
+                                
+                                filter.encoded_url = article_id_url;
+                                
+                                Articles
+                                .findOne(filter, null, {sort: {updated: -1}})
+                                .populate(['images', 'products'])
+                                .exec(function(err, article) {
+                                        
+                                        if (err) {
+                                                
+                                                res.statusCode = 400;
+                                                res.send(err);       
+                                        }
+                                        
+                                        res.render('articles/article_meta_tags', {article:article});
+                                        
+                                });
+                                
+                        }
                 
 		} else {
 		        
@@ -293,70 +304,6 @@ module.exports=function(app, mongoose, moment, utils) {
 		        
 		}
 
-        });
-        
-        app.get('/v1/article/:encoded_url/products', function(req, res) {
-                
-                utils.getUserKind(req, function(userKind){
-                        
-                        var article_id_url = req.params.encoded_url;
-                        
-                        var isObjectId = mongoose.Types.ObjectId.isValid(article_id_url);
-                        
-                        var filter = {};
-                        
-                        if(userKind != 'admin') filter.active = 1;
-                        
-                        if(isObjectId){
-                                
-                                filter._id = article_id_url;
-                                
-                        } else {
-                                
-                                filter.encoded_url = article_id_url;
-                        }
-                                
-                        Articles.findOne(filter, null, function(err, article) {
-        
-                                if (err){
-                                        res.statusCode = 400;
-                                        res.send(err);
-                                } else {
-                                        
-                                        console.log(article.products);
-                                        
-                                        if(article.products){
-                                                
-                                                Products.find({
-                                                        _id: { $in : article.products }
-                                                }, null, function(err, products) {
-                                
-                                                        if (err){
-                                                                res.statusCode = 400;
-                                                                res.send(err);
-                                                        } else {
-                                                                
-                                                                res.json(products);
-                                                                
-                                                        }
-                                
-                                                });
-                                                
-                                        } else {
-                                                
-                                                res.json([]);
-
-                                        }
-                                        
-
-                                }
-        
-                        });
-                                
-                });
-                
-        
-        
         });
         
 }

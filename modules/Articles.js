@@ -10,9 +10,13 @@ var Articles = new Schema({
         
         encoded_url: { type: String, required: 'Informe a url codificada!' },
         
-        img: { type: String },
+        img: { type: String, required: 'Informe a url da imagem!' },
         
-        products : { type: Array, default: [] },
+        images: [{ type : Schema.Types.ObjectId, ref: 'Images' }],
+        
+        products: [{ type : Schema.Types.ObjectId, ref: 'Products' }],
+        
+        categories: [{ type : Schema.Types.ObjectId, ref: 'Categories' }],
         
         highlight : { type: Boolean, default: false },
         

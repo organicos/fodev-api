@@ -21,7 +21,7 @@ module.exports=function(app, mongoose, moment, utils) {
                                 if (err) {
                                         
                                         res.statusCode = 400;
-                                        res.send(err);       
+                                        res.send(err);
                                 }
         
                                 res.json(products);
@@ -111,6 +111,8 @@ module.exports=function(app, mongoose, moment, utils) {
                         
                         img : req.body.img,
                         
+                        images : req.body.images,
+                        
                         highlight : req.body.highlight,
                         
                         active : req.body.active,
@@ -172,6 +174,8 @@ module.exports=function(app, mongoose, moment, utils) {
                                 product.dscr = req.body.dscr;
                                 
                                 product.img = req.body.img;
+                                
+                                product.images = req.body.images;
                                 
                                 product.highlight = req.body.highlight;
                                 

@@ -36,6 +36,6 @@ var Products = new Schema({
     updated: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('products', Products);
+module.exports = mongoose.model('Products', Products);
 
 

@@ -88,6 +88,8 @@ if(['dev', 'stg'].indexOf(config.env) > -1){
 
 require('./router/main')(app, express);
 
+require('./router/playground')(app, mongoose, moment, config, utils);
+
 require('./router/products')(app, mongoose, moment, utils);
 
 require('./router/payments')(app, mongoose, moment, config);
@@ -97,6 +99,8 @@ require('./router/tickets')(app, mongoose, config, utils, moment);
 require('./router/newsletter')(app, mongoose, config);
 
 require('./router/articles')(app, mongoose, moment, utils);
+
+require('./router/images')(app, mongoose, moment, utils);
 
 require('./router/shipping')(app, moment);
 
