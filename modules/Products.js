@@ -6,7 +6,9 @@ var Schema = mongoose.Schema;
 var Products = new Schema({
     name : { type: String, required: 'Informe o nome do produto!' },
 
-    price: {type: Array, default: []},
+    prices: {type: Array, default: []},
+    
+    price: {type: Number, required: 'Informe o preço corretamente'},
     
     cost: Number,
     
