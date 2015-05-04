@@ -89,7 +89,7 @@ module.exports=function(app, mongoose, moment, utils) {
 
                         content : req.body.content,
                         
-                        img : req.body.img,
+                        img : 'http://images.elasticbeanstalk.com/300/https://s3-sa-east-1.amazonaws.com/fodev/img/global/logo.png',
                         
                         encoded_url : req.body.encoded_url,
                         

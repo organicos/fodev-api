@@ -59,7 +59,7 @@ app.use(function (req, res, next) {
 
 mongoose.connect('mongodb://' + config.database.host);
 
-app.use(morgan('dev'));                                                                                 // log every request to the console
+app.use(morgan('dev')); // log every request to the console
 
 app.use(bodyParser.urlencoded({'extended':'true'}));                    // parse application/x-www-form-urlencoded
 

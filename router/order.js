@@ -73,7 +73,10 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
 
                 if(product._id){
                     
-                    Products.findOne({_id: product._id, active: true}, function(err, productNow) {
+                    Products
+                    .findOne({_id: product._id, active: true})
+                    .populate(['prices'])
+                    .exec(function(err, productNow) {
                         
                         if (err) {
                                 
@@ -83,12 +86,12 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
 
                             if(productNow) {
                                 
-                                product.price = productNow.price;
+                                product.prices[0].price = productNow.prices[0].price;
                                 product.dscr = productNow.dscr;
                                 product.name = productNow.name;
                                 newBasket.products.push(product);
-                                newBasket.total += Number(product.price * product.quantity);
-                            
+                                newBasket.total += Number(product.prices[0].price * product.quantity);
+                                
                             } else {
                                 
                                 newBasket.inactive_products.push(product);
@@ -392,7 +395,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
             shippingAddressCity: order.city,
             shippingAddressState: order.state,
             shippingAddressCountry: order.country,
-            encoding: 'UTF-8'
+            encoding: 'ISO-8859-1'
         };
 
         var arrayLength = order.products.length;
@@ -400,7 +403,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
         for (var i = 0; i < arrayLength; i++) {
             data['itemId'+ (i+1)] = order.products[i]._id;
             data['itemDescription'+ (i+1)] = order.products[i].name;
-            data['itemAmount'+ (i+1)] = order.products[i].price.toFixed(2);
+            data['itemAmount'+ (i+1)] = order.products[i].prices[0].price.toFixed(2);
             data['itemQuantity'+ (i+1)] = order.products[i].quantity;
             data['itemWeight'+ (i+1)] = order.products[i].weight || 1;
         };
@@ -417,7 +420,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
             url:config.pagseguro.host+'/v2/checkout',
             form: data,
             headers: {
-                'Content-Type': 'application/json; charset=UTF-8'
+                'Content-Type': 'application/json; charset=ISO-8859-1'
             }
         }, function(err,httpResponse,body){
 

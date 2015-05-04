@@ -4,24 +4,26 @@ var moment = require('moment');
 var Schema = mongoose.Schema;
 
 var Products = new Schema({
+
     name : { type: String, required: 'Informe o nome do produto!' },
 
-    prices: {type: Array, default: []},
+    price: Number,
     
-    price: {type: Number, required: 'Informe o preço corretamente'},
+    prices: [{ type : Schema.Types.ObjectId, ref: 'Prices' }],
     
-    cost: Number,
+    cost: {type: Number},
+    
+    costs: [{ type : Schema.Types.ObjectId, ref: 'Prices', select: false }],
     
     dscr : String,
 
-    img: {
-            type: String,
-            trim: true,
-            required: 'Forneça uma url válida no campo imagem.',
-            match: [/[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/, 'Forneça uma url válida da imagem do produto.']
-    },
-
-    category : { type: String, required: 'Informe a categoria!' },
+    img: { type: String, required: 'Informe a url da imagem!' },
+    
+    images: [{ type : Schema.Types.ObjectId, ref: 'Images' }],
+    
+    category : String,
+    
+    categories: [{ type : Schema.Types.ObjectId, ref: 'Categories' }],
     
     highlight : { type: Boolean, default: 0 },
     
@@ -30,12 +32,11 @@ var Products = new Schema({
     supplier: String,
     
     season: String,
-    
-    recipes: String,
-    
+
     clicks: { type: Number, default: 0 },
     
     updated: { type: Date, default: Date.now }
+
 });
 
 module.exports = mongoose.model('Products', Products);
