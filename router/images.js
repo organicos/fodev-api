@@ -47,5 +47,42 @@ module.exports=function(app, mongoose, moment, utils) {
         });
 
     });
+    
+    app.put('/v1/image/:image_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res){
+
+            Images.findById(req.params.image_id, function(err, image) {
+                    
+                if (err) {
+                        
+                    res.statusCode = 400;
+
+                    res.send(err);
+                        
+                } else {
+                        
+                    image.title = req.body.title;
+                    image.url = req.body.url;
+
+                    image.save(function(err, updatedImage) {
+
+                        if (err) {
+                                
+                            res.statusCode = 400;
+
+                            res.send(err);
+
+                        } else {
+                                
+                            res.send(updatedImage);
+                                
+                        }
+
+                    });
+                        
+                }
+
+            });
+
+    });
 
 }
