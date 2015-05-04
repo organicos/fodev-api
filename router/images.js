@@ -4,7 +4,7 @@ module.exports=function(app, mongoose, moment, utils) {
         
     var Images = require('./../modules/Images.js');
 
-    app.get('/v1/images', utils.ensureAdmin, function(req, res) {
+    app.get('/v1/images', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
         
         var filter = {};
         
@@ -28,7 +28,7 @@ module.exports=function(app, mongoose, moment, utils) {
 
     });
 
-    app.get('/v1/image/:image_id', utils.ensureAuthorized, function(req, res) {
+    app.get('/v1/image/:image_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
 
         Images.findOne({_id: req.params.image_id}, function(err, image) {
 
@@ -43,6 +43,32 @@ module.exports=function(app, mongoose, moment, utils) {
                 res.json(image);
                 
             }
+
+        });
+
+    });
+
+    app.post('/v1/image', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
+
+        Images.create({
+
+                title : req.body.title,
+
+                url : req.body.url
+
+        }, function(err, image) {
+
+                if (err) {
+                    
+                    res.statusCode = 400;
+
+                    res.send(err);
+                
+                } else {
+                    
+                    res.json(image); 
+                        
+                }
 
         });
 
