@@ -3,6 +3,12 @@
 module.exports=function(app, mongoose, config, utils) {
     
     var Schema = mongoose.Schema;
+    
+    var Users = require('./../modules/Users.js');
+    var Products = require('./../modules/Products.js');
+    var Articles = require('./../modules/Articles.js');
+    
+    var crypto = require('crypto');
 
     var Newsletters = mongoose.model('Newsletters', {
         title: { type : String, required: "informe o título da newsletter" }
