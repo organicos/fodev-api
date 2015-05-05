@@ -23,13 +23,15 @@ var Products = new Schema({
     
     category : String,
     
-    categories: [{ type : Schema.Types.ObjectId, ref: 'Categories' }],
+    categories: [{ type : Schema.Types.ObjectId, ref: 'Categories', required: 'Informe ao menos uma categoria!' }],
     
     highlight : { type: Boolean, default: 0 },
     
     active : { type: Boolean, default: 0 },
     
     supplier: String,
+    
+    suppliers: [{ type : Schema.Types.ObjectId, ref: 'Suppliers', required: 'Informe ao menos um fornecedor!' }],
     
     season: String,
 

@@ -10,14 +10,14 @@ module.exports=function(app, mongoose, moment, utils) {
                 
                 var filter = {};
                 
-                var populate = ['images', 'prices', 'categories']
+                var populate = ['images', 'prices', 'categories', 'suppliers']
                 
                 if(!req.user || req.user.kind != 'admin'){
                         filter.active = 1;       
                 } else {
                         populate.push('costs');
                 }
-                
+
                 if(req.query.highlight) filter.highlight = 1;
                 
                 if(req.query.name) filter.name = new RegExp(req.query.name, "i");
@@ -43,7 +43,7 @@ module.exports=function(app, mongoose, moment, utils) {
 
                 var filter = {_id: req.params.product_id};
                 
-                var populate = ['images', 'prices', 'categories'];
+                var populate = ['images', 'prices', 'categories', 'suppliers'];
                 
                 if(!req.user || req.user.kind != 'admin'){
                         filter.active = 1;       
@@ -137,8 +137,12 @@ module.exports=function(app, mongoose, moment, utils) {
                                 active : req.body.active,
                                 
                                 category : req.body.category,
+                                
+                                categories : req.body.categories,
         
                                 supplier: req.body.supplier,
+                                
+                                suppliers: req.body.suppliers,
                                 
                                 season: req.body.season
                                 
@@ -249,6 +253,10 @@ module.exports=function(app, mongoose, moment, utils) {
                                         
                                         product.costs = req.body.costs;
                                         
+                                        product.category = req.body.category;
+                                        
+                                        product.categories = req.body.categories;
+                                        
                                         product.dscr = req.body.dscr;
                                         
                                         product.img = req.body.img;
@@ -259,9 +267,9 @@ module.exports=function(app, mongoose, moment, utils) {
                                         
                                         product.active = req.body.active;
                 
-                                        product.category = req.body.category;
-                
                                         product.supplier = req.body.supplier;
+                                        
+                                        product.suppliers = req.body.suppliers;
                                         
                                         product.season = req.body.season;
                                         
@@ -277,7 +285,7 @@ module.exports=function(app, mongoose, moment, utils) {
                 
                                                 } else {
                                                         
-                                                        Products.deepPopulate(updatedProduct, ['images', 'prices', 'costs'], function(err, updatedProductPopulated) {
+                                                        Products.deepPopulate(updatedProduct, ['images', 'prices', 'costs', 'suppliers', 'categories'], function(err, updatedProductPopulated) {
                                                         
                                                                 if (err) {
                                                                         
@@ -406,7 +414,10 @@ module.exports=function(app, mongoose, moment, utils) {
                                                 res.send(err);
                                         } else {
         
-                                                res.json(products);
+                                                res.json({
+                                                        type: true,
+                                                        msg: 'Product deleted!'
+                                                });
                                                 
                                         }
         

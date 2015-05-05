@@ -92,11 +92,15 @@ require('./router/playground')(app, mongoose, moment, config, utils);
 
 require('./router/products')(app, mongoose, moment, utils);
 
+require('./router/categories')(app, mongoose, moment, utils);
+
+require('./router/suppliers')(app, mongoose, moment, utils);
+
 require('./router/payments')(app, mongoose, moment, config);
 
 require('./router/tickets')(app, mongoose, config, utils, moment);
 
-require('./router/newsletter')(app, mongoose, config);
+require('./router/newsletter')(app, mongoose, config, utils);
 
 require('./router/articles')(app, mongoose, moment, utils);
 
