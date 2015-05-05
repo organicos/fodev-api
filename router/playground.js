@@ -45,9 +45,9 @@ module.exports=function(app, mongoose, moment, config, utils) {
                 console.log('updateImageStructure');
 
                 var oldImage = {
-                    _id: product.images.length ? (product.images[0] ? product.images[0]._id : false) : false,
-                    title: product.images.length ? (product.images[0] ? product.images[0].title : product.img.split("/").pop().replace(/\.[^/.]+$/, "") ) : product.img.split("/").pop().replace(/\.[^/.]+$/, ""),
-                    url: product.images.length ? (product.images[0] ? product.images[0].url : product.img) : product.img
+                    _id: product.images instanceof Array ? (product.images[0] ? product.images[0]._id : false) : false,
+                    title: product.images instanceof Array ? (product.images[0] ? product.images[0].title : product.img.split("/").pop().replace(/\.[^/.]+$/, "") ) : product.img.split("/").pop().replace(/\.[^/.]+$/, ""),
+                    url: product.images instanceof Array ? (product.images[0] ? product.images[0].url : product.img) : product.img
                 }
                 
                 if(oldImage.url){
@@ -121,8 +121,8 @@ module.exports=function(app, mongoose, moment, config, utils) {
                 console.log('updateCategoryStructure');
 
                 var oldCategory = {
-                    _id: product.categories.length ? (product.categories[0] ? product.categories[0]._id : false) : false,
-                    name: product.categories.length ? (product.categories[0] ? product.categories[0].name : product.category) :  product.category
+                    _id: product.categories instanceof Array ? (product.categories[0] ? product.categories[0]._id : false) : false,
+                    name: product.categories instanceof Array ? (product.categories[0] ? product.categories[0].name : product.category) :  product.category
                 }
                 
                 if(oldCategory.name){
@@ -196,8 +196,8 @@ module.exports=function(app, mongoose, moment, config, utils) {
                 console.log('updateSuppliersStructure');
 
                 var oldSupplier = {
-                    _id: product.suppliers.length ? (product.suppliers[0] ? product.suppliers[0]._id : false) : false,
-                    name: product.suppliers.length ? (product.suppliers[0] ? product.suppliers[0].name : product.supplier) : product.supplier
+                    _id: product.suppliers instanceof Array ? (product.suppliers[0] ? product.suppliers[0]._id : false) : false,
+                    name: product.suppliers instanceof Array ? (product.suppliers[0] ? product.suppliers[0].name : product.supplier) : product.supplier
                 }
                 
                 
