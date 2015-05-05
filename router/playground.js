@@ -45,9 +45,9 @@ module.exports=function(app, mongoose, moment, config, utils) {
                 console.log('updateImageStructure');
 
                 var oldImage = {
-                    _id: product.images[0] ? product.images[0]._id : false,
-                    title: product.images[0]? product.images[0].title : product.img.split("/").pop().replace(/\.[^/.]+$/, ""),
-                    url: product.images[0] ? product.images[0].url : product.img
+                    _id: product.images ? (product.images[0] ? product.images[0]._id : false) : false,
+                    title: product.images ? (product.images[0] ? product.images[0].title : product.img.split("/").pop().replace(/\.[^/.]+$/, "") ) : product.img.split("/").pop().replace(/\.[^/.]+$/, ""),
+                    url: product.images ? (product.images[0] ? product.images[0].url : product.img) : product.img
                 }
                 
                 if(oldImage.url){
@@ -121,8 +121,8 @@ module.exports=function(app, mongoose, moment, config, utils) {
                 console.log('updateCategoryStructure');
 
                 var oldCategory = {
-                    _id: product.categories[0] ? product.categories[0]._id : false,
-                    name: product.categories[0] ? product.categories[0].name : product.category
+                    _id: product.categories ? (product.categories[0] ? product.categories[0]._id : false) : false,
+                    name: product.categories ? (product.categories[0] ? product.categories[0].name : product.category) :  product.category
                 }
                 
                 if(oldCategory.name){
@@ -196,8 +196,8 @@ module.exports=function(app, mongoose, moment, config, utils) {
                 console.log('updateSuppliersStructure');
 
                 var oldSupplier = {
-                    _id: product.suppliers[0] ? product.suppliers[0]._id : false,
-                    name: product.suppliers[0] ? product.suppliers[0].name : product.supplier
+                    _id: product.suppliers ? (product.suppliers[0] ? product.suppliers[0]._id : false) : false,
+                    name: product.suppliers ? (product.suppliers[0] ? product.suppliers[0].name : product.supplier) : product.supplier
                 }
                 
                 
