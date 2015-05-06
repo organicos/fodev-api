@@ -35,3 +35,6 @@ node_modules
 
 # config file
 config/env_config.js
+
+# ssl certs
+ssl-data
