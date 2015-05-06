@@ -67,21 +67,21 @@ module.exports=function(app, mongoose, moment, utils) {
         }        
 
         image.stream(function streamOut (err, stdout, stderr) {
-                if (err) return next(err);
-                
-                res.setHeader('Pragma', "public");
-                res.setHeader('Connection', "keep-alive");
-                res.setHeader('Cache-Control', "public, max-age=86400");
-                res.setHeader('Date', new Date(Date.now()).toUTCString());
-                res.setHeader('Expires', new Date(Date.now() + (30*86400000)).toUTCString());
-                //res.setHeader('Content-Encoding', 'gzip');
-                
-                stdout.pipe(res); //pipe to response
-    
-                // the following line gave me an error compaining for already sent headers
-                //stdout.on('end', function(){res.writeHead(200, { 'Content-Type': 'ima    ge/jpeg' });}); 
-    
-                stdout.on('error', next);
+            if (err) return next(err);
+            
+            res.setHeader('Pragma', "public");
+            res.setHeader('Connection', "keep-alive");
+            res.setHeader('Cache-Control', "public, max-age=86400");
+            res.setHeader('Date', new Date(Date.now()).toUTCString());
+            res.setHeader('Expires', new Date(Date.now() + (30*86400000)).toUTCString());
+            //res.setHeader('Content-Encoding', 'gzip');
+            
+            stdout.pipe(res); //pipe to response
+
+            // the following line gave me an error compaining for already sent headers
+            //stdout.on('end', function(){res.writeHead(200, { 'Content-Type': 'ima    ge/jpeg' });}); 
+
+            stdout.on('error', next);
         });
 
     });
