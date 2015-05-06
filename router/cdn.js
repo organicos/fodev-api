@@ -1,18 +1,36 @@
 "use strict";
 
 module.exports=function(app, mongoose, moment, utils) {
-        
+       
     app.get('/cdn/image', utils.getRequestUser, function(req, res) {
         
         res.send('Image resizing.');
 
     });
     
-    app.get('/cdn/image/:size', utils.getRequestUser, function(req, res) {
+    app.get('/cdn/image/:size', function(req, res, next){
+        
+        var gm = require('gm').subClass({imageMagick: true});
+        
+        var url = req.query.url;
         
         var size = req.params.size;
+        
+        var image;
 
-        var url = req.query.url;
+        if(url){
+    
+            image = gm(url);
+            
+        } else {
+            
+            image = gm(50, 50, '#DADAE3')
+                .font("arial", 20)
+                .stroke("#fff", 2)
+                .fill("#888")
+                .drawText(10, 22, 'not found');
+            
+        }
         
         if(isNaN(size)){
             
@@ -34,56 +52,34 @@ module.exports=function(app, mongoose, moment, utils) {
                 
             } else {
                 
-                res.send(resizeImage(res, sizes, url));
+                image.resize(width,height);
                 
             }
 
         } else {
             
-            res.send(resizeImage(res, size, url));
+            image.resize(size,size);
 
-        }
-        
-        
+        }        
 
-    });
+        image.stream(function streamOut (err, stdout, stderr) {
+                if (err) return next(err);
+                
+                res.setHeader('Pragma', "public");
+                res.setHeader('Connection', "keep-alive");
+                res.setHeader('Cache-Control', "public, max-age=86400");
+                res.setHeader('Date', new Date(Date.now()).toUTCString());
+                res.setHeader('Expires', new Date(Date.now() + (30*86400000)).toUTCString());
+                //res.setHeader('Content-Encoding', 'gzip');
+                
+                stdout.pipe(res); //pipe to response
     
-    var resizeImage = function(res, sizes, url){
-        
-        var gm = require('gm').subClass({imageMagick: true});
-        
-        var newImage;
-        
-        if(url){
-            
-            newImage = gm(url);
-            
-        } else {
-            
-            newImage = createImage();
-        }
-        
-        newImage.font("arial", 20)
-        newImage.stroke("#fff", 2)
-        newImage.fill("#888")
-        newImage.drawText(10, 22, 'test')
-        newImage.stream(function streamOut (err, stdout, stderr) {
-            if (err) return next(err);
-            stdout.pipe(res); //pipe to response
-
-            stdout.on('end', function(){res.writeHead(200, { 'Content-Type': 'ima    ge/jpeg' });}); 
-
-            stdout.on('error', next);
+                // the following line gave me an error compaining for already sent headers
+                //stdout.on('end', function(){res.writeHead(200, { 'Content-Type': 'ima    ge/jpeg' });}); 
+    
+                stdout.on('error', next);
         });
 
-    }
+    });
 
-    var createImage = function() {
-        return gm(70, 30, '#000')
-            .font("arial", 20)
-            .stroke("#fff", 2)
-            .fill("#888")
-            .drawText(10, 22, 'Some text');
-    }
-    
 }

@@ -190,7 +190,7 @@ module.exports=function(app, mongoose, config, utils, moment) {
                     
                 if (user) {
                     
-                    createTicket(user);
+                    createTicket(user._id);
                         
                 } else {
                     
@@ -247,18 +247,32 @@ module.exports=function(app, mongoose, config, utils, moment) {
                         res.send(err);
                 } else {
 
-                    if(newCustomer){
-                        
-                        send_ticket_email_new_customer(ticket);
-                        
-                    } else {
-                        
-                        send_ticket_email(ticket);
-                        
-                    }
-
-                    res.json(ticket);
+                    Tickets.deepPopulate(ticket, ['customer', 'updates'], function(err, updatedticketPopulated) {
                     
+                            if (err) {
+                                    
+                                    res.statusCode = 400;
+                            
+                                    return res.send(err);
+                            
+                            } else {
+                                
+                                if(newCustomer){
+                                    
+                                    send_ticket_email_new_customer(updatedticketPopulated);
+                                    
+                                } else {
+                                    
+                                    send_ticket_email(updatedticketPopulated);
+                                    
+                                }
+            
+                                res.json(updatedticketPopulated);
+                                
+                            }
+                    
+                    });
+                                                        
                 }
     
             });
