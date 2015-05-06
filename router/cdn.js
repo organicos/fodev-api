@@ -12,7 +12,9 @@ module.exports=function(app, mongoose, moment, utils) {
         
         var gm = require('gm').subClass({imageMagick: true});
         
-        var url = req.query.url;
+        var url = encodeURI(req.query.url);
+        
+        console.log(url);
         
         var size = req.params.size;
         
@@ -51,6 +53,8 @@ module.exports=function(app, mongoose, moment, utils) {
                 res.send('A altura é inválida. Favor informar um número inteiro e positivo!');
                 
             } else {
+                
+                console.log(width,height);
                 
                 image.resize(width,height);
                 
