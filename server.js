@@ -137,7 +137,7 @@ https.createServer({
 
     cert: fs.readFileSync('./ssl-data/cert.crt'),
 
-    ca: [fs.readFileSync('./ssl-data/ca.crt')],
+    ca: [fs.readFileSync('./ssl-data/ca.crt'), fs.readFileSync('./ssl-data/b31f05f66f16b2d2.crt'), fs.readFileSync('./ssl-data/gd_bundle-g2-g1.crt')],
 
     requestCert: true,
 
