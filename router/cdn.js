@@ -56,7 +56,7 @@ module.exports=function(app, mongoose, moment, utils) {
                 
                 console.log(width,height);
                 
-                image.resize(width,height);
+                image.resize(width,height, "!");
                 
             }
 
