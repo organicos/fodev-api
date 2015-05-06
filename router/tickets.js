@@ -12,7 +12,6 @@ module.exports=function(app, mongoose, config, utils, moment) {
                 type: String, 
                 trim: true, 
                 required: 'Favor informar a mensagem.'
-//                match: [/^.{20,}$/, 'A nova mensagem deve possuir ao menos 20 caracteres.']
         }
         , date: { type: Date, default: Date.now }
     });
@@ -29,7 +28,6 @@ module.exports=function(app, mongoose, config, utils, moment) {
                 type: String, 
                 trim: true, 
                 required: 'Favor informar a mensagem.',
-                match: [/^.{20,}$/, 'A mensagem deve possuir ao menos 20 caracteres.']
         },
         updates: [{ type : Schema.Types.ObjectId, ref: 'TicketUpdates' }],
         updated: { type: Date, default: Date.now }

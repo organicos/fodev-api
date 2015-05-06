@@ -92,6 +92,8 @@ require('./router/playground')(app, mongoose, moment, config, utils);
 
 require('./router/products')(app, mongoose, moment, utils);
 
+require('./router/cdn')(app, mongoose, moment, utils);
+
 require('./router/categories')(app, mongoose, moment, utils);
 
 require('./router/suppliers')(app, mongoose, moment, utils);
