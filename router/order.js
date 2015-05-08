@@ -171,9 +171,9 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
 
     });
     
-    app.get('/v1/order/:product_id', function(req, res) {
+    app.get('/v1/order/:order_id', utils.ensureAuthorized, function(req, res) {
 
-            Orders.findOne({_id: req.params.product_id}, function(err, product) {
+            Orders.findOne({_id: req.params.order_id}, function(err, product) {
 
                     if (err) {
                         
