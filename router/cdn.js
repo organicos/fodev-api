@@ -14,8 +14,6 @@ module.exports=function(app, mongoose, moment, utils) {
         
         var url = encodeURI(req.query.url);
         
-        console.log(url);
-        
         var size = req.params.size;
         
         var image;
