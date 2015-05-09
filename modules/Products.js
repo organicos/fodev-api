@@ -9,35 +9,27 @@ var Products = new Schema({
 
     price: Number,
     
-    prices: [{ type : Schema.Types.ObjectId, ref: 'Prices' }],
-    
-    cost: {type: Number},
-    
-    costs: [{ type : Schema.Types.ObjectId, ref: 'Prices', select: false }],
-    
     dscr : String,
-
-    img: { type: String, required: 'Informe a url da imagem!' },
-    
-    images: [{ type : Schema.Types.ObjectId, ref: 'Images' }],
-    
-    category : String,
-    
-    categories: [{ type : Schema.Types.ObjectId, ref: 'Categories', required: 'Informe ao menos uma categoria!' }],
     
     highlight : { type: Boolean, default: 0 },
     
     active : { type: Boolean, default: 0 },
     
-    supplier: String,
-    
-    suppliers: [{ type : Schema.Types.ObjectId, ref: 'Suppliers', required: 'Informe ao menos um fornecedor!' }],
-    
     season: String,
-
-    clicks: { type: Number, default: 0 },
     
-    updated: { type: Date, default: Date.now }
+    updated: { type: Date, default: Date.now },
+    
+    prices: { type: [{ type : Schema.Types.ObjectId, ref: 'Prices' }], default: []},
+    
+    costs: { type: [{ type : Schema.Types.ObjectId, ref: 'Prices' }], default: []},
+    
+    images: { type: [{ type : Schema.Types.ObjectId, ref: 'Images' }], default: []},
+    
+    categories: { type: [{ type : Schema.Types.ObjectId, ref: 'Categories'}], default: [], required: 'Informe ao menos uma categoria!' },
+    
+    suppliers: { type: [{ type : Schema.Types.ObjectId, ref: 'Suppliers'}], default: [] },
+    
+    visits: { type: [{ type : Schema.Types.ObjectId, ref: 'Visits' }], default: []}
 
 });
 

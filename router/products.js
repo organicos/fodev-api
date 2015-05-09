@@ -6,16 +6,23 @@ module.exports=function(app, mongoose, moment, utils) {
         
         var Prices = require('./../modules/Prices.js');
         
+        var Visits = require('./../modules/Visits.js');
+        
+        var adminFields = '-costs';
+        
         app.get('/v1/products', utils.getRequestUser, function(req, res) {
                 
                 var filter = {};
                 
+                var hiddenFields = null;
+                
                 var populate = ['images', 'prices', 'categories', 'suppliers']
                 
                 if(!req.user || req.user.kind != 'admin'){
+                        hiddenFields = adminFields;
                         filter.active = 1;       
                 } else {
-                        populate.push('costs');
+                        populate.push('costs', 'visits');
                 }
 
                 if(req.query.highlight) filter.highlight = 1;
@@ -23,7 +30,7 @@ module.exports=function(app, mongoose, moment, utils) {
                 if(req.query.name) filter.name = new RegExp(req.query.name, "i");
                 
                 Products
-                .find(filter, null, {sort: {updated: -1}})
+                .find(filter, hiddenFields, {sort: {updated: -1}})
                 .populate(populate)
                 .exec(function(err, products) {
                         
@@ -43,27 +50,55 @@ module.exports=function(app, mongoose, moment, utils) {
 
                 var filter = {_id: req.params.product_id};
                 
-                var populate = ['images', 'prices', 'categories', 'suppliers'];
+                var hiddenFields = null;
+                
+                var populate = ['images', 'prices', 'categories', 'suppliers', 'visits'];
                 
                 if(!req.user || req.user.kind != 'admin'){
+                        hiddenFields = adminFields;
                         filter.active = 1;       
                 } else {
                        populate.push('costs');
-                       console.log(populate);
                 }
                 
                 Products
-                .findOne(filter, null, {sort: {updated: -1}})
+                .findOne(filter, hiddenFields, {sort: {updated: -1}})
                 .populate(populate)
-                .exec(function(err, products) {
+                .exec(function(err, product) {
                         
                         if (err) {
                                 
                                 res.statusCode = 400;
                                 res.send(err);       
                         }
-        
-                        res.json(products);
+                        
+                        if(!req.user || req.user.kind != 'admin'){
+                                
+                                var visit = {};
+                                
+                                if(req.user) visit.user = req.user._id;
+                                
+                                Visits.create(visit, function(err, newVisit){
+                                        
+                                        product.visits.push(newVisit);
+                                        
+                                        product.save(function(err, product){
+                                                
+                                                product = product.toObject();
+                                        
+                                                product.visits = product.visits.length;
+                                                
+                                                res.json(product);
+                                                
+                                        });
+                                        
+                                });
+                                
+                        } else {
+                         
+                                res.json(product);
+                                
+                        }
                         
                 });
                 

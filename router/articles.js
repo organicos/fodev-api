@@ -6,6 +6,8 @@ module.exports=function(app, mongoose, moment, utils) {
         
         var Products = require('./../modules/Products.js');
         
+        var Visits = require('./../modules/Visits.js');
+        
         app.get('/v1/articles', utils.getRequestUser, function(req, res) {
 
                 var filter = {};
@@ -45,8 +47,8 @@ module.exports=function(app, mongoose, moment, utils) {
                         
                         Articles
                         .findOne(filter, null, {sort: {updated: -1}})
-                        .populate(['images', 'products'])
-                        .exec(function(err, articles) {
+                        .populate(['images', 'products', 'visits'])
+                        .exec(function(err, article) {
                                 
                                 if (err) {
                                         
@@ -54,7 +56,33 @@ module.exports=function(app, mongoose, moment, utils) {
                                         res.send(err);       
                                 }
                 
-                                res.json(articles);
+                                if(!req.user || req.user.kind != 'admin'){
+                                        
+                                        var visit = {};
+                                        
+                                        if(req.user) visit.user = req.user._id;
+                                        
+                                        Visits.create(visit, function(err, newVisit){
+                                                
+                                                article.visits.push(newVisit);
+                                                
+                                                article.save(function(err, article){
+                                                        
+                                                        article = article.toObject();
+                                                
+                                                        article.visits = article.visits.length;
+                                                        
+                                                        res.json(article);
+                                                        
+                                                });
+                                                
+                                        });
+                                        
+                                } else {
+                                 
+                                        res.json(article);
+                                        
+                                }
                                 
                         });
                         
@@ -64,8 +92,8 @@ module.exports=function(app, mongoose, moment, utils) {
                         
                         Articles
                         .findOne(filter, null, {sort: {updated: -1}})
-                        .populate(['images', 'products'])
-                        .exec(function(err, articles) {
+                        .populate(['images', 'products', 'visits'])
+                        .exec(function(err, article) {
                                 
                                 if (err) {
                                         
@@ -73,7 +101,33 @@ module.exports=function(app, mongoose, moment, utils) {
                                         res.send(err);       
                                 }
                 
-                                res.json(articles);
+                                if(!req.user || req.user.kind != 'admin'){
+                                        
+                                        var visit = {};
+                                        
+                                        if(req.user) visit.user = req.user._id;
+                                        
+                                        Visits.create(visit, function(err, newVisit){
+                                                
+                                                article.visits.push(newVisit);
+                                                
+                                                article.save(function(err, article){
+                                                        
+                                                        article = article.toObject();
+                                                
+                                                        article.visits = article.visits.length;
+                                                        
+                                                        res.json(article);
+                                                        
+                                                });
+                                                
+                                        });
+                                        
+                                } else {
+                                 
+                                        res.json(article);
+                                        
+                                }
                                 
                         });
                         

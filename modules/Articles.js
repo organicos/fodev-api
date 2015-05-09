@@ -12,11 +12,13 @@ var Articles = new Schema({
         
         img: { type: String, required: 'Informe a url da imagem!' },
         
-        images: [{ type : Schema.Types.ObjectId, ref: 'Images' }],
+        images: { type: [{ type : Schema.Types.ObjectId, ref: 'Images' }], default: []},
         
-        products: [{ type : Schema.Types.ObjectId, ref: 'Products' }],
+        products: { type: [{ type : Schema.Types.ObjectId, ref: 'Products' }], default: []},
         
-        categories: [{ type : Schema.Types.ObjectId, ref: 'Categories' }],
+        categories: { type: [{ type : Schema.Types.ObjectId, ref: 'Categories' }], default: []},
+        
+        visits: { type: [{ type : Schema.Types.ObjectId, ref: 'Visits' }], default: []},
         
         highlight : { type: Boolean, default: false },
         
