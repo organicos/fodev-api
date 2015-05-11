@@ -9,41 +9,143 @@ module.exports=function(app, mongoose, config, utils) {
     var Articles = require('./../modules/Articles.js');
     
     var crypto = require('crypto');
-
+    
     var Newsletters = mongoose.model('Newsletters', {
         title: { type : String, required: "informe o título da newsletter" }
-        , intro: { type : String, required: "informe a introdução da newsletter" }
-        , footer: { type : String, required: "informe o rodapé da newsletter" }
-        , products: [{ type : Schema.Types.ObjectId, ref: 'Products' }]
-        , articles: [{ type : Schema.Types.ObjectId, ref: 'Articles' }]
+        , top: { type : String, required: "informe a introdução da newsletter" }
+        , bottom: { type : String }
+        , sections: { type: [{
+            title: { type : String, required: "informe o título da seção" }
+            , top: { type : String, required: "informe a introdução da seção" }
+            , bottom: { type : String }
+            , products: []
+            , articles: []
+        }]}
         , status: {type: Number, required: "Informe o status da newsletter", default: 0}
         , updated: { type: Date, default: Date.now }
     });
     
-    app.get('/v1/newsletters', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
+    app.get('/v1/newsletters', utils.getRequestUser, function(req, res) {
 
-        Newsletters.find(function(err, users) {
+        var filter = {};
+        
+        if(!req.user || req.user.kind != 'admin') {
+            filter.status = 1;
+        }
+        
+        Newsletters
+        .find(filter, null, {sort: {updated: -1}})
+        .deepPopulate(['sections'])
+        .exec(function(err, newsletters) {
+                
+                if (err) {
+                        
+                        res.statusCode = 400;
+                        res.send(err);       
+                } else {
+                 
+                        res.json(newsletters);
+                        
+                }
+                
+        });
+                        
+    });
+    
+    app.get('/v1/newsletter/:id', utils.getRequestUser, function(req, res) {
+        
+        var filter = {_id: req.params.id};
+        
+        if(!req.user || req.user.kind != 'admin') {
+            filter.status = 1;
+        }
 
-            if (err) {
+        Newsletters
+        .findOne(filter)
+        .deepPopulate(['sections'])
+        .exec(function(err, newsletter) {
                 
-                res.statusCode = 400;
+                if (err) {
+                        
+                        res.statusCode = 400;
+                        res.send(err);       
+                } else {
+                 
+                        res.json(newsletter);
+                        
+                }
                 
-                res.send(err)
+        });
+
+    });
+    
+    app.post('/v1/newsletter', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
+
+        Newsletters.create({
+
+            title: req.body.title
+            , top: req.body.top
+            , bottom: req.body.bottom
+            , sections: req.body.sections
+            , status: 0
+
+        }, function(err, image) {
+
+                if (err) {
+                    
+                    res.statusCode = 400;
+
+                    res.send(err);
                 
-            } else {
-                
-                res.json(users);
-                
-            }
+                } else {
+                    
+                    res.json(image); 
+                        
+                }
 
         });
 
     });
     
+    app.put('/v1/newsletter/:id', utils.ensureAdmin, function(req, res){
+
+            return Newsletters.findById(req.params.id, function(err, newsletter) {
+                    
+                    if (err) {
+                            
+                            res.statusCode = 400;
+
+                            return res.send(err);
+                            
+                    } else {
+                            
+                            newsletter.title = req.body.title;
+                            newsletter.top = req.body.top;
+                            newsletter.bottom = req.body.bottom;
+                            newsletter.sections = req.body.sections;
+                            newsletter.status = req.body.status;
+
+                            return newsletter.save(function(err, updatedNewsletter) {
     
+                                    if (err) {
+                                            
+                                            res.statusCode = 400;
     
+                                            return res.send(err);
     
+                                    } else {
+                                            
+                                            return res.send(updatedNewsletter);
+                                            
+                                    }
     
+                            });
+                            
+                    }
+
+            });
+
+    });
     
     
     
@@ -55,155 +157,5 @@ module.exports=function(app, mongoose, config, utils) {
     // O GMAIL TEM LIMITE DE 2000 ENDEREÇOS POR EMAIL. LOGO, DEVE HAVER UM TRATAMENTO NA HORA DE ENVIAR OS E-MAILS PARA QUE NÃO EXCEDA ESTE LIMITE!!!
     //
     //
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    app.post('/v1/newsletter/signup', function(req, res) {
-        
-        Users.findOne({email: req.body.email}, function(err, user) {
 
-            if (err) {
-                
-                res.statusCode = 400;
-                    
-                res.json({
-                    type: false,
-                    data: "Erro: " + err
-                });
-                
-            } else {
-                    
-                if (user) {
-                    
-                    user.newsletter = true;
-                    
-                    user.save(function(err, new_user) {
-                            
-                        if(err) {
-                            
-                            res.statusCode = 400;
-                            
-                            res.send(err);
-                            
-                        } else {
-
-                            res.json({
-                                type: true,
-                                data: "Cadastrado realizado com sucesso!"
-                            });
-
-                        }
-
-                    });
-                        
-                } else {
-                    
-                    Users.create({
-    
-                            name : req.body.email,
-    
-                            email : req.body.email,
-                            
-                            newsletter : true,
-                            
-                            kind : 'newsletter',
-                            
-                            password : crypto.createHash('md5').update(req.body.email).digest('hex')
-    
-                    }, function(err, user) {
-    
-                            if (err) {
-                                
-                                res.statusCode = 400;
-    
-                                res.send(err);
-                            
-                            } else {
-                                
-                                user.password = req.body.email;
-                                
-                                send_newsletter_signup_email(user);
-                                
-                                res.json({
-                                    type: true,
-                                    data: "Cadastrado realizado com sucesso!"
-                                });
-                                    
-                            }
-    
-                    });
-
-                }
-            }
-        });
-    });
-        
-    var send_newsletter_signup_email = function(user){
-        
-        var nodemailer = require('nodemailer');
-        var path = require('path');
-        var templatesDir   = path.join(__dirname, '../templates');
-        var emailTemplates = require('email-templates');
-
-        var transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 465, // 465
-            secure: true, // true
-            debug : true,
-            auth: {
-                user: 'bruno@tzadi.com',
-                pass: 'Dublin2010ireland'
-            }
-        });
-
-        emailTemplates(templatesDir, function(err, template) {
-             
-            if (err) {
-                console.log(err);
-            } else {
-              
-                template('newsletter/signup', user, function(err, html, text) {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        var mailOptions = {
-                            from: 'Feira Orgânica Delivery <info@feiraorganica.com>', //sender address
-                            replyTo: "info@feiraorganica.com",
-                            to: user.email, // list of receivers
-                            cc: 'info@feiraorganica.com', // list of BCC receivers 'bruno@tzadi.com, denisefaccin@gmail.com'
-                            subject: config.envTag + 'Assinatura de newsletter',
-                            text: text,
-                            html: html
-                        };
-                        transporter.sendMail(mailOptions, function(error, info){
-                            if(error){
-                                console.log(error);
-                            }else{
-                                console.log('Message sent: ' + info.response);
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    }
 }

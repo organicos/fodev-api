@@ -310,7 +310,7 @@ module.exports=function(app, mongoose, config, utils, moment) {
                         var mailOptions = {
                             from: 'Feira Orgânica Delivery <info@feiraorganica.com>', //sender address
                             replyTo: "info@feiraorganica.com",
-                            to: ticket.email, // list of receivers
+                            to: ticket.customer.email, // list of receivers
                             cc: 'info@feiraorganica.com', // list of BCC receivers 'bruno@tzadi.com, denisefaccin@gmail.com'
                             subject: config.envTag + 'Contato recebido',
                             text: text,
@@ -360,7 +360,7 @@ module.exports=function(app, mongoose, config, utils, moment) {
                         var mailOptions = {
                             from: 'Feira Orgânica Delivery <info@feiraorganica.com>', //sender address
                             replyTo: "info@feiraorganica.com",
-                            to: ticket.email, // list of receivers
+                            to: ticket.customer.email, // list of receivers
                             cc: 'info@feiraorganica.com', // list of BCC receivers 'bruno@tzadi.com, denisefaccin@gmail.com'
                             subject: config.envTag + 'Contato recebido',
                             text: text,
@@ -410,7 +410,7 @@ module.exports=function(app, mongoose, config, utils, moment) {
                         var mailOptions = {
                             from: 'Feira Orgânica Delivery <info@feiraorganica.com>', //sender address
                             replyTo: "info@feiraorganica.com",
-                            to: ticket.email, // list of receivers
+                            to: ticket.customer.email, // list of receivers
                             cc: 'info@feiraorganica.com', // list of BCC receivers 'bruno@tzadi.com, denisefaccin@gmail.com'
                             subject: config.envTag + 'Contato recebido',
                             text: text,

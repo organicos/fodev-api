@@ -29,6 +29,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
         },
         active : { type: Boolean, default: true },
         status : { type: Number, default: 0 }, // payment_status_map
+        payment_date: { type: Date },
         updated: { type: Date, default: Date.now }
     });
     
@@ -508,6 +509,8 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
        if(reference){
            
              Orders.findOne({ _id: reference }, function (err, order){
+                 
+                 console.log(order);
                 
                 if (err) {
                         
@@ -569,6 +572,12 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                                                 order.pagseguro.transactions = transactions;
                                                 
                                                 order.status = getOrderStatusFromTransactions(transactions);
+                                                
+                                                if(order.status == 1){
+                                                    
+                                                    order.payment_date = Date.now;
+                                                    
+                                                }
                                             
                                         }
 
@@ -678,6 +687,12 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
 
                                     order.status = getOrderStatusFromTransactions([result.transaction]);
 
+                                    if(order.status == 1){
+                                        
+                                        order.payment_date = Date.now;
+                                        
+                                    }
+                                                
                                     order.save(function(err, updatedOrder) {
                                         
                                         if (err) {
