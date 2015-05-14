@@ -6,13 +6,13 @@ module.exports=function(app, moment) {
         
         var today = moment().day();
 
-        var forTuesday = [5, 6, 0];
+        var forWednesday = [5, 6, 0];
         
         var forSaturday = [1, 2, 3, 4];
         
         var shippingDates = [];
         
-        if(forTuesday.indexOf(today) > -1){
+        if(forWednesday.indexOf(today) > -1){
 
             if(today == 0){
                 shippingDates = [
@@ -63,13 +63,15 @@ module.exports=function(app, moment) {
         
         var today = moment().day();
         
-        var forTuesday = [0, 1, 2];
+        // orders until monday lunch time are delivered Wednesday
+        var forWednesday = [0, 1, 2];
         
+        // orders until Thursday lunch time are delivered Saturday
         var forSaturday = [3, 4, 5, 6];
         
         var nextShippingDate = [];
         
-        if(forTuesday.indexOf(today) > -1){
+        if(forWednesday.indexOf(today) > -1){
             
             nextShippingDate = moment().day(2).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase();
                 

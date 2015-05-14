@@ -6,6 +6,8 @@ var Schema = mongoose.Schema;
 var Products = new Schema({
 
     name : { type: String, required: 'Informe o nome do produto!' },
+    
+    encoded_url: { type: String, required: 'Informe a url codificada!' },
 
     price: Number,
     
