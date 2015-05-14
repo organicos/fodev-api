@@ -282,6 +282,8 @@ module.exports=function(app, mongoose, moment, utils) {
                                 
                                         product.name = req.body.name;
                                         
+                                        product.encoded_url = req.body.encoded_url;
+                                        
                                         product.price = req.body.price;
                                         
                                         product.prices = req.body.prices;

@@ -16,24 +16,24 @@ module.exports=function(app, moment) {
 
             if(today == 0){
                 shippingDates = [
-                    moment().day(2).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
+                    moment().day(3).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
                     , moment().day(6).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                    , moment().add(1, 'weeks').day(2).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
+                    , moment().add(1, 'weeks').day(3).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
                     , moment().add(1, 'weeks').day(6).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                    , moment().add(2, 'weeks').day(2).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
+                    , moment().add(2, 'weeks').day(3).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
                     , moment().add(2, 'weeks').day(6).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                    , moment().add(3, 'weeks').day(2).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
+                    , moment().add(3, 'weeks').day(3).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
                     , moment().add(3, 'weeks').day(6).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
                 ];
             } else {
                 shippingDates = [
-                    moment().add(1, 'weeks').day(2).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
+                    moment().add(1, 'weeks').day(3).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
                     , moment().add(1, 'weeks').day(6).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                    , moment().add(2, 'weeks').day(2).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
+                    , moment().add(2, 'weeks').day(3).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
                     , moment().add(2, 'weeks').day(6).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                    , moment().add(3, 'weeks').day(2).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
+                    , moment().add(3, 'weeks').day(3).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
                     , moment().add(3, 'weeks').day(6).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                    , moment().add(4, 'weeks').day(2).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
+                    , moment().add(4, 'weeks').day(3).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
                     , moment().add(4, 'weeks').day(6).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
                 ];
             }
@@ -43,13 +43,13 @@ module.exports=function(app, moment) {
             
             shippingDates = [
                 moment().day(6).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                , moment().add(1, 'weeks').day(2).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
+                , moment().add(1, 'weeks').day(3).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
                 , moment().add(1, 'weeks').day(6).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                , moment().add(2, 'weeks').day(2).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
+                , moment().add(2, 'weeks').day(3).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
                 , moment().add(2, 'weeks').day(6).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                , moment().add(3, 'weeks').day(2).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
+                , moment().add(3, 'weeks').day(3).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
                 , moment().add(3, 'weeks').day(6).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                , moment().add(4, 'weeks').day(2).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
+                , moment().add(4, 'weeks').day(3).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
             ];   
 
             
@@ -73,7 +73,7 @@ module.exports=function(app, moment) {
         
         if(forWednesday.indexOf(today) > -1){
             
-            nextShippingDate = moment().day(2).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase();
+            nextShippingDate = moment().day(3).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase();
                 
         } else if(forSaturday.indexOf(today) > -1) {
             
