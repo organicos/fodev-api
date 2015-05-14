@@ -64,10 +64,10 @@ module.exports=function(app, moment) {
         var today = moment().day();
         
         // orders until monday lunch time are delivered Wednesday
-        var forWednesday = [0, 1, 2];
+        var forWednesday = [0, 1, 2, 3];
         
         // orders until Thursday lunch time are delivered Saturday
-        var forSaturday = [3, 4, 5, 6];
+        var forSaturday = [4, 5, 6];
         
         var nextShippingDate = [];
         
