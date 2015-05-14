@@ -152,6 +152,8 @@ module.exports=function(app, mongoose, moment, utils) {
                         Products.create({
         
                                 name : req.body.name,
+                                
+                                encoded_url: req.body.encoded_url,
         
                                 price : req.body.price,
                                 

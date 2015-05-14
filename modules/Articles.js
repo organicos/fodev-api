@@ -8,7 +8,7 @@ var Articles = new Schema({
 
         content: { type: String, required: 'Informe conteúdo do artigo!' },
         
-        encoded_url: { type: String, required: 'Informe a url codificada!' },
+        encoded_url: { type: String, required: 'Informe a url codificada!', unique: true },
         
         img: { type: String, required: 'Informe a url da imagem!' },
         

