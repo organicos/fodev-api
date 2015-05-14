@@ -8,7 +8,7 @@ var Articles = new Schema({
 
         content: { type: String, required: 'Informe conteúdo do artigo!' },
         
-        encoded_url: { type: String, trim: true, required: 'Informe a url codificada!', unique: true },
+        encoded_url: { type: String, trim: true, required: 'Informe a url codificada!', unique: true }, // SLUG
         
         images: { type: [{ type : Schema.Types.ObjectId, ref: 'Images' }], default: []},
         
