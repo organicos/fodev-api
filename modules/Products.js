@@ -7,10 +7,8 @@ var Products = new Schema({
 
     name : { type: String, required: 'Informe o nome do produto!' },
     
-    encoded_url: { type: String, required: 'Informe a url codificada!', unique: true },
+    encoded_url: { type: String, trim: true, required: 'Informe a url codificada!', unique: true },
 
-    price: Number,
-    
     dscr : String,
     
     highlight : { type: Boolean, default: 0 },
