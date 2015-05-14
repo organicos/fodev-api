@@ -42,6 +42,24 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
         5: 'Inválido.'
     };
 
+    app.get('/v1/orders', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
+            
+        var filter = {active: 1};
+        
+        if(req.user.kind != 'admin') filter['customer._id'] = req.user._id;
+            
+        Orders.find(filter, null, {sort: {updated: 1}}, function(err, products) {
+
+            if (err) {
+                    res.send(err);       
+            }
+
+            res.json(products);
+
+        });
+
+    });
+    
     var validateOrder = function(basket, validationCallback){
         
         var newBasket = {
@@ -154,24 +172,6 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
     });
 
 
-    app.get('/v1/orders', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
-            
-        var filter = {active: 1};
-        
-        if(req.user.kind != 'admin') filter['customer._id'] = req.user._id;
-            
-        Orders.find(filter, null, {sort: {updated: -1}}, function(err, products) {
-
-            if (err) {
-                    res.send(err);       
-            }
-
-            res.json(products);
-
-        });
-
-    });
-    
     app.get('/v1/order/:order_id', utils.ensureAuthorized, function(req, res) {
 
             Orders.findOne({_id: req.params.order_id}, function(err, product) {
@@ -510,8 +510,6 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
            
              Orders.findOne({ _id: reference }, function (err, order){
                  
-                 console.log(order);
-                
                 if (err) {
                         
                     res.statusCode = 400;
@@ -524,23 +522,25 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                         
                         var request = require('request');
 
-                        var initialDate = moment().subtract(29, 'days').format("YYYY-MM-DDTHH:mm"); // 2015-04-07T14:55
-                        var finalDate = moment().subtract(5, 'minutes').format("YYYY-MM-DDTHH:mm"); // 2015-04-07T14:55
+                        var initialDate = moment(order.updated).format("YYYY-MM-DDTHH:mm"); // 2015-04-07T14:55
+                        var finalDate = moment(order.updated).add(30, 'days') > moment() ? moment().subtract(1, 'minutes').format("YYYY-MM-DDTHH:mm") : moment(order.updated).add(30, 'days').format("YYYY-MM-DDTHH:mm"); // 2015-04-07T14:55
+                        
+                        var params = {
+                            initialDate: initialDate,
+                            finalDate: finalDate,
+                            page: 1,
+                            maxPageResults: 100,
+                            email: config.pagseguro.email,
+                            token: config.pagseguro.token,
+                            reference: reference
+                        };
                         
                         request.get({
-                            url:config.pagseguro.host+'/v2/transactions',
-                            qs : {
-                                initialDate: initialDate,
-                                finalDate: finalDate,
-                                page: 1,
-                                maxPageResults: 100,
-                                email: config.pagseguro.email,
-                                token: config.pagseguro.token,
-                                reference: reference
-                            },
+                            url:config.pagseguro.host+'/v3/transactions',
+                            qs : params,
                             headers: {'Content-Type' : 'application/json; charset=utf-8'}
                         }, function(err,httpResponse,body){
-                
+
                             if(err){
                                 
                                 res.statusCode = 400;
@@ -571,11 +571,13 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                                             
                                                 order.pagseguro.transactions = transactions;
                                                 
+                                                console.log(getOrderStatusFromTransactions(transactions));
+                                                
                                                 order.status = getOrderStatusFromTransactions(transactions);
                                                 
                                                 if(order.status == 1){
                                                     
-                                                    order.payment_date = Date.now;
+                                                    order.payment_date = Date.now();
                                                     
                                                 }
                                             
@@ -686,10 +688,14 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                                     order.pagseguro.transactions.push(result.transaction);
 
                                     order.status = getOrderStatusFromTransactions([result.transaction]);
+                                    
+                                    console.log(getOrderStatusFromTransactions([result.transaction]));
+                                    
+                                    console.log(order.status);
 
                                     if(order.status == 1){
                                         
-                                        order.payment_date = Date.now;
+                                        order.payment_date = Date.now();
                                         
                                     }
                                                 

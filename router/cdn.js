@@ -8,13 +8,15 @@ module.exports=function(app, mongoose, moment, utils) {
 
     });
     
-    app.get('/cdn/image/:size', function(req, res, next){
+    app.get(['/cdn/image/:size', '/cdn/image/:size'], function(req, res, next){
         
         var gm = require('gm').subClass({imageMagick: true});
         
         var url = encodeURI(req.query.url);
         
         var size = req.params.size;
+        
+        console.log(size, url);
         
         var image;
 

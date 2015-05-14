@@ -82,9 +82,9 @@ module.exports=function(app, mongoose, moment, utils) {
                                         
                                         product.visits.push(newVisit);
                                         
-                                        product.save(function(err, product){
+                                        product.save(function(err, updatedProduct){
                                                 
-                                                product = product.toObject();
+                                                product = updatedProduct.toObject();
                                         
                                                 product.visits = product.visits.length;
                                                 
@@ -145,7 +145,7 @@ module.exports=function(app, mongoose, moment, utils) {
 
         });
         
-        app.post('/v1/products', utils.ensureAdmin, function(req, res) {
+        app.post('/v1/product', utils.ensureAdmin, function(req, res) {
 
                 var createProduct = function (){
                 
@@ -263,7 +263,7 @@ module.exports=function(app, mongoose, moment, utils) {
 
         });
 
-        app.put('/v1/products/:product_id', utils.ensureAdmin, function(req, res){
+        app.put('/v1/product/:product_id', utils.ensureAdmin, function(req, res){
 
                 Products
                 .findById(req.params.product_id)
@@ -431,7 +431,7 @@ module.exports=function(app, mongoose, moment, utils) {
 
         });
 
-        app.delete('/v1/products/:product_id', utils.ensureAdmin, function(req, res) {
+        app.delete('/v1/product/:product_id', utils.ensureAdmin, function(req, res) {
 
                 Products.remove({
 
