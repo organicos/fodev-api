@@ -9,7 +9,7 @@ function ensureAuthorized(req, res, next) {
         req.token = bearerToken;
         next();
     } else {
-        res.send(403);
+        res.sendStatus(403);
     }
 }
 
@@ -20,7 +20,7 @@ function ensureAdmin(req, res, next) {
        if (userKind == 'admin') {
            next();
        } else {
-           res.send(403);
+           res.sendStatus(403);
        }
     });
 }

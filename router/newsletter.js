@@ -52,7 +52,9 @@ module.exports=function(app, mongoose, config, utils) {
                         
     });
 
-    app.get('/newsletter/:id/preview', utils.getRequestUser, function(req, res) {
+    app.get('/news/:id', utils.getRequestUser, function(req, res) {
+        
+        console.log(req.user);
         
         var filter = {_id: req.params.id};
         
@@ -85,7 +87,96 @@ module.exports=function(app, mongoose, config, utils) {
         });
 
     });
-    
+
+    app.post('/v1/newsletter/:id/send', utils.ensureAdmin, function(req, res) {
+        
+        var filter = {_id: req.body._id};
+        
+        Newsletters
+        .findOne(filter)
+        .deepPopulate(['sections'])
+        .exec(function(err, newsletter) {
+                
+                if (err) {
+                        
+                        res.statusCode = 400;
+                        res.send(err);
+
+                } else {
+                    
+                    if(!newsletter){
+                        
+                        res.statusCode = 400;
+                        res.send({errors: {
+                            city: {message: 'Newsletter não encontrada.'}
+                        }});
+
+                    } else {
+                        
+                        if(newsletter.status == 1){
+                            
+                            res.statusCode = 400;
+                            res.send({errors: {
+                                city: {message: 'Newsletter já foi enviada.'}
+                            }});
+                            
+                        } else {
+                            
+                            var helper = {
+                                groupIntoRows : function(input, count){
+                                    var rows = [];
+                                    for (var i = 0; i < input.length; i++) {
+                                        if ( i % count == 0) rows.push([]);
+                                            rows[rows.length-1].push(input[i]);
+                                    }
+                                    return rows;
+                                }
+                            };
+                            
+                            Users.find({newsletter: 1}, function(err, users){
+                                
+                                if(err){
+                                    
+                                } else {
+                                    
+                                    var receivers = [];
+                                    
+                                    for (var i in users) {
+                                        var email = users[i].email;
+                                        
+                                        receivers.push(email);
+                                        
+                                        if(i == (users.length - 1)){
+                                            
+                                            send_newsletter({newsletter:newsletter, helper: helper}, receivers.toString());
+                            
+                                            newsletter.status = 1;
+                                            
+                                            newsletter.save(function(){
+                                                
+                                                res.json(true);
+                                                
+                                            });
+                                            
+                                        }
+                                            
+                                    }
+                                    
+                                }
+                                
+                                
+                            });
+                            
+                        }                        
+                        
+                    }
+                    
+                }
+                
+        });
+
+    });
+
     app.get('/v1/newsletter/:id', utils.getRequestUser, function(req, res) {
         
         var filter = {_id: req.params.id};
@@ -181,14 +272,61 @@ module.exports=function(app, mongoose, config, utils) {
     });
     
     
-    
-    
-    
     // IMPORTANTE!
     //
     //
     // O GMAIL TEM LIMITE DE 2000 ENDEREÇOS POR EMAIL. LOGO, DEVE HAVER UM TRATAMENTO NA HORA DE ENVIAR OS E-MAILS PARA QUE NÃO EXCEDA ESTE LIMITE!!!
     //
-    //
+    //    
+    var send_newsletter = function(mailData, receivers){
+        
+        var nodemailer = require('nodemailer');
+        var path = require('path');
+        var templatesDir   = path.join(__dirname, '../templates');
+        var emailTemplates = require('email-templates');
 
+        var transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465, // 465
+            secure: true, // true
+            debug : true,
+            auth: {
+                user: 'bruno@tzadi.com',
+                pass: 'Dublin2010ireland'
+            }
+        });
+
+        emailTemplates(templatesDir, function(err, template) {
+
+            if (err) {
+                console.log(err);
+            } else {
+              
+                template('newsletter/news', mailData, function(err, html, text) {
+                    
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        var mailOptions = {
+                            from: 'Feira Orgânica Delivery <info@feiraorganica.com>', //sender address
+                            replyTo: "info@feiraorganica.com",
+                            to: receivers, // list of receivers
+                            cc: 'info@feiraorganica.com', // lredirects to 'bruno@tzadi.com, denisefaccin@gmail.com'
+                            subject: 'Produtos e artigos da semana.',
+                            text: text,
+                            html: html
+                        };
+                        transporter.sendMail(mailOptions, function(error, info){
+                            if(error){
+                                console.log(error);
+                            }else{
+                                console.log('Message sent: ' + info.response);
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+    
 }

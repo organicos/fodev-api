@@ -689,10 +689,6 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
 
                                     order.status = getOrderStatusFromTransactions([result.transaction]);
                                     
-                                    console.log(getOrderStatusFromTransactions([result.transaction]));
-                                    
-                                    console.log(order.status);
-
                                     if(order.status == 1){
                                         
                                         order.payment_date = Date.now();
