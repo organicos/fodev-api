@@ -46,9 +46,9 @@ module.exports=function(app, mongoose, moment, utils) {
 
         });
 
-        app.get('/v1/product/:product_id', utils.getRequestUser, function(req, res) {
+        app.get('/v1/product/:encoded_url', utils.getRequestUser, function(req, res) {
 
-                var filter = {_id: req.params.product_id};
+                var filter = {};
                 
                 var hiddenFields = null;
                 
@@ -59,6 +59,20 @@ module.exports=function(app, mongoose, moment, utils) {
                         filter.active = 1;       
                 } else {
                        populate.push('costs');
+                }
+                
+                var product_id_url = req.params.encoded_url;
+                
+                var isObjectId = mongoose.Types.ObjectId.isValid(product_id_url);
+                
+                if(isObjectId){
+                        
+                        filter._id = product_id_url;
+                        
+                } else {
+                        
+                        filter.encoded_url = product_id_url;
+
                 }
                 
                 Products

@@ -1,0 +1,60 @@
+extends ../../layout/layout.jade
+
+block content
+
+    table
+        tr
+            td(width="100%")
+                h1(style='color:#a349a4;') #{newsletter.title}
+                span #{newsletter.top}
+        tr
+            td(width="100%")
+                each section in newsletter.sections
+                    table(width="100%")
+                        tr
+                            td(width="100%", align='center')
+                                h3(style='width:100%; background-color:#a349a4; color:white;') #{section.title}
+                        tr
+                            td(width="100%")
+                                span #{section.top}
+                        tr
+                            td(width="100%")
+                                table
+                                    if section.products.length
+                                        each productsRow in helper.groupIntoRows(section.products, '4')
+                                            tr
+                                                each product in productsRow
+                                                    td(valign='top', align='center', style='padding:5px; width: 122px;')
+                                                        a(href="https://feiraorganica.com/feira/#{product.encoded_url}", style='color: #50bbb6; text-decoration: none;')
+                                                            img(border='0', alt="#{product.name}", src="https://feiraorganica.com/cdn/image/122x110/?url=#{product.images[0].url}", style='width: 122; height: 110px;')
+                                                            b #{product.name}
+                                                            br
+                                                            strong(style="color:#a349a4") R$#{product.prices[0].price.toFixed(2)}
+                                    if section.articles.length
+                                        each article in section.articles
+                                            tr
+                                                td(valign='top', style='padding-bottom: 30px; padding-right: 35px; padding-top: 3px;')
+                                                    div
+                                                        div
+                                                            a(href="https://feiraorganica.com/blog/#{article.encoded_url}", style="text-decoration: none;")
+                                                                img(alt="#{article.images[0].title}", src="https://feiraorganica.com/cdn/image/140x150/?url=#{article.images[0].url}", border='0', style='max-width: 510px; border: 1px solid #dddddd; display: inline; height: 140px; width: 150px;')
+                                                td(valign='top', style='padding-bottom: 25px;')
+                                                    div(style="font-size: 20px; font-weight: bold; margin: 0; font-family: 'Helvetica Neue',Helvetica,arial,sans-serif; line-height: 115%; padding-top: 0; display: block; text-align: left; font-style: normal; padding-bottom: 0; letter-spacing: normal; width: 323px; color: #50bbb6 !important; text-decoration: none;")
+                                                        a(href="https://feiraorganica.com/blog/#{article.encoded_url}", style='color: #50bbb6; text-decoration: none;') #{article.title}
+                                                        div(style="font-family: 'Helvetica Neue',Helvetica,arial,sans-serif; font-size: 14px; line-height: 150%; color: #444444;")
+                                                            p
+                                                                small "#{article.content.substring(0,200)}..."
+                                                            p
+                                                                a(href='https://feiraorganica.com/blog/#{article.encoded_url}', style='color: #50bbb6 !important; text-decoration: none !important;') Ler artigo
+                        tr
+                            td(width="100%")
+                                p #{section.bottom}
+                                
+                tr
+                    td(width="100%")
+                        p #{newsletter.bottom}
+
+            tr
+                td(align='center', style='font-size: .67em; margin-top: 2.33em; margin-bottom: 2.33em; margin-left: 0; margin-right: 0; font-weight: bold;')
+                    | N&atilde;o consegue ver este e-mail? 
+                    a(href="https://feiraorganica.com/newsletter/#{newsletter._id}", style='text-decoration:none; font-size: 1.17em; margin-top: 1em; margin-bottom: 1em; margin-left: 0; margin-right: 0; font-weight: bold') Clique aqui.

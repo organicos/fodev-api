@@ -51,14 +51,46 @@ module.exports=function(app, mongoose, config, utils) {
         });
                         
     });
+
+    app.get('/newsletter/:id/preview', utils.getRequestUser, function(req, res) {
+        
+        var filter = {_id: req.params.id};
+        
+        Newsletters
+        .findOne(filter)
+        .deepPopulate(['sections'])
+        .exec(function(err, newsletter) {
+                
+                if (err) {
+                        
+                        res.statusCode = 400;
+                        res.send(err);       
+                } else {
+                    
+                    var helper = {
+                        groupIntoRows : function(input, count){
+                            var rows = [];
+                            for (var i = 0; i < input.length; i++) {
+                                if ( i % count == 0) rows.push([]);
+                                    rows[rows.length-1].push(input[i]);
+                            }
+                            return rows;
+                        }
+                    };
+                    
+                    res.render('../templates/newsletter/news/html.jade', {newsletter:newsletter, helper: helper});
+                 
+                }
+                
+        });
+
+    });
     
     app.get('/v1/newsletter/:id', utils.getRequestUser, function(req, res) {
         
         var filter = {_id: req.params.id};
         
-        if(!req.user || req.user.kind != 'admin') {
-            filter.status = 1;
-        }
+
 
         Newsletters
         .findOne(filter)
@@ -72,6 +104,7 @@ module.exports=function(app, mongoose, config, utils) {
                 } else {
                  
                         res.json(newsletter);
+                        
                         
                 }
                 

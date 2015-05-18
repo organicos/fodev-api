@@ -2,6 +2,7 @@
 
 module.exports = function (app, express) {
 
+    // Ensure HTTPS
     app.use(function(req, res, next) {
         
         if((!req.secure) && (req.get('X-Forwarded-Proto') !== 'https')) {
