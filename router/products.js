@@ -30,7 +30,7 @@ module.exports=function(app, mongoose, moment, utils) {
                 if(req.query.name) filter.name = new RegExp(req.query.name, "i");
                 
                 Products
-                .find(filter, hiddenFields, {sort: {updated: -1}})
+                .find(filter, hiddenFields, {sort: {name: 1}})
                 .populate(populate)
                 .exec(function(err, products) {
                         

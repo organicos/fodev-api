@@ -45,93 +45,66 @@ module.exports=function(app, mongoose, moment, utils) {
                         
                         filter._id = article_id_url;
                         
-                        Articles
-                        .findOne(filter, null, {sort: {updated: -1}})
-                        .populate(['images', 'products', 'visits'])
-                        .exec(function(err, article) {
-                                
-                                if (err) {
-                                        
-                                        res.statusCode = 400;
-                                        res.send(err);       
-                                }
-                
-                                if(!req.user || req.user.kind != 'admin'){
-                                        
-                                        var visit = {};
-                                        
-                                        if(req.user) visit.user = req.user._id;
-                                        
-                                        Visits.create(visit, function(err, newVisit){
-                                                
-                                                article.visits.push(newVisit);
-                                                
-                                                article.save(function(err, article){
-                                                        
-                                                        article = article.toObject();
-                                                
-                                                        article.visits = article.visits.length;
-                                                        
-                                                        res.json(article);
-                                                        
-                                                });
-                                                
-                                        });
-                                        
-                                } else {
-                                 
-                                        res.json(article);
-                                        
-                                }
-                                
-                        });
-                        
                 } else {
                         
                         filter.encoded_url = article_id_url;
-                        
-                        Articles
-                        .findOne(filter, null, {sort: {updated: -1}})
-                        .populate(['images', 'products', 'visits'])
-                        .exec(function(err, article) {
-                                
-                                if (err) {
-                                        
-                                        res.statusCode = 400;
-                                        res.send(err);       
-                                }
+
+                }
                 
-                                if(!req.user || req.user.kind != 'admin'){
+                Articles
+                .findOne(filter, null, {sort: {updated: -1}})
+                .populate(['images', 'products', 'visits'])
+                .exec(function(err, article) {
+                        
+                        if (err) {
+                                
+                                res.statusCode = 400;
+                                res.send(err);       
+                        }
+        
+                        if(!req.user || req.user.kind != 'admin'){
+                                
+                                var visit = {};
+                                
+                                if(req.user) visit.user = req.user._id;
+                                
+                                Visits.create(visit, function(err, newVisit){
                                         
-                                        var visit = {};
+                                        article.visits.push(newVisit);
                                         
-                                        if(req.user) visit.user = req.user._id;
-                                        
-                                        Visits.create(visit, function(err, newVisit){
+                                        article.save(function(err, updatedArtile){
                                                 
-                                                article.visits.push(newVisit);
+                                                Articles.deepPopulate(updatedArtile, ['images', 'products', 'products.images', 'visits'], function(err, updatedArticlePopulated) {
                                                 
-                                                article.save(function(err, article){
+                                                        if (err) {
+                                                                
+                                                                res.statusCode = 400;
                                                         
-                                                        article = article.toObject();
+                                                                return res.send(err);
+                                                        
+                                                        } else {
+                                                                
+                                                                updatedArticlePopulated = updatedArticlePopulated.toObject();
+                                                        
+                                                                updatedArticlePopulated.visits = updatedArticlePopulated.visits.length;
+                                                            
+                                                                res.json(updatedArticlePopulated);
+                                                            
+                                                        }
                                                 
-                                                        article.visits = article.visits.length;
-                                                        
-                                                        res.json(article);
-                                                        
                                                 });
-                                                
+
                                         });
                                         
-                                } else {
-                                 
-                                        res.json(article);
-                                        
-                                }
+                                });
                                 
-                        });
+                        } else {
+                         
+                                res.json(article);
+                                
+                        }
                         
-                }
+                });
 
         });
 
@@ -144,44 +117,6 @@ module.exports=function(app, mongoose, moment, utils) {
                         content : req.body.content,
                         
                         img : 'http://images.elasticbeanstalk.com/300/https://s3-sa-east-1.amazonaws.com/fodev/img/global/logo.png',
-                        
-                        encoded_url : req.body.encoded_url,
-                        
-                        highlight : req.body.highlight,
-                        
-                        products : req.body.products,
-                        
-                        active : req.body.active
-
-                }, function(err, article) {
-
-                        if (err){
-                                
-                                res.statusCode = 400;
-                                
-                                res.send(err);
-                                
-                        } else {
-                                
-                                res.json(article);
-                                
-                        }
-
-                });
-
-        });
-
-        app.post('/v1/article/:article_id/product', utils.ensureAdmin, function(req, res) {
-
-                Articles.create({
-
-                        title : req.body.title,
-
-                        content : req.body.content,
-                        
-                        img : req.body.img,
-                        
-                        images : req.body.images,
                         
                         encoded_url : req.body.encoded_url,
                         
