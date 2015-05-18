@@ -62,7 +62,7 @@ module.exports=function(app, mongoose, moment, utils) {
                                 res.send(err);       
                         }
         
-                        if(!req.user || req.user.kind != 'admin'){
+                        if(article && (!req.user || req.user.kind != 'admin')){
                                 
                                 var visit = {};
                                 
