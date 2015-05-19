@@ -395,8 +395,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
             shippingAddressPostalCode: order.cep,
             shippingAddressCity: order.city,
             shippingAddressState: order.state,
-            shippingAddressCountry: order.country,
-            encoding: 'ISO-8859-1'
+            shippingAddressCountry: order.country
         };
 
         var arrayLength = order.products.length;
