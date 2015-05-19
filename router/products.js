@@ -119,10 +119,10 @@ module.exports=function(app, mongoose, moment, utils) {
         });
         
         app.get([
-                '/feira/:product_id'
-                , '/feira/produto/:product_id'
-                , '/fair/:product_id'
-                , '/fair/product/:product_id'
+                '/feira/:encoded_url'
+                , '/feira/produto/:encoded_url'
+                , '/fair/:encoded_url'
+                , '/fair/product/:encoded_url'
         ], function(req, res) {
                 
                 var path = require('path');
@@ -131,7 +131,21 @@ module.exports=function(app, mongoose, moment, utils) {
                 
 		if (isBoot) {
 		
-                        var filter = {_id: req.params.product_id, active: 1};
+                        var filter = {active: 1};
+                        
+                        var product_id_url = req.params.encoded_url;
+                        
+                        var isObjectId = mongoose.Types.ObjectId.isValid(product_id_url);
+                        
+                        if(isObjectId){
+                                
+                                filter._id = product_id_url;
+                                
+                        } else {
+                                
+                                filter.encoded_url = product_id_url;
+        
+                        }
                         
                         Products
                         .findOne(filter)
