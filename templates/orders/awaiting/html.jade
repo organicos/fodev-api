@@ -9,7 +9,7 @@ block content
   p O status do seu pedido continua como Aguardando pagamento.
   
   p Você ainda pode efetuar o pagamento clicando 
-    a(href="https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{pagseguro.checkout.code}" style="text-decoration: none;") aqui 
+    a(href="https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{pagseguro.checkout.code}", hreflang="pt-br", style="text-decoration: none;") aqui 
     |  ou copiando o endereço abaixo e colando em seu navegador:
   
   p As formas de pagamento disponibilizadas se encaixam em suas necessidades?
@@ -19,13 +19,13 @@ block content
   p Para ver o seu pedido acesse: 
   
   p 
-    a(href="https://feiraorganica.com/meu/pedido/#{_id}" style="text-decoration: none;") https://feiraorganica.com/meu/pedido/#{_id}
+    a(href="https://feiraorganica.com/meu/pedido/#{_id}", hreflang="pt-br", style="text-decoration: none;") https://feiraorganica.com/meu/pedido/#{_id}
   
   h2 Detalhes
   
   p 
     b Pedido: 
-    a(href="https://feiraorganica.com/minha/pedido/#{_id}" style="text-decoration: none;") #{_id}
+    a(href="https://feiraorganica.com/meu/pedido/#{_id}", hreflang="pt-br", style="text-decoration: none;") #{_id}
     
   b Entrega: 
   | #{shipping.deliveryOption}

@@ -26,7 +26,7 @@ block content
                                             tr
                                                 each product in productsRow
                                                     td(valign='top', align='center', style='padding:5px; width: 122px;')
-                                                        a(href="https://feiraorganica.com/feira/#{product.encoded_url}", style='color: #50bbb6; text-decoration: none;')
+                                                        a(href="https://feiraorganica.com/feira/#{product.encoded_url}", hreflang="pt-br", style='color: #50bbb6; text-decoration: none;')
                                                             img(border='0', alt="#{product.name}", src="https://feiraorganica.com/cdn/image/122x110/?url=#{product.images[0].url}", style='width: 122; height: 110px;')
                                                             b #{product.name}
                                                             br
@@ -37,11 +37,11 @@ block content
                                                 td(valign='top', style='padding-bottom: 30px; padding-right: 35px; padding-top: 3px;')
                                                     div
                                                         div
-                                                            a(href="https://feiraorganica.com/blog/#{article.encoded_url}", style="text-decoration: none;")
+                                                            a(href="https://feiraorganica.com/blog/#{article.encoded_url}", hreflang="pt-br", style="text-decoration: none;")
                                                                 img(alt="#{article.images[0].title}", src="https://feiraorganica.com/cdn/image/140x150/?url=#{article.images[0].url}", border='0', style='max-width: 510px; border: 1px solid #dddddd; display: inline; height: 140px; width: 150px;')
                                                 td(valign='top', style='padding-bottom: 25px;')
                                                     div(style="font-size: 20px; font-weight: bold; margin: 0; font-family: 'Helvetica Neue',Helvetica,arial,sans-serif; line-height: 115%; padding-top: 0; display: block; text-align: left; font-style: normal; padding-bottom: 0; letter-spacing: normal; width: 323px; color: #50bbb6 !important; text-decoration: none;")
-                                                        a(href="https://feiraorganica.com/blog/#{article.encoded_url}", style='color: #50bbb6; text-decoration: none;') #{article.title}
+                                                        a(href="https://feiraorganica.com/blog/#{article.encoded_url}", hreflang="pt-br", style='color: #50bbb6; text-decoration: none;') #{article.title}
                                                         div(style="font-family: 'Helvetica Neue',Helvetica,arial,sans-serif; font-size: 14px; line-height: 150%; color: #444444;")
                                                             p
                                                                 small "#{article.content.substring(0,200)}..."

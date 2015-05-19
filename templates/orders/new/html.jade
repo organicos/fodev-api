@@ -7,26 +7,26 @@ block content
   p Olá #{customer.name}.
   
   p Recebemos seu novo pedido e já preparamos tudo para que você possa 
-   a(href="https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{pagseguro.checkout.code}" style="text-decoration: none;") pagar 
+   a(href="https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{pagseguro.checkout.code}", hreflang="pt-br", style="text-decoration: none;") pagar 
    | da maneira mais simples e segura.
    
   p Clique 
-    a(href="https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{pagseguro.checkout.code}" style="text-decoration: none;") aqui 
+    a(href="https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{pagseguro.checkout.code}", hreflang="pt-br", style="text-decoration: none;") aqui 
     | para pagar ou copie o endereço abaixo e cole em seu navegador:
     
   p 
-    a(href="https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{pagseguro.checkout.code}" style="text-decoration: none;") https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{pagseguro.checkout.code}
+    a(href="https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{pagseguro.checkout.code}", hreflang="pt-br", style="text-decoration: none;") https://pagseguro.uol.com.br/v2/checkout/payment.html?code=#{pagseguro.checkout.code}
     
   p Para acompanhar o seu pedido acesse: 
   
   p 
-    a(href="https://feiraorganica.com/meu/pedido/#{_id}" style="text-decoration: none;") https://feiraorganica.com/meu/pedido/#{_id}
+    a(href="https://feiraorganica.com/meu/pedido/#{_id}", hreflang="pt-br", style="text-decoration: none;") https://feiraorganica.com/meu/pedido/#{_id}
   
   h2 Detalhes
   
   p 
     b Pedido: 
-    a(href="https://feiraorganica.com/meu/pedido/#{_id}" style="text-decoration: none;") #{_id}
+    a(href="https://feiraorganica.com/meu/pedido/#{_id}", hreflang="pt-br", style="text-decoration: none;") #{_id}
     
   b Entrega: 
   | #{shipping.deliveryOption}
