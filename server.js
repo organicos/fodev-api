@@ -98,8 +98,6 @@ require('./router/categories')(app, mongoose, moment, utils);
 
 require('./router/suppliers')(app, mongoose, moment, utils);
 
-require('./router/payments')(app, mongoose, moment, config);
-
 require('./router/tickets')(app, mongoose, config, utils, moment);
 
 require('./router/newsletter')(app, mongoose, config, utils);
