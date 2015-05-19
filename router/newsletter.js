@@ -139,27 +139,43 @@ module.exports=function(app, mongoose, config, utils) {
                                     
                                 } else {
                                     
-                                    var receivers = [];
-                                    
-                                    for (var i in users) {
-                                        var email = users[i].email;
+                                    if(config.env == 'dev'){
                                         
-                                        receivers.push(email);
+                                        send_newsletter({newsletter:newsletter, helper: helper}, ['bruno@tzadi.com', 'denisefaccin@gmail.com']);
+                        
+                                        newsletter.status = 1;
                                         
-                                        if(i == (users.length - 1)){
+                                        newsletter.save(function(){
                                             
-                                            send_newsletter({newsletter:newsletter, helper: helper}, receivers.toString());
-                            
-                                            newsletter.status = 1;
+                                            res.json(true);
                                             
-                                            newsletter.save(function(){
+                                        });
+                                        
+                                    } else {
+                                        
+                                        var receivers = [];
+                                        
+                                        for (var i in users) {
+                                            var email = users[i].email;
+                                            
+                                            receivers.push(email);
+                                            
+                                            if(i == (users.length - 1)){
                                                 
-                                                res.json(true);
+                                                send_newsletter({newsletter:newsletter, helper: helper}, receivers.toString());
+                                
+                                                newsletter.status = 1;
                                                 
-                                            });
-                                            
+                                                newsletter.save(function(){
+                                                    
+                                                    res.json(true);
+                                                    
+                                                });
+                                                
+                                            }
+                                                
                                         }
-                                            
+                                        
                                     }
                                     
                                 }
@@ -312,7 +328,7 @@ module.exports=function(app, mongoose, config, utils) {
                             replyTo: "info@feiraorganica.com",
                             to: receivers, // list of receivers
                             cc: 'info@feiraorganica.com', // lredirects to 'bruno@tzadi.com, denisefaccin@gmail.com'
-                            subject: 'Produtos e artigos da semana.',
+                            subject: config.envTag + 'Produtos e artigos da semana.',
                             text: text,
                             html: html
                         };
