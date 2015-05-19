@@ -149,7 +149,7 @@ module.exports=function(app, mongoose, moment, utils) {
                         
                         Products
                         .findOne(filter)
-                        .populate(['prices'])
+                        .populate(['prices', 'images'])
                         .exec(function(err, product) {
         
                                 if (err){
