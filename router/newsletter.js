@@ -141,7 +141,7 @@ module.exports=function(app, mongoose, config, utils) {
                                     
                                     if(config.env == 'dev'){
                                         
-                                        send_newsletter({newsletter:newsletter, helper: helper}, ['bruno@tzadi.com', 'denisefaccin@gmail.com']);
+                                        send_newsletter({newsletter:newsletter, helper: helper}, '');
                         
                                         newsletter.status = 1;
                                         
@@ -326,8 +326,7 @@ module.exports=function(app, mongoose, config, utils) {
                         var mailOptions = {
                             from: 'Feira Orgânica Delivery <info@feiraorganica.com>', //sender address
                             replyTo: "info@feiraorganica.com",
-                            to: receivers, // list of receivers
-                            cc: 'info@feiraorganica.com', // lredirects to 'bruno@tzadi.com, denisefaccin@gmail.com'
+                            bcc: 'info@feiraorganica.com,' + receivers, // list of receivers
                             subject: config.envTag + 'Produtos e artigos da semana.',
                             text: text,
                             html: html
