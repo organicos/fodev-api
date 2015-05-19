@@ -21,7 +21,7 @@ html(lang="pt-br")
 
         meta(property='og:title', content='#{product.name}')
         meta(property='og:type', content='product')
-        meta(property='og:url', content='https://feiraorganica.com/feira/#{product._id}')
+        meta(property='og:url', content='https://feiraorganica.com/feira/#{product.encoded_url}')
         meta(property='og:image:url', content='#{product.images[0].url}')
         meta(property='og:image:secure_url', content='#{product.images[0].url}')
         meta(property='og:description', content='#{product.dscr}')
