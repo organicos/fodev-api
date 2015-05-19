@@ -53,7 +53,7 @@ module.exports=function(app, mongoose, moment, utils) {
                 
                 Articles
                 .findOne(filter, null, {sort: {updated: -1}})
-                .populate(['images', 'products', 'visits'])
+                .deepPopulate(['images', 'products', 'products.images', 'visits'])
                 .exec(function(err, article) {
                         
                         if (err) {
@@ -108,7 +108,7 @@ module.exports=function(app, mongoose, moment, utils) {
 
         });
 
-        app.post('/v1/articles', utils.ensureAdmin, function(req, res) {
+        app.post('/v1/article', utils.ensureAdmin, function(req, res) {
 
                 Articles.create({
 
@@ -144,7 +144,7 @@ module.exports=function(app, mongoose, moment, utils) {
 
         });
 
-        app.put('/v1/articles/:article_id', utils.ensureAdmin, function(req, res){
+        app.put('/v1/article/:article_id', utils.ensureAdmin, function(req, res){
 
                 return Articles.findById(req.params.article_id, function(err, article) {
                         
@@ -194,7 +194,7 @@ module.exports=function(app, mongoose, moment, utils) {
 
         });
 
-        app.delete('/v1/articles/:article_id', utils.ensureAdmin, function(req, res) {
+        app.delete('/v1/article/:article_id', utils.ensureAdmin, function(req, res) {
 
                 Articles.remove({
 
@@ -249,41 +249,26 @@ module.exports=function(app, mongoose, moment, utils) {
                                 
                                 filter._id = article_id_url;
                                 
-                                Articles
-                                .findOne(filter, null, {sort: {updated: -1}})
-                                .populate(['images', 'products'])
-                                .exec(function(err, article) {
-                                        
-                                        if (err) {
-                                                
-                                                res.statusCode = 400;
-                                                res.send(err);       
-                                        }
-                                        
-                                        res.render('articles/article_meta_tags', {article:article});
-                                        
-                                });
-                                
                         } else {
                                 
                                 filter.encoded_url = article_id_url;
                                 
-                                Articles
-                                .findOne(filter, null, {sort: {updated: -1}})
-                                .populate(['images', 'products'])
-                                .exec(function(err, article) {
-                                        
-                                        if (err) {
-                                                
-                                                res.statusCode = 400;
-                                                res.send(err);       
-                                        }
-                                        
-                                        res.render('articles/article_meta_tags', {article:article});
-                                        
-                                });
-                                
                         }
+                        
+                        Articles
+                        .findOne(filter, null, {sort: {updated: -1}})
+                        .deepPopulate(['images', 'products'])
+                        .exec(function(err, article) {
+                                
+                                if (err) {
+                                        
+                                        res.statusCode = 400;
+                                        res.send(err);       
+                                }
+                                
+                                res.render('articles/article_meta_tags', {article:article});
+                                
+                        });
                 
 		} else {
 		        
