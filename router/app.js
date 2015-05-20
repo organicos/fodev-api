@@ -5,8 +5,7 @@ module.exports=function(app, express) {
 	var path = require('path');
 
 	// these need to go first:
-	app.use("/js", express.static(__dirname + "../../../fodev-app/js", { maxAge: 86400000 }));
-	app.use("/app.js", express.static(__dirname + "../../../fodev-app/app.js", { maxAge: 86400000 }));
+	app.use("/app.min.css", express.static(__dirname + "../../../fodev-app/app.min.css", { maxAge: 86400000 }));
 	app.use("/app.min.js", express.static(__dirname + "../../../fodev-app/app.min.js", { maxAge: 86400000 }));
 	app.use("/assets", express.static(__dirname + "../../../fodev-app/assets", { maxAge: 86400000 }));
 	app.use("/bower_components", express.static(__dirname + "../../../fodev-app/bower_components", { maxAge: 86400000 }));
