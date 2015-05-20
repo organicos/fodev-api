@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports=function(app, express) {
+module.exports=function(app, express, config) {
 	
 	var path = require('path');
 	var day = 86400000;
@@ -10,7 +10,13 @@ module.exports=function(app, express) {
 
 	// these need to go first:
 	app.use("/app.min.css", express.static(__dirname + "../../../fodev-app/app.min.css", { maxAge: week }));
-	app.use("/app.min.js", express.static(__dirname + "../../../fodev-app/app.min.js", { maxAge: week }));
+	
+	if(config.env == 'dev'){
+		app.use("/app.min.js", express.static(__dirname + "../../../fodev-app/app.concat.js", { maxAge: week }));		
+	} else {
+		app.use("/app.min.js", express.static(__dirname + "../../../fodev-app/app.min.js", { maxAge: week }));
+	}
+
 	app.use("/assets", express.static(__dirname + "../../../fodev-app/assets", { maxAge: week }));
 	app.use("/bower_components", express.static(__dirname + "../../../fodev-app/bower_components", { maxAge: week }));
 	app.use("/components", express.static(__dirname + "../../../fodev-app/components", { maxAge: week }));
