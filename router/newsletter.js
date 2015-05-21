@@ -21,6 +21,7 @@ module.exports=function(app, mongoose, config, utils) {
             , products: []
             , articles: []
         }]}
+        , receivers : []
         , status: {type: Number, required: "Informe o status da newsletter", default: 0}
         , updated: { type: Date, default: Date.now }
     });
@@ -141,34 +142,35 @@ module.exports=function(app, mongoose, config, utils) {
                                     
                                     if(config.env == 'dev'){
                                         
-                                        send_newsletter({newsletter:newsletter, helper: helper}, '');
+                                        newsletter.receivers = ['brunohamp@hotmail.com', 'ise_faccin@yahoo.com.br'];
+                                        
+                                        send_newsletter({newsletter:newsletter, helper: helper});
                         
                                         newsletter.status = 1;
                                         
-                                        newsletter.save(function(){
+                                        newsletter.save(function(err, updatedNewsletter){
                                             
-                                            res.json(true);
+                                            res.json(updatedNewsletter);
                                             
                                         });
                                         
                                     } else {
                                         
-                                        var receivers = [];
-                                        
                                         for (var i in users) {
+
                                             var email = users[i].email;
                                             
-                                            receivers.push(email);
+                                            newsletter.receivers.push(email);
                                             
                                             if(i == (users.length - 1)){
                                                 
-                                                send_newsletter({newsletter:newsletter, helper: helper}, receivers.toString());
+                                                send_newsletter({newsletter:newsletter, helper: helper});
                                 
                                                 newsletter.status = 1;
                                                 
-                                                newsletter.save(function(){
+                                                newsletter.save(function(err, updatedNewsletter){
                                                     
-                                                    res.json(true);
+                                                    res.json(updatedNewsletter);
                                                     
                                                 });
                                                 
@@ -294,54 +296,15 @@ module.exports=function(app, mongoose, config, utils) {
     // O GMAIL TEM LIMITE DE 2000 ENDEREÇOS POR EMAIL. LOGO, DEVE HAVER UM TRATAMENTO NA HORA DE ENVIAR OS E-MAILS PARA QUE NÃO EXCEDA ESTE LIMITE!!!
     //
     //    
-    var send_newsletter = function(mailData, receivers){
+    var send_newsletter = function(mailData){
         
-        var nodemailer = require('nodemailer');
-        var path = require('path');
-        var templatesDir   = path.join(__dirname, '../templates');
-        var emailTemplates = require('email-templates');
+        utils.sendMail({
+            template: 'newsletter/news'
+            , data: mailData
+            , subject: config.envTag + 'Produtos e artigos da semana.'
+            , receivers: mailData.newsletter.receivers
+        })
 
-        var transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 465, // 465
-            secure: true, // true
-            debug : true,
-            auth: {
-                user: 'bruno@tzadi.com',
-                pass: 'Dublin2010ireland'
-            }
-        });
-
-        emailTemplates(templatesDir, function(err, template) {
-
-            if (err) {
-                console.log(err);
-            } else {
-              
-                template('newsletter/news', mailData, function(err, html, text) {
-                    
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        var mailOptions = {
-                            from: 'Feira Orgânica Delivery <info@feiraorganica.com>', //sender address
-                            replyTo: "info@feiraorganica.com",
-                            bcc: 'info@feiraorganica.com,' + receivers, // list of receivers
-                            subject: config.envTag + 'Produtos e artigos da semana.',
-                            text: text,
-                            html: html
-                        };
-                        transporter.sendMail(mailOptions, function(error, info){
-                            if(error){
-                                console.log(error);
-                            }else{
-                                console.log('Message sent: ' + info.response);
-                            }
-                        });
-                    }
-                });
-            }
-        });
     }
     
 }

@@ -27,6 +27,7 @@
     "mongoose-deep-populate": "^1.1.0",
     "morgan": "~1.2.2",
     "nodemailer": ">=1",
+    "nodemailer-mandrill-transport": "^0.1.1",
     "optimist": "*",
     "request": "^2.53.0",
     "url": "^0.10.3",

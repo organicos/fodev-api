@@ -77,3 +77,63 @@ function getRequestUser(req, res, next){
 }
 
 exports.getRequestUser = getRequestUser;
+
+
+
+
+function sendMail(mailConfig){
+    
+    console.log(mailConfig);
+
+    var path = require('path');
+    var templatesDir   = path.join(__dirname, '../templates/');
+    
+    var nodemailer =        require('nodemailer');
+    var mandrillTransport = require('nodemailer-mandrill-transport');
+    var emailTemplates =    require('email-templates');
+    var appConfig =         require('./../config/env_config');
+
+    var transporter = nodemailer.createTransport(mandrillTransport({
+        auth: {
+            apiKey: appConfig.mandrill.apiKey
+        }
+    }));
+
+    emailTemplates(templatesDir, function(err, template) {
+
+        if (err) {
+            console.log(err);
+        } else {
+          
+            template(mailConfig.template, mailConfig.data, function(err, html, text) {
+                
+                if (err) {
+                    console.log(err);
+                } else {
+
+                    transporter.sendMail({
+                        from: 'Feira Orgânica Delivery <info@feiraorganica.com>', //sender address
+                        replyTo: "info@feiraorganica.com",
+                        to: mailConfig.receivers.toString(),
+                        subject: appConfig.envTag + mailConfig.subject,
+                        text: text,
+                        html: html
+                    }, function(error, info) {
+                        if (error) {
+                            console.log(error);
+                        } else {
+                            console.log('Message sent: ' + info.response);
+                        }
+                    });
+                    
+                }
+
+            });
+
+        }
+
+    });
+
+}
+
+exports.sendMail = sendMail;

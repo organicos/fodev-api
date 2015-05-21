@@ -9,10 +9,7 @@ module.exports = function (app, express) {
         var hostname = ( host.match(/:/g) ) ? host.slice( 0, host.indexOf(":") ) : host;
         
         var nonWwwHost = hostname.replace('www.','');
-        
-        console.log(host);
-        console.log(nonWwwHost);
-        
+
         // Ensure HTTPS
         if ((!req.secure) && (req.get('X-Forwarded-Proto') !== 'https')) {
             
