@@ -6,7 +6,8 @@ block content
         tr
             td(width="100%")
                 h1(style='color:#a349a4;') #{newsletter.title}
-                span #{newsletter.top}
+                span(style="white-space: pre;")
+                    #{newsletter.top}
         tr
             td(width="100%")
                 each section in newsletter.sections
@@ -16,7 +17,8 @@ block content
                                 h3(style='width:100%; background-color:#a349a4; color:white;') #{section.title}
                         tr
                             td(width="100%")
-                                span #{section.top}
+                                span(style="white-space: pre;")
+                                    #{section.top}
                         tr
                             td(width="100%")
                                 br
@@ -49,11 +51,13 @@ block content
                                                                 a(href='https://feiraorganica.com/blog/#{article.encoded_url}', style='color: #50bbb6 !important; text-decoration: none !important;') Ler artigo
                         tr
                             td(width="100%")
-                                p #{section.bottom}
+                                p(style="white-space: pre;")
+                                    #{section.bottom}
                                 
                 tr
                     td(width="100%")
-                        p #{newsletter.bottom}
+                        p(style="white-space: pre;")
+                            #{newsletter.bottom}
 
             tr
                 td(align='center', style='font-size: .67em; margin-top: 2.33em; margin-bottom: 2.33em; margin-left: 0; margin-right: 0; font-weight: bold;')
