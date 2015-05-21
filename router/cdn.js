@@ -16,8 +16,6 @@ module.exports=function(app, mongoose, moment, utils) {
         
         var size = req.params.size;
         
-        console.log(size, url);
-        
         var image;
 
         if(url){
@@ -53,8 +51,6 @@ module.exports=function(app, mongoose, moment, utils) {
                 res.send('A altura é inválida. Favor informar um número inteiro e positivo!');
                 
             } else {
-                
-                console.log(width,height);
                 
                 image.resize(width,height, "!");
                 
