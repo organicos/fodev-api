@@ -17,7 +17,7 @@ module.exports = function (app, express) {
 
         } else if (host.match(/^www/) !== null ) {
             
-            res.redirect(301, 'https://' + hostname + req.url);
+            res.redirect(301, 'https://' + hostname.replace('www.','') + req.url);
             
         } else {
          
