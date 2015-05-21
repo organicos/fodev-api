@@ -229,7 +229,7 @@ module.exports=function(app, mongoose, config, utils) {
             , sections: req.body.sections
             , status: 0
 
-        }, function(err, image) {
+        }, function(err, newsletter) {
 
                 if (err) {
                     
@@ -239,7 +239,7 @@ module.exports=function(app, mongoose, config, utils) {
                 
                 } else {
                     
-                    res.json(image); 
+                    res.json(newsletter); 
                         
                 }
 
