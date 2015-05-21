@@ -14,7 +14,7 @@ var Users = new Schema({
         phone : {type: String, trim: true},
         password: {type: String, select: false, trim: true, required: 'Favor informar a senha.'},
         kind: {type: String, default: 'customer'},
-        newsletter: {type: Boolean, default: 0},
+        newsletter: {type: Boolean, default: false},
         token: String,
         updated: {type: Date, default: Date.now}
 });

@@ -11,9 +11,9 @@ var Products = new Schema({
 
     dscr : String,
     
-    highlight : { type: Boolean, default: 0 },
+    highlight : { type: Boolean, default: false },
     
-    active : { type: Boolean, default: 0 },
+    active : { type: Boolean, default: false },
     
     season: String,
     

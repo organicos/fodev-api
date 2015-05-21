@@ -134,7 +134,7 @@ module.exports=function(app, mongoose, config, utils) {
                                 }
                             };
                             
-                            Users.find({newsletter: 1}, function(err, users){
+                            Users.find({newsletter: 1}, null, function(err, users){
                                 
                                 if(err){
                                     

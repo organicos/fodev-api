@@ -14,6 +14,10 @@ config.pagseguro = {
     token: 'xxxxxxx'
 };
 
+config.mandrill = {
+    apiKey: 'xxxxxx'
+}
+
 config.APP_PRIVATE_KEY = 'xxxxx'; // a private key to use across the app
 
 module.exports = config;
