@@ -6,7 +6,10 @@ module.exports = function (app, express) {
         
         var host =  req.get('Host');
         
+        var nonWwwHost = hostname.replace('www.','');
+        
         console.log(host);
+        console.log(nonWwwHost);
         
         var hostname = ( host.match(/:/g) ) ? host.slice( 0, host.indexOf(":") ) : host;
         
@@ -17,7 +20,7 @@ module.exports = function (app, express) {
 
         } else if (host.match(/^www/) !== null ) {
             
-            res.redirect(301, 'https://' + hostname.replace('www.','') + req.url);
+            res.redirect(301, 'https://' + nonWwwHost + req.url);
             
         } else {
          
