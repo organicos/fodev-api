@@ -32,6 +32,10 @@ block content
                                                             b #{product.name}
                                                             br
                                                             strong(style="color:#a349a4") R$#{product.prices[0].price.toFixed(2)}
+                                                            if product.prices[1] && product.prices[0].price < product.prices[1].price
+                                                                b(style="color: red;") &dArr;
+                                                                del(style="color:#b2b2b2;") #{product.prices[1].price.toFixed(2)}
+
                                     if section.articles.length
                                         each article in section.articles
                                             tr
