@@ -40,7 +40,7 @@ block content
   
   p 
     b Pedido: 
-    a(href="https://feiraorganica.com/minha/pedido/#{_id}", hreflang="pt-br", style="text-decoration: none;") #{_id}
+    a(href="https://feiraorganica.com/meu/pedido/#{_id}", hreflang="pt-br", style="text-decoration: none;") #{_id}
     
   b Entrega: 
   | #{shipping.deliveryOption}
@@ -70,13 +70,13 @@ block content
   | #{shipping.address_ref}
   br
   b Valor da cesta R$: 
-  | #{total}
+  | #{total.toFixed(2)}
   br
   b Valor do frete R$: 
-  | #{shipping.price}
+  | #{shipping.price.toFixed(2)}
   br
   b Valor final R$: 
-  | #{total+shipping.price}
+  | #{(total+shipping.price).toFixed(2)}
   br
   b Data: 
   | #{updated}

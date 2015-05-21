@@ -200,8 +200,6 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                     
                     var invalidCity = req.body.basket.shipping.city == 'Florianópolis' ? false : true;
                     
-                    basket.total.toFixed(2);
-                    
                     if(basket.inactive_products.length > 0){
                         
                         res.statusCode = 400;
@@ -220,7 +218,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
         
                             name : basket.name,
                             customer: customer,
-                            total:  basket.total,
+                            total:  basket.total.toFixed(2),
                             products:  basket.products,
                             shipping:  basket.shipping,
                             status: invalidCity ? 5 : 0
@@ -254,7 +252,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                                                 res.statusCode = 400;
                                                 
                                                 res.send({errors: {
-                                                    city: {message: 'Tivemos alguns problemas em gerar sua ordem de pagamento. Nossa equipe irá verificar o motivo e entrar em contato com você em breve. Pedimos desculpas pelo inconveniente.'}
+                                                    city: {message: 'Tivemos alguns problemas em gerar sua ordem de pagamento. Nossa equipe irá verificar o motivo e entrará em contato com você em breve. Pedimos desculpas pelo inconveniente.'}
                                                 }});
                                                 
                                             } else {
@@ -272,9 +270,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                                                                 return res.send(err);
                         
                                                         } else {
-                                                            
-                                                            updatedOrder.total = updatedOrder.total.toFixed(2);
-                                                            
+
                                                             updatedOrder.shipping.price = updatedOrder.shipping.price.toFixed(2);
                                                             
                                                             send_new_order_email(updatedOrder);
