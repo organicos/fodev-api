@@ -46,7 +46,7 @@ module.exports=function(app, mongoose, moment, utils) {
 
         });
 
-        app.get('/v1/product/:encoded_url', utils.getRequestUser, function(req, res) {
+        app.get('/v1/product/:slug_or_id', utils.getRequestUser, function(req, res) {
 
                 var filter = {};
                 
@@ -61,20 +61,16 @@ module.exports=function(app, mongoose, moment, utils) {
                        populate.push('costs');
                 }
                 
-                var product_id_url = req.params.encoded_url;
+                var slug_or_id = req.params.slug_or_id;
                 
-                var isObjectId = mongoose.Types.ObjectId.isValid(product_id_url);
-                
-                if(isObjectId){
-                        
-                        filter._id = product_id_url;
-                        
-                } else {
-                        
-                        filter.encoded_url = product_id_url;
+                filter.$or = [{encoded_url: slug_or_id}];
+
+                if (utils.isObjectId(slug_or_id)) {
+
+                        filter.$or.push({_id: slug_or_id});
 
                 }
-                
+
                 Products
                 .findOne(filter, hiddenFields, {sort: {updated: -1}})
                 .populate(populate)
@@ -119,10 +115,10 @@ module.exports=function(app, mongoose, moment, utils) {
         });
         
         app.get([
-                '/feira/:encoded_url'
-                , '/feira/produto/:encoded_url'
-                , '/fair/:encoded_url'
-                , '/fair/product/:encoded_url'
+                '/feira/:slug_or_id'
+                , '/feira/produto/:slug_or_id'
+                , '/fair/:slug_or_id'
+                , '/fair/product/:slug_or_id'
         ], function(req, res) {
                 
                 var path = require('path');
@@ -133,17 +129,13 @@ module.exports=function(app, mongoose, moment, utils) {
 		
                         var filter = {active: 1};
                         
-                        var product_id_url = req.params.encoded_url;
+                        var slug_or_id = req.params.slug_or_id;
                         
-                        var isObjectId = mongoose.Types.ObjectId.isValid(product_id_url);
-                        
-                        if(isObjectId){
-                                
-                                filter._id = product_id_url;
-                                
-                        } else {
-                                
-                                filter.encoded_url = product_id_url;
+                        filter.$or = [{encoded_url: slug_or_id}];
+        
+                        if (utils.isObjectId(slug_or_id)) {
+        
+                                filter.$or.push({_id: slug_or_id});
         
                         }
                         

@@ -8,6 +8,8 @@ module.exports=function(app, mongoose, moment, utils) {
         
         var Visits = require('./../modules/Visits.js');
         
+        var ObjectId = mongoose.Types.ObjectId;
+        
         app.get('/v1/articles', utils.getRequestUser, function(req, res) {
 
                 var filter = {};
@@ -31,23 +33,19 @@ module.exports=function(app, mongoose, moment, utils) {
         
         });
 
-        app.get('/v1/article/:encoded_url', utils.getRequestUser, function(req, res) {
-                
-                var article_id_url = req.params.encoded_url;
-                
-                var isObjectId = mongoose.Types.ObjectId.isValid(article_id_url);
+        app.get('/v1/article/:slug_or_id', utils.getRequestUser, function(req, res) {
                 
                 var filter = {};
                 
                 if(!req.user || req.user.kind != 'admin') filter.active = 1;
                 
-                if(isObjectId){
-                        
-                        filter._id = article_id_url;
-                        
-                } else {
-                        
-                        filter.encoded_url = article_id_url;
+                var slug_or_id = req.params.slug_or_id;
+                
+                filter.$or = [{encoded_url: slug_or_id}];
+
+                if (utils.isObjectId(slug_or_id)) {
+
+                        filter.$or.push({_id: slug_or_id});
 
                 }
                 
@@ -229,7 +227,7 @@ module.exports=function(app, mongoose, moment, utils) {
         });
 
         // for boots
-        app.get('/blog/:encoded_url', utils.getRequestUser, function(req, res) {
+        app.get('/blog/:slug_or_id', utils.getRequestUser, function(req, res) {
 
                 var path = require('path');
                 
@@ -237,22 +235,18 @@ module.exports=function(app, mongoose, moment, utils) {
                 
 		if (isBoot) {
 		
-                        var article_id_url = req.params.encoded_url;
-                        
-                        var isObjectId = mongoose.Types.ObjectId.isValid(article_id_url);
-                        
                         var filter = {};
                         
                         if(!req.user || req.user.kind != 'admin') filter.active = 1;
                         
-                        if(isObjectId){
-                                
-                                filter._id = article_id_url;
-                                
-                        } else {
-                                
-                                filter.encoded_url = article_id_url;
-                                
+                        var slug_or_id = req.params.slug_or_id;
+                        
+                        filter.$or = [{encoded_url: slug_or_id}];
+        
+                        if (utils.isObjectId(slug_or_id)) {
+        
+                                filter.$or.push({_id: slug_or_id});
+        
                         }
                         
                         Articles

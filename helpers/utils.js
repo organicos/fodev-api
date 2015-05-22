@@ -137,3 +137,11 @@ function sendMail(mailConfig){
 }
 
 exports.sendMail = sendMail;
+
+function isObjectId(a){
+    
+    return a.match(/^[0-9a-fA-F]{24}$/);
+    
+}
+
+exports.isObjectId = isObjectId;
