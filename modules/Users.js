@@ -15,6 +15,7 @@ var Users = new Schema({
         password: {type: String, select: false, trim: true, required: 'Favor informar a senha.'},
         kind: {type: String, default: 'customer'},
         newsletter: {type: Boolean, default: false},
+        groups: {type: Array, default: []},
         token: String,
         updated: {type: Date, default: Date.now}
 });

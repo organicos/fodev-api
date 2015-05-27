@@ -16,17 +16,30 @@ module.exports=function(app, mongoose, moment, utils) {
                 
                 var hiddenFields = null;
                 
-                var populate = ['images', 'prices', 'categories', 'suppliers']
                 
+                // only admin can see not active products
                 if(!req.user || req.user.kind != 'admin'){
                         hiddenFields = adminFields;
                         filter.active = 1;       
                 } else {
                         populate.push('costs', 'visits');
-                }
+                }                
 
-                if(req.query.highlight) filter.highlight = 1;
+                // define what should be populated
+                var populate = ['images', 'prices', 'suppliers'];
                 
+                // query filter: categories
+                if(req.query.category){
+                        populate.push({
+                            path: 'categories'
+                          , match: { name: req.query.category }
+                        });
+                } else {
+                        populate.push('categories');
+                }
+                // query filter: highlight
+                if(req.query.highlight) filter.highlight = 1;
+                // query filter: name
                 if(req.query.name) filter.name = new RegExp(req.query.name, "i");
                 
                 Products
@@ -38,10 +51,19 @@ module.exports=function(app, mongoose, moment, utils) {
                                 
                                 res.statusCode = 400;
                                 res.send(err);       
+                        } else {
+                                
+                                // if the query filter category is set, get only objects with categories
+                                if(req.query.category){
+                                        products = products.filter(function(product){
+                                                return product.categories.length;
+                                        });
+                                }
+                                
+                                res.json(products);
+                                
                         }
         
-                        res.json(products);
-                        
                 });
 
         });

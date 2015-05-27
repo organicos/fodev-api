@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var moment = require('moment');
 
 var Addresses = new Schema({
 
