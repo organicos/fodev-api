@@ -15,17 +15,8 @@ module.exports=function(app, mongoose, moment, utils) {
                 var filter = {};
                 
                 var hiddenFields = null;
-                
-                
-                // only admin can see not active products
-                if(!req.user || req.user.kind != 'admin'){
-                        hiddenFields = adminFields;
-                        filter.active = 1;       
-                } else {
-                        populate.push('costs', 'visits');
-                }                
 
-                // define what should be populated
+                // defines what should be populated
                 var populate = ['images', 'prices', 'suppliers'];
                 
                 // query filter: categories
@@ -41,7 +32,15 @@ module.exports=function(app, mongoose, moment, utils) {
                 if(req.query.highlight) filter.highlight = 1;
                 // query filter: name
                 if(req.query.name) filter.name = new RegExp(req.query.name, "i");
-                
+
+                // only admin can see not active products
+                if(!req.user || req.user.kind != 'admin'){
+                        hiddenFields = adminFields;
+                        filter.active = 1;       
+                } else {
+                        populate.push('costs', 'visits');
+                } 
+
                 Products
                 .find(filter, hiddenFields, {sort: {name: 1}})
                 .populate(populate)
