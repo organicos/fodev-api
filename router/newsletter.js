@@ -289,7 +289,7 @@ module.exports=function(app, mongoose, config, utils) {
 
     });
     
-    app.post('/v1/newsletter/signup', function(req, res) {
+    app.post('/v1/newsletter/signout', function(req, res) {
         
         Users.findOne({email: req.body.email}, function(err, user) {
 
@@ -304,9 +304,9 @@ module.exports=function(app, mongoose, config, utils) {
                 
             } else {
                     
-                if (user) {
+                if (user && user.newsletter == true) {
                     
-                    user.newsletter = true;
+                    user.newsletter = false;
                     
                     user.save(function(err, new_user) {
                             
@@ -317,10 +317,12 @@ module.exports=function(app, mongoose, config, utils) {
                             res.send(err);
                             
                         } else {
+                            
+                            send_newsletter_signout_email(user);
 
                             res.json({
                                 type: true,
-                                data: "Cadastrado realizado com sucesso!"
+                                data: "Assinatura de newsletter cancelada para o email: " + req.body.email + "!"
                             });
 
                         }
@@ -328,47 +330,67 @@ module.exports=function(app, mongoose, config, utils) {
                     });
                         
                 } else {
-                    
-                    Users.create({
-    
-                            name : req.body.email,
-    
-                            email : req.body.email,
-                            
-                            newsletter : true,
-                            
-                            kind : 'newsletter',
-                            
-                            password : crypto.createHash('md5').update(req.body.email).digest('hex')
-    
-                    }, function(err, user) {
-    
-                            if (err) {
-                                
-                                res.statusCode = 400;
-    
-                                res.send(err);
-                            
-                            } else {
-                                
-                                user.password = req.body.email;
-                                
-                                send_newsletter_signup_email(user);
-                                
-                                res.json({
-                                    type: true,
-                                    data: "Cadastrado realizado com sucesso!"
-                                });
-                                    
-                            }
-    
+            
+                    res.json({
+                        type: true,
+                        data: "Assinatura de newsletter cancelada para o email: " + req.body.email + "!"
                     });
 
                 }
             }
         });
     });
+
+    var send_newsletter_signout_email = function(user){
         
+        var nodemailer = require('nodemailer');
+        var path = require('path');
+        var templatesDir   = path.join(__dirname, '../templates');
+        var emailTemplates = require('email-templates');
+
+        var transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465, // 465
+            secure: true, // true
+            debug : true,
+            auth: {
+                user: 'bruno@tzadi.com',
+                pass: 'Dublin2010ireland'
+            }
+        });
+
+        emailTemplates(templatesDir, function(err, template) {
+             
+            if (err) {
+                console.log(err);
+            } else {
+              
+                template('newsletter/signout', user, function(err, html, text) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        var mailOptions = {
+                            from: 'Feira Orgânica Delivery <info@feiraorganica.com>', //sender address
+                            replyTo: "info@feiraorganica.com",
+                            to: user.email, // list of receivers
+                            cc: 'info@feiraorganica.com', // list of BCC receivers 'bruno@tzadi.com, denisefaccin@gmail.com'
+                            subject: config.envTag + 'Cancelamento de assinatura de newsletter',
+                            text: text,
+                            html: html
+                        };
+                        transporter.sendMail(mailOptions, function(error, info){
+                            if(error){
+                                console.log(error);
+                            }else{
+                                console.log('Message sent: ' + info.response);
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
     var send_newsletter_signup_email = function(user){
         
         var nodemailer = require('nodemailer');
@@ -426,7 +448,7 @@ module.exports=function(app, mongoose, config, utils) {
             , data: mailData
             , subject: config.envTag + 'Produtos e artigos da semana.'
             , receivers: mailData.newsletter.receivers
-        })
+        });
 
     }
     
