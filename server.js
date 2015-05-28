@@ -112,6 +112,8 @@ require('./router/order')(app, mongoose, moment, utils, config, https);
 
 require('./router/users')(app, mongoose, utils, config);
 
+require('./router/email')(app, mongoose, utils, config);
+
 require('./router/app')(app, express, config);
 
 // avoid server stop =====================================

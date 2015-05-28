@@ -110,8 +110,8 @@ function sendMail(mailConfig){
                 } else {
 
                     transporter.sendMail({
-                        from: 'Feira Orgânica Delivery <info@feiraorganica.com>', //sender address
-                        replyTo: "info@feiraorganica.com",
+                        from: appConfig.mail.from,
+                        replyTo: appConfig.mail.replyTo,
                         to: mailConfig.receivers.toString(),
                         subject: appConfig.envTag + mailConfig.subject,
                         text: text,
@@ -120,7 +120,8 @@ function sendMail(mailConfig){
                         if (error) {
                             console.log(error);
                         } else {
-                            console.log('Message sent: ' + info.response);
+                            console.log('Message sent');
+                            console.log(info);
                         }
                     });
                     
