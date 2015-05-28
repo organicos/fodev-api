@@ -83,8 +83,6 @@ exports.getRequestUser = getRequestUser;
 
 function sendMail(mailConfig){
     
-    console.log(mailConfig);
-
     var path = require('path');
     var templatesDir   = path.join(__dirname, '../templates/');
     

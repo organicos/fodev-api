@@ -423,52 +423,13 @@ module.exports=function(app, mongoose, config, utils) {
 
     var send_newsletter_signout_email = function(user){
         
-        var nodemailer = require('nodemailer');
-        var path = require('path');
-        var templatesDir   = path.join(__dirname, '../templates');
-        var emailTemplates = require('email-templates');
-
-        var transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 465, // 465
-            secure: true, // true
-            debug : true,
-            auth: {
-                user: 'bruno@tzadi.com',
-                pass: 'Dublin2010ireland'
-            }
+        utils.sendMail({
+            template: 'newsletter/signout'
+            , data: user
+            , subject: 'Cancelamento de assinatura de newsletter.'
+            , receivers: user.email
         });
-
-        emailTemplates(templatesDir, function(err, template) {
-             
-            if (err) {
-                console.log(err);
-            } else {
-              
-                template('newsletter/signout', user, function(err, html, text) {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        var mailOptions = {
-                            from: 'Feira Orgânica Delivery <info@feiraorganica.com>', //sender address
-                            replyTo: "info@feiraorganica.com",
-                            to: user.email, // list of receivers
-                            cc: 'info@feiraorganica.com', // list of BCC receivers 'bruno@tzadi.com, denisefaccin@gmail.com'
-                            subject: config.envTag + 'Cancelamento de assinatura de newsletter',
-                            text: text,
-                            html: html
-                        };
-                        transporter.sendMail(mailOptions, function(error, info){
-                            if(error){
-                                console.log(error);
-                            }else{
-                                console.log('Message sent: ' + info.response);
-                            }
-                        });
-                    }
-                });
-            }
-        });
+        
     }
 
     var send_newsletter_signup_email = function(user){
@@ -476,7 +437,7 @@ module.exports=function(app, mongoose, config, utils) {
         utils.sendMail({
             template: 'newsletter/signup'
             , data: user
-            , subject: config.envTag + 'Assinatura de newsletter.'
+            , subject: 'Assinatura de newsletter.'
             , receivers: user.email
         });
 
@@ -487,7 +448,7 @@ module.exports=function(app, mongoose, config, utils) {
         utils.sendMail({
             template: 'newsletter/news'
             , data: mailData
-            , subject: config.envTag + 'Produtos e artigos da semana.'
+            , subject: 'Produtos e artigos da semana.'
             , receivers: mailData.newsletter.receivers
         });
 

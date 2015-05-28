@@ -487,20 +487,9 @@ module.exports=function(app, mongoose, moment, utils) {
                                 
                         } else {
 
-                                Products.find(function(err, products) {
-        
-                                        if (err) {
-                                                res.statusCode = 400;
-                                                res.send(err);
-                                        } else {
-        
-                                                res.json({
-                                                        type: true,
-                                                        msg: 'Product deleted!'
-                                                });
-                                                
-                                        }
-        
+                                res.json({
+                                        type: true,
+                                        msg: 'Produto removido!'
                                 });
 
                         }

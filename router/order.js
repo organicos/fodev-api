@@ -725,256 +725,61 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
     
     var send_new_order_email = function(order){
         
-        var nodemailer = require('nodemailer');
-        var path = require('path');
-        var templatesDir   = path.join(__dirname, '../templates');
-        var emailTemplates = require('email-templates');
-
-        var transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 465, // 465
-            secure: true, // true
-            debug : true,
-            auth: {
-                user: 'bruno@tzadi.com',
-                pass: 'Dublin2010ireland'
-            }
+        utils.sendMail({
+            template: 'orders/new'
+            , data: order
+            , subject: 'Pedido ' + order._id
+            , receivers: order.customer.email
+            , copyAdmins: true
         });
-
-        emailTemplates(templatesDir, function(err, template) {
-             
-            if (err) {
-                console.log(err);
-            } else {
-              
-                template('orders/new', order, function(err, html, text) {
-                    
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        var mailOptions = {
-                            from: 'Feira Orgânica Delivery <info@feiraorganica.com>', //sender address
-                            replyTo: "info@feiraorganica.com",
-                            to: order.customer.email, // list of receivers
-                            cc: 'info@feiraorganica.com', // lredirects to 'bruno@tzadi.com, denisefaccin@gmail.com'
-                            subject: config.envTag + 'Pedido ' + order._id,
-                            text: text,
-                            html: html
-                        };
-                        transporter.sendMail(mailOptions, function(error, info){
-                            if(error){
-                                console.log(error);
-                            }else{
-                                console.log('Message sent: ' + info.response);
-                            }
-                        });
-                    }
-                });
-            }
-        });
+        
     }
 
     var send_paid_email = function(order){
         
-        var nodemailer = require('nodemailer');
-        var path = require('path');
-        var templatesDir   = path.join(__dirname, '../templates');
-        var emailTemplates = require('email-templates');
-
-        var transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 465, // 465
-            secure: true, // true
-            debug : true,
-            auth: {
-                user: 'bruno@tzadi.com',
-                pass: 'Dublin2010ireland'
-            }
+        utils.sendMail({
+            template: 'orders/paid'
+            , data: order
+            , subject: 'Pedido ' + order._id
+            , receivers: order.customer.email
+            , copyAdmins: true
         });
-
-        emailTemplates(templatesDir, function(err, template) {
-             
-            if (err) {
-                console.log(err);
-            } else {
-              
-                template('orders/paid', order, function(err, html, text) {
-                    
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        var mailOptions = {
-                            from: 'Feira Orgânica Delivery <info@feiraorganica.com>', //sender address
-                            replyTo: "info@feiraorganica.com",
-                            to: order.customer.email, // list of receivers
-                            cc: 'info@feiraorganica.com', // lredirects to 'bruno@tzadi.com, denisefaccin@gmail.com'
-                            subject: config.envTag + 'Pedido ' + order._id,
-                            text: text,
-                            html: html
-                        };
-                        transporter.sendMail(mailOptions, function(error, info){
-                            if(error){
-                                console.log(error);
-                            }else{
-                                console.log('Message sent: ' + info.response);
-                            }
-                        });
-                    }
-                });
-            }
-        });
+        
     }
 
     var send_delivered_email = function(order){
         
-        var nodemailer = require('nodemailer');
-        var path = require('path');
-        var templatesDir   = path.join(__dirname, '../templates');
-        var emailTemplates = require('email-templates');
-
-        var transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 465, // 465
-            secure: true, // true
-            debug : true,
-            auth: {
-                user: 'bruno@tzadi.com',
-                pass: 'Dublin2010ireland'
-            }
+        utils.sendMail({
+            template: 'orders/delivered'
+            , data: order
+            , subject: 'Pedido ' + order._id
+            , receivers: order.customer.email
+            , copyAdmins: true
         });
 
-        emailTemplates(templatesDir, function(err, template) {
-             
-            if (err) {
-                console.log(err);
-            } else {
-              
-                template('orders/delivered', order, function(err, html, text) {
-                    
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        var mailOptions = {
-                            from: 'Feira Orgânica Delivery <info@feiraorganica.com>', //sender address
-                            replyTo: "info@feiraorganica.com",
-                            to: order.customer.email, // list of receivers
-                            cc: 'info@feiraorganica.com', // lredirects to 'bruno@tzadi.com, denisefaccin@gmail.com'
-                            subject: config.envTag + 'Pedido ' + order._id,
-                            text: text,
-                            html: html
-                        };
-                        transporter.sendMail(mailOptions, function(error, info){
-                            if(error){
-                                console.log(error);
-                            }else{
-                                console.log('Message sent: ' + info.response);
-                            }
-                        });
-                    }
-                });
-            }
-        });
     }
 
     var send_awaiting_email = function(order){
         
-        var nodemailer = require('nodemailer');
-        var path = require('path');
-        var templatesDir   = path.join(__dirname, '../templates');
-        var emailTemplates = require('email-templates');
-
-        var transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 465, // 465
-            secure: true, // true
-            debug : true,
-            auth: {
-                user: 'bruno@tzadi.com',
-                pass: 'Dublin2010ireland'
-            }
+        utils.sendMail({
+            template: 'orders/awaiting'
+            , data: order
+            , subject: 'Pedido ' + order._id
+            , receivers: order.customer.email
+            , copyAdmins: true
         });
 
-        emailTemplates(templatesDir, function(err, template) {
-             
-            if (err) {
-                console.log(err);
-            } else {
-              
-                template('orders/awaiting', order, function(err, html, text) {
-                    
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        var mailOptions = {
-                            from: 'Feira Orgânica Delivery <info@feiraorganica.com>', //sender address
-                            replyTo: "info@feiraorganica.com",
-                            to: order.customer.email, // list of receivers
-                            cc: 'info@feiraorganica.com', // lredirects to 'bruno@tzadi.com, denisefaccin@gmail.com'
-                            subject: config.envTag + 'Pedido ' + order._id,
-                            text: text,
-                            html: html
-                        };
-                        transporter.sendMail(mailOptions, function(error, info){
-                            if(error){
-                                console.log(error);
-                            }else{
-                                console.log('Message sent: ' + info.response);
-                            }
-                        });
-                    }
-                });
-            }
-        });
     }
     
     var send_canceled_email = function(order){
         
-        var nodemailer = require('nodemailer');
-        var path = require('path');
-        var templatesDir   = path.join(__dirname, '../templates');
-        var emailTemplates = require('email-templates');
-
-        var transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 465, // 465
-            secure: true, // true
-            debug : true,
-            auth: {
-                user: 'bruno@tzadi.com',
-                pass: 'Dublin2010ireland'
-            }
+        utils.sendMail({
+            template: 'orders/canceled'
+            , data: order
+            , subject: 'Pedido ' + order._id
+            , receivers: order.customer.email
+            , copyAdmins: true
         });
 
-        emailTemplates(templatesDir, function(err, template) {
-             
-            if (err) {
-                console.log(err);
-            } else {
-              
-                template('orders/canceled', order, function(err, html, text) {
-                    
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        var mailOptions = {
-                            from: 'Feira Orgânica Delivery <info@feiraorganica.com>', //sender address
-                            replyTo: "info@feiraorganica.com",
-                            to: order.customer.email, // list of receivers
-                            cc: 'info@feiraorganica.com', // lredirects to 'bruno@tzadi.com, denisefaccin@gmail.com'
-                            subject: config.envTag + 'Pedido ' + order._id,
-                            text: text,
-                            html: html
-                        };
-                        transporter.sendMail(mailOptions, function(error, info){
-                            if(error){
-                                console.log(error);
-                            }else{
-                                console.log('Message sent: ' + info.response);
-                            }
-                        });
-                    }
-                });
-            }
-        });
     }
 }
