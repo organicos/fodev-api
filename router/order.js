@@ -489,7 +489,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
 
         for (var i = 0; i < arrayLength; i++) {
             
-            if (transactions[i].status[0] == 3) return 1;
+            if ([3, 4].indexOf(transactions[i].status[0]) > -1) return 1;
 
         };
 
