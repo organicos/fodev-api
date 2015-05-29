@@ -493,9 +493,11 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
             
             var paidStatusesRefer = [3, 4];
             
+            console.log('iniciou');
             console.log(transactionStatus);
             console.log(paidStatusesRefer);
             console.log(paidStatusesRefer.indexOf(transactionStatus));
+            console.log('temrinou');
             
             if (paidStatusesRefer.indexOf(transactionStatus) > -1) return 1;
 
@@ -564,6 +566,8 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
     
                                     } else {
                                         
+                                        console.log(initialDate);
+                                        
                                         var transactions = result.transactionSearchResult.transactions ? result.transactionSearchResult.transactions[0].transaction : null;
                                         
                                         var old_status = order.status;
@@ -572,17 +576,19 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                                         
                                         if (transactions) {
                                             
-                                                order.pagseguro.transactions = transactions;
+                                            console.log('foi');
+                                            
+                                            order.pagseguro.transactions = transactions;
+                                            
+                                            console.log(getOrderStatusFromTransactions(transactions));
+                                            
+                                            order.status = getOrderStatusFromTransactions(transactions);
+                                            
+                                            if(order.status == 1){
                                                 
-                                                console.log(getOrderStatusFromTransactions(transactions));
+                                                order.payment_date = Date.now();
                                                 
-                                                order.status = getOrderStatusFromTransactions(transactions);
-                                                
-                                                if(order.status == 1){
-                                                    
-                                                    order.payment_date = Date.now();
-                                                    
-                                                }
+                                            }
                                             
                                         }
 
