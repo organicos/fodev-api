@@ -97,6 +97,12 @@ function sendMail(mailConfig){
         }
     }));
     
+    if(angular.isString(mailConfig.receivers)){
+        
+        mailConfig.receivers = [mailConfig.receivers];
+        
+    }
+    
     if(mailConfig.copyAdmins){
         
         mailConfig.receivers.push('bruno@tzadi.com', 'denisefaccin@gmail.com');

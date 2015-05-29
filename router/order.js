@@ -493,12 +493,6 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
             
             var paidStatusesRefer = ['3', '4'];
             
-            console.log('iniciou');
-            console.log(transactionStatus);
-            console.log(paidStatusesRefer);
-            console.log(paidStatusesRefer.indexOf(transactionStatus));
-            console.log('temrinou');
-            
             if (paidStatusesRefer.indexOf(transactionStatus) > -1) return 1;
 
         };
