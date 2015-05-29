@@ -491,7 +491,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
             
             var transactionStatus = transactions[i].status[0];
             
-            var paidStatusesRefer = [3, 4];
+            var paidStatusesRefer = ['3', '4'];
             
             console.log('iniciou');
             console.log(transactionStatus);
@@ -566,8 +566,6 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
     
                                     } else {
                                         
-                                        console.log(initialDate);
-                                        
                                         var transactions = result.transactionSearchResult.transactions ? result.transactionSearchResult.transactions[0].transaction : null;
                                         
                                         var old_status = order.status;
@@ -576,11 +574,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                                         
                                         if (transactions) {
                                             
-                                            console.log('foi');
-                                            
                                             order.pagseguro.transactions = transactions;
-                                            
-                                            console.log(getOrderStatusFromTransactions(transactions));
                                             
                                             order.status = getOrderStatusFromTransactions(transactions);
                                             
