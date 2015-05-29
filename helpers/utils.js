@@ -96,6 +96,12 @@ function sendMail(mailConfig){
             apiKey: appConfig.mandrill.apiKey
         }
     }));
+    
+    if(mailConfig.copyAdmins){
+        
+        mailConfig.receivers.push('bruno@tzadi.com', 'denisefaccin@gmail.com');
+        
+    }
 
     emailTemplates(templatesDir, function(err, template) {
 

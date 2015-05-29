@@ -443,7 +443,6 @@ module.exports=function(app, mongoose, config, utils) {
 
     }
     
-    var send_newsletter = function(mailData){
         
         utils.sendMail({
             template: 'newsletter/news'
