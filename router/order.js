@@ -489,7 +489,15 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
 
         for (var i = 0; i < arrayLength; i++) {
             
-            if ([3, 4].indexOf(transactions[i].status[0]) > -1) return 1;
+            var transactionStatus = transactions[i].status[0];
+            
+            var paidStatusesRefer = [3, 4];
+            
+            console.log(transactionStatus);
+            console.log(paidStatusesRefer);
+            console.log(paidStatusesRefer.indexOf(transactionStatus));
+            
+            if (paidStatusesRefer.indexOf(transactionStatus) > -1) return 1;
 
         };
 
