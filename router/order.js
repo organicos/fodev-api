@@ -751,6 +751,8 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
 
     var send_delivered_email = function(order){
         
+        console.log(order);
+        
         utils.sendMail({
             template: 'orders/delivered'
             , data: order

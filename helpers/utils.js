@@ -97,12 +97,11 @@ function sendMail(mailConfig){
         }
     }));
     
-    if(angular.isString(mailConfig.receivers)){
-        
+    // ensure array
+    if(typeof mailConfig.receivers == 'string'){
         mailConfig.receivers = [mailConfig.receivers];
-        
     }
-    
+
     if(mailConfig.copyAdmins){
         
         mailConfig.receivers.push('bruno@tzadi.com', 'denisefaccin@gmail.com');
