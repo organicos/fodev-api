@@ -562,7 +562,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                                         
                                         var transactions = result.transactionSearchResult.transactions ? result.transactionSearchResult.transactions[0].transaction : null;
                                         
-                                        var old_status = order.status;
+                                        var oldStatus = order.status;
                                         
                                         order.pagseguro = { checkout: order.pagseguro.checkout };
                                         
@@ -581,23 +581,23 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                                         }
 
                                         order.save(function(err, updatedOrder) {
-                                            
+
                                             if (err) {
-                                                    
+
                                                 res.statusCode = 400;
-            
+
                                                 return res.send(err);
-            
+
                                             } else {
-                                                
-                                                if(old_status != 1 && order.status == 1) send_paid_email(updatedOrder);
+
+                                                if(oldStatus != 1 && order.status == 1) send_paid_email(updatedOrder);
 
                                                 updatedOrder.total = updatedOrder.total.toFixed(2);
-                                                
+
                                                 updatedOrder.shipping.price = updatedOrder.shipping.price.toFixed(2);
-                                                            
+
                                                 res.json(updatedOrder);
-                                                    
+
                                             }
                 
                                         });
@@ -681,11 +681,19 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                                     return res.send(err);
         
                                 } else {
-                                
-                                    order.pagseguro.transactions.push(result.transaction);
-
-                                    order.status = getOrderStatusFromTransactions([result.transaction]);
                                     
+                                    var oldStatus = order.status;
+                                    
+                                    var newStatus = getOrderStatusFromTransactions([result.transaction]); 
+                                    
+                                    order.pagseguro.transactions.push(result.transaction);
+                                    
+                                    if( oldStatus =! newStatus ){
+                                        
+                                        order.status = newStatus;
+                                        
+                                    }
+
                                     if(order.status == 1){
                                         
                                         order.payment_date = Date.now();
@@ -702,7 +710,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
         
                                         } else {
                                             
-                                            if(order.status == 1) send_paid_email(updatedOrder);
+                                            if(oldStatus =! 1 && order.status == 1) send_paid_email(updatedOrder);
                                                 
                                             res.json(true);
                                                 
