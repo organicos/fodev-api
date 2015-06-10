@@ -564,15 +564,19 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                                         
                                         var oldStatus = order.status;
                                         
+                                        var newStatus = oldStatus;
+                                        
                                         order.pagseguro = { checkout: order.pagseguro.checkout };
                                         
                                         if (transactions) {
                                             
                                             order.pagseguro.transactions = transactions;
                                             
-                                            order.status = getOrderStatusFromTransactions(transactions);
+                                            newStatus = getOrderStatusFromTransactions(transactions);
                                             
-                                            if(order.status == 1){
+                                            order.status = newStatus;
+                                            
+                                            if(oldStatus != 1 && newStatus == 1){
                                                 
                                                 order.payment_date = Date.now();
                                                 
@@ -589,7 +593,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                                                 return res.send(err);
 
                                             } else {
-
+                                                
                                                 if(oldStatus != 1 && order.status == 1) send_paid_email(updatedOrder);
 
                                                 updatedOrder.total = updatedOrder.total.toFixed(2);
@@ -688,18 +692,18 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                                     
                                     order.pagseguro.transactions.push(result.transaction);
                                     
-                                    if( oldStatus =! newStatus ){
+                                    if( (oldStatus != 1) && (oldStatus != newStatus) ){
                                         
                                         order.status = newStatus;
                                         
                                     }
-
+                                    
                                     if(order.status == 1){
                                         
                                         order.payment_date = Date.now();
                                         
                                     }
-                                                
+                                    
                                     order.save(function(err, updatedOrder) {
                                         
                                         if (err) {
@@ -710,7 +714,9 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
         
                                         } else {
                                             
-                                            if(oldStatus =! 1 && order.status == 1) send_paid_email(updatedOrder);
+                                            if(oldStatus != 1 && updatedOrder.status == 1){
+                                                send_paid_email(updatedOrder);
+                                            }
                                                 
                                             res.json(true);
                                                 
