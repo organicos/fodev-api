@@ -521,8 +521,8 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                         
                         var request = require('request');
 
-                        var initialDate = moment(order.updated).format("YYYY-MM-DDTHH:mm"); // 2015-04-07T14:55
-                        var finalDate = moment(order.updated).add(30, 'days') > moment() ? moment().subtract(1, 'minutes').format("YYYY-MM-DDTHH:mm") : moment(order.updated).add(30, 'days').format("YYYY-MM-DDTHH:mm"); // 2015-04-07T14:55
+                        var initialDate = moment(order.updated).subtract(5, 'minutes').format("YYYY-MM-DDTHH:mm"); // 2015-04-07T14:55
+                        var finalDate = moment(order.updated).add(30, 'days') > moment() ? moment().subtract(5, 'minutes').format("YYYY-MM-DDTHH:mm") : moment(order.updated).add(30, 'days').format("YYYY-MM-DDTHH:mm"); // 2015-04-07T14:55
                         
                         var params = {
                             initialDate: initialDate,
