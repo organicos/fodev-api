@@ -560,7 +560,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
     
                                     } else {
                                         
-                                        console.log(result);
+                                        console.log(params, result);
                                         
                                         var transactions = result.transactionSearchResult.transactions ? result.transactionSearchResult.transactions[0].transaction : null;
                                         
