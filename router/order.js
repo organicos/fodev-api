@@ -560,8 +560,6 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
     
                                     } else {
                                         
-                                        console.log(params, result);
-                                        
                                         var transactions = result.transactionSearchResult.transactions ? result.transactionSearchResult.transactions[0].transaction : null;
                                         
                                         var oldStatus = order.status;
@@ -766,8 +764,6 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
     }
 
     var send_delivered_email = function(order){
-        
-        console.log(order);
         
         utils.sendMail({
             template: 'orders/delivered'
