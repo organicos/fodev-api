@@ -173,7 +173,8 @@ module.exports = function (app, mongoose, utils) {
                     
                     file.size = req.body.size;
                     
-                    file.url = req.body.url;
+                    // its best to do not change the url. It is the remote path.
+                    // file.url = req.body.url;
 
                     file.save(function(err, updatedFile) {
 

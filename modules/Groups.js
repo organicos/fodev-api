@@ -4,3 +4,5 @@ var Groups = new Schema({
         name : {type: String, trim: true},
         updated: {type: Date, default: Date.now}
 });
+
+module.exports = mongoose.model('Groups', Groups);

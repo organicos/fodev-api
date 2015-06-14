@@ -106,6 +106,8 @@ require('./router/articles')(app, mongoose, moment, utils);
 
 require('./router/files')(app, mongoose, utils);
 
+require('./router/groups')(app, mongoose, utils);
+
 require('./router/shipping')(app, moment);
 
 require('./router/order')(app, mongoose, moment, utils, config, https);
