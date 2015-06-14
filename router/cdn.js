@@ -1,10 +1,10 @@
 "use strict";
 
-module.exports=function(app, mongoose, moment, utils) {
+module.exports=function(app, mongoose, utils) {
        
     app.get('/cdn/image', utils.getRequestUser, function(req, res) {
         
-        res.send('Image resizing.');
+        res.send('File resizing.');
 
     });
     

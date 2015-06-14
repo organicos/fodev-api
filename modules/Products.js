@@ -23,7 +23,7 @@ var Products = new Schema({
     
     costs: { type: [{ type : Schema.Types.ObjectId, ref: 'Prices' }], default: []},
     
-    images: { type: [{ type : Schema.Types.ObjectId, ref: 'Images' }], default: []},
+    images: { type: [{ type : Schema.Types.ObjectId, ref: 'Files' }], default: []},
     
     categories: { type: [{ type : Schema.Types.ObjectId, ref: 'Categories'}], default: [], required: 'Informe ao menos uma categoria!' },
     

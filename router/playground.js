@@ -8,7 +8,7 @@ module.exports=function(app, mongoose, moment, config, utils) {
     
     var Products = require('./../modules/Products.js');
     
-    var Images = require('./../modules/Images.js');
+    var Files = require('./../modules/Files.js');
 
     var Prices = require('./../modules/Prices.js');
     
@@ -40,29 +40,29 @@ module.exports=function(app, mongoose, moment, config, utils) {
 
             }
             
-            var updateImageStructure = function(product, callback){
+            var updateFileStructure = function(product, callback){
 
-                console.log('updateImageStructure');
+                console.log('updateFileStructure');
 
-                var oldImage = {
+                var oldFile = {
                     _id: product.images instanceof Array ? (product.images[0] ? product.images[0]._id : false) : false,
                     title: product.images instanceof Array ? (product.images[0] ? product.images[0].title : product.img.split("/").pop().replace(/\.[^/.]+$/, "") ) : product.img.split("/").pop().replace(/\.[^/.]+$/, ""),
                     url: product.images instanceof Array ? (product.images[0] ? product.images[0].url : product.img) : product.img
                 }
                 
-                if(oldImage.url){
+                if(oldFile.url){
                     
-                    console.log('======================================================== Produto já tinha imagem: ' + oldImage.url);
+                    console.log('======================================================== Produto já tinha imagem: ' + oldFile.url);
                     
-                    var inImagesRaw = imagesRaw.filter(function (el) { return el.url == oldImage.url; });
+                    var inFilesRaw = imagesRaw.filter(function (el) { return el.url == oldFile.url; });
                     
-                    if(inImagesRaw.length){
+                    if(inFilesRaw.length){
                         
                         console.log('======================================================== A imagem já esta no raw:');
                         
-                        product.images = [inImagesRaw[0]._id];
+                        product.images = [inFilesRaw[0]._id];
                         
-                        Images.remove({_id: oldImage._id}, function(){
+                        Files.remove({_id: oldFile._id}, function(){
                             
                             callback();
                             
@@ -72,13 +72,13 @@ module.exports=function(app, mongoose, moment, config, utils) {
                         
                         console.log('======================================================== A imagem não está no raw');
                         
-                        Images.create({
+                        Files.create({
             
-                                title : oldImage.title,
+                                title : oldFile.title,
             
-                                url : oldImage.url
+                                url : oldFile.url
                                 
-                        }, function(err, newImage) {
+                        }, function(err, newFile) {
             
                             if (err){
                                 
@@ -92,11 +92,11 @@ module.exports=function(app, mongoose, moment, config, utils) {
                                 
                                 console.log('======================================================== criou nova imagem');
                                 
-                                imagesRaw.push(newImage);
+                                imagesRaw.push(newFile);
                                     
-                                product.images = [newImage._id];
+                                product.images = [newFile._id];
                                 
-                                Images.remove({_id: oldImage._id}, function(){
+                                Files.remove({_id: oldFile._id}, function(){
                                     
                                     callback();
                                     
@@ -282,7 +282,7 @@ module.exports=function(app, mongoose, moment, config, utils) {
                 
                 console.log(product);
                 
-                updateImageStructure(product, function(){
+                updateFileStructure(product, function(){
                     updateCategoryStructure(product, function(){
                         updateSuppliersStructure(product, function(){
                             
@@ -340,7 +340,7 @@ module.exports=function(app, mongoose, moment, config, utils) {
                 
                 var article = articles.pop();
 
-                Images.create({
+                Files.create({
     
                         title : article.img.split("/").pop(),
     

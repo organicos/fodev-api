@@ -1,23 +1,37 @@
 "use strict";
 
-var config = {
-    env: 'dev'
-};
+var config = {};
+
+config.env = 'env_name';
+
+config.envTag = 'env_tag_to_prefix_email_subject';
 
 config.database = {
-    host: 'x.x.x.x'
+    host: 'localhost/databasename'
 };
 
 config.pagseguro = {
-    host: 'https://ws.pagseguro.uol.com.br/v2',
-    email: 'xxx@xxx.xxx',
-    token: 'xxxxxxx'
+    host: 'https://ws.sandbox.pagseguro.uol.com.br',
+    email: 'sssn@sss.com',
+    token: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 };
 
 config.mandrill = {
-    apiKey: 'xxxxxx'
+    apiKey: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 }
 
-config.APP_PRIVATE_KEY = 'xxxxx'; // a private key to use across the app
+config.mail = {
+    from: 'Company name <foo@bar.com>'
+    , replyTo: "foo@bar.com"
+}
+
+config.s3 = {
+    host: 'https://s3-sa-east-1.amazonaws.com'
+    , bucket: 'xxxx'
+    , accessKeyID: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+    , secretAccessKey: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+}
+
+config.APP_PRIVATE_KEY = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxx'; // a private key to use across the app
 
 module.exports = config;

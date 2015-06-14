@@ -10,19 +10,19 @@ module.exports=function(app, mongoose, utils, config) {
 
     app.get('/v1/users', utils.ensureAdmin, function(req, res) {
 
-        Users.find(function(err, users) {
+        Users
+        .find()
+        .populate(['profile_img'])
+        .exec(function(err, users) {
 
-            if (err) {
-                
-                res.statusCode = 400;
-                
-                res.send(err)
-                
-            } else {
-                
-                res.json(users);
-                
-            }
+                if (err){
+                        res.statusCode = 400;
+                        res.send(err);
+                } else {
+                        
+                        res.json(users);
+                        
+                }
 
         });
 
@@ -30,7 +30,10 @@ module.exports=function(app, mongoose, utils, config) {
 
     app.get('/v1/user/:user_id', utils.ensureAuthorized, function(req, res) {
 
-        Users.findOne({_id: req.params.user_id}, function(err, user) {
+        Users
+        .findById(req.params.user_id)
+        .populate(['profile_img'])
+        .exec(function(err, user) {
 
             if (err) {
                 
@@ -207,15 +210,27 @@ module.exports=function(app, mongoose, utils, config) {
 
                                     } else {
                                         
-                                        delete updated_user.password;
-
-                                        updated_user = updated_user.toObject(); // swap for a plain javascript object instance
-
-                                        res.json({
-                                            type: true,
-                                            data: updated_user
-                                        });       
-
+                                        Users.deepPopulate(updated_user, ['profile_img'], function(err, updatedUserPopulated) {
+                                        
+                                                if (err) {
+                                                        
+                                                        res.statusCode = 400;
+                                                
+                                                        return res.send(err);
+                                                
+                                                } else {
+                                                    
+                                                    delete updatedUserPopulated.password;
+            
+                                                    res.json({
+                                                        type: true,
+                                                        data: updatedUserPopulated
+                                                    }); 
+                                                    
+                                                }
+                                        
+                                        });
+        
                                     }
                             
                             });
@@ -271,6 +286,8 @@ module.exports=function(app, mongoose, utils, config) {
                                 
                                 newsletter : req.body.newsletter,
                                 
+                                profile_img : req.body.profile_img,
+                                
                                 password : crypto.createHash('md5').update(req.body.password).digest('hex')
         
                         }, function(err, user) {
@@ -296,15 +313,31 @@ module.exports=function(app, mongoose, utils, config) {
                                                 res.send(err);
                                                 
                                             } else {
-                                                new_user = new_user.toObject(); // swap for a plain javascript object instance
-                                                send_user_email(new_user);
-                                                delete new_user["_id"];
-                                                delete new_user["password"];
-                                                res.json({
-                                                    type: true,
-                                                    data: new_user,
-                                                    token: new_user.token
-                                                });       
+                                                
+                                                Users.deepPopulate(new_user, ['profile_img'], function(err, updatedUserPopulated) {
+                                                
+                                                        if (err) {
+                                                                
+                                                                res.statusCode = 400;
+                                                        
+                                                                return res.send(err);
+                                                        
+                                                        } else {
+                                                            
+                                                            new_user = updatedUserPopulated.toObject(); // swap for a plain javascript object instance
+                                                            send_user_email(new_user);
+                                                            delete new_user["_id"];
+                                                            delete new_user["password"];
+                                                            res.json({
+                                                                type: true,
+                                                                data: new_user,
+                                                                token: new_user.token
+                                                            }); 
+                                                            
+                                                        }
+                                                
+                                                });
+ 
                                             }
 
                                     });
@@ -332,12 +365,13 @@ module.exports=function(app, mongoose, utils, config) {
                         
                     user.name = req.body.name;
                     user.email = req.body.email;
+                    user.profile_img = req.body.profile_img;
                     user.newsletter = req.body.newsletter;
                     user.updated = Date.now();
                     
                     if(req.user.kind == 'admin') user.kind = req.body.kind;
                         
-                    user.save(function(err, updatedProduct) {
+                    user.save(function(err, updatedUser) {
 
                         if (err) {
                                 
@@ -346,8 +380,22 @@ module.exports=function(app, mongoose, utils, config) {
                             res.send(err);
 
                         } else {
-                                
-                            res.send(updatedProduct);
+                            
+                            Users.deepPopulate(updatedUser, ['profile_img'], function(err, updatedUserPopulated) {
+                            
+                                    if (err) {
+                                            
+                                            res.statusCode = 400;
+                                    
+                                            return res.send(err);
+                                    
+                                    } else {
+                                        
+                                        res.json(updatedUserPopulated);
+                                        
+                                    }
+                            
+                            });
                                 
                         }
 
@@ -360,27 +408,21 @@ module.exports=function(app, mongoose, utils, config) {
     });
         
     app.get('/v1/me', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
-        
-        Users.findOne({_id: req.user._id}, function(err, user) {
 
-                if (err) {
-                    
-                    res.statusCode = 400;
-                        
-                    res.json({
-                        type: false,
-                        data: "Erro: " + err
-                    });
-                    
+        Users
+        .findById(req.user._id)
+        .populate(['profile_img'])
+        .exec(function(err, users) {
+
+                if (err){
+                        res.statusCode = 400;
+                        res.send(err);
                 } else {
-                    
-                    res.json({
-                        type: true,
-                        data: user
-                    });
-                    
+                        
+                        res.json(users);
+                        
                 }
-                
+
         });
 
     });

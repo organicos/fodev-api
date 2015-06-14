@@ -576,7 +576,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                                             
                                             order.status = newStatus;
                                             
-                                            if(oldStatus != 1 && newStatus == 1){
+                                            if(newStatus == 1 && oldStatus != 1 && oldStatus != 2){
                                                 
                                                 order.payment_date = Date.now();
                                                 
@@ -594,7 +594,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
 
                                             } else {
                                                 
-                                                if(oldStatus != 1 && order.status == 1) send_paid_email(updatedOrder);
+                                                if(order.status == 1 && oldStatus != 1 && oldStatus != 2) send_paid_email(updatedOrder);
 
                                                 updatedOrder.total = updatedOrder.total.toFixed(2);
 
@@ -692,7 +692,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                                     
                                     order.pagseguro.transactions.push(result.transaction);
                                     
-                                    if( (oldStatus != 1) && (oldStatus != newStatus) ){
+                                    if( oldStatus != newStatus && oldStatus != 1 && oldStatus != 2 ){
                                         
                                         order.status = newStatus;
                                         
@@ -714,7 +714,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
         
                                         } else {
                                             
-                                            if(oldStatus != 1 && updatedOrder.status == 1){
+                                            if(updatedOrder.status == 1 && oldStatus != 1 && oldStatus != 2){
                                                 send_paid_email(updatedOrder);
                                             }
                                                 

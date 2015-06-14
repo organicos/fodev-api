@@ -11,6 +11,8 @@ var Addresses = new Schema({
         
         number: { type: String, required: 'Informe o numero da casa!' },
         
+        img: { type : Schema.Types.ObjectId, ref: 'Files' },
+        
         complement: String,
         
         district: { type: String, required: 'Informe o bairro!' },

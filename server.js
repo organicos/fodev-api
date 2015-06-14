@@ -92,7 +92,7 @@ require('./router/playground')(app, mongoose, moment, config, utils);
 
 require('./router/products')(app, mongoose, moment, utils);
 
-require('./router/cdn')(app, mongoose, moment, utils);
+require('./router/cdn')(app, mongoose, utils);
 
 require('./router/categories')(app, mongoose, moment, utils);
 
@@ -100,11 +100,11 @@ require('./router/suppliers')(app, mongoose, moment, utils);
 
 require('./router/tickets')(app, mongoose, config, utils, moment);
 
-require('./router/newsletter')(app, mongoose, config, utils);
+require('./router/newsletters')(app, mongoose, config, utils);
 
 require('./router/articles')(app, mongoose, moment, utils);
 
-require('./router/images')(app, mongoose, moment, utils);
+require('./router/files')(app, mongoose, utils);
 
 require('./router/shipping')(app, moment);
 
@@ -112,7 +112,7 @@ require('./router/order')(app, mongoose, moment, utils, config, https);
 
 require('./router/users')(app, mongoose, utils, config);
 
-require('./router/email')(app, mongoose, utils, config);
+require('./router/s3')(app, mongoose, utils, config);
 
 require('./router/app')(app, express, config);
 

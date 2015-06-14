@@ -8,7 +8,9 @@ var Suppliers = new Schema({
     
     contacts : { type: String, trim: true },
     
-    images: [{ type : Schema.Types.ObjectId, ref: 'Images' }],
+    img: { type : Schema.Types.ObjectId, ref: 'Files' },
+    
+    images: [{ type : Schema.Types.ObjectId, ref: 'Files' }],
     
     addresses : [{ type : Schema.Types.ObjectId, ref: 'Addresses' }],
 

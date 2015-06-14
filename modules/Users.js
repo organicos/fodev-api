@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 
 var Users = new Schema({
         name : {type: String, trim: true},
+        profile_img : { type : Schema.Types.ObjectId, ref: 'Files' },
         email: {
                 type: String, 
                 trim: true, 

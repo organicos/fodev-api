@@ -39,7 +39,7 @@ module.exports=function(app, mongoose, moment, utils) {
                         filter.active = 1;       
                 } else {
                         populate.push('costs', 'visits');
-                } 
+                }
 
                 Products
                 .find(filter, hiddenFields, {sort: {name: 1}})

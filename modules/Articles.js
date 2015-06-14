@@ -9,7 +9,7 @@ var Articles = new Schema({
         
         encoded_url: { type: String, trim: true, required: 'Informe a url codificada!', unique: true }, // SLUG
         
-        images: { type: [{ type : Schema.Types.ObjectId, ref: 'Images' }], default: []},
+        images: { type: [{ type : Schema.Types.ObjectId, ref: 'Files' }], default: []},
         
         products: { type: [{ type : Schema.Types.ObjectId, ref: 'Products' }], default: []},
         
