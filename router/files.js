@@ -166,7 +166,7 @@ module.exports = function (app, mongoose, utils) {
         file.type = req.body.type;
         file.size = req.body.size;
         file.url = req.body.url;
-        file.user = req.user._id;
+        file.user = req.user;
 
         if(validTypes.images.indexOf(file.type) == -1 && validTypes.videos.indexOf(file.type) == -1 && validTypes.audios.indexOf(file.type) == -1){
             
@@ -215,7 +215,6 @@ module.exports = function (app, mongoose, utils) {
         file.type = req.body.type;
         file.size = req.body.size;
         file.url = req.body.url;
-        file.user = req.user._id;
 
         if(validTypes.images.indexOf(file.type) == -1 && validTypes.videos.indexOf(file.type) == -1 && validTypes.audios.indexOf(file.type) == -1){
             
