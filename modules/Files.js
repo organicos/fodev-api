@@ -17,6 +17,10 @@ var Files = new Schema({
         categories: [{ type : Schema.Types.ObjectId, ref: 'Categories' }],
         
         user: { type : Schema.Types.ObjectId, ref: 'Users' },
+        
+        appFile: { type:Boolean, required: true, default: false },
+        
+        privacy: String,
 
         updated: { type: Date, default: Date.now }
 
