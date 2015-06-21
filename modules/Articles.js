@@ -11,6 +11,8 @@ var Articles = new Schema({
         
         images: { type: [{ type : Schema.Types.ObjectId, ref: 'Files' }], default: []},
         
+        author: { type : Schema.Types.ObjectId, ref: 'Users' },
+        
         products: { type: [{ type : Schema.Types.ObjectId, ref: 'Products' }], default: []},
         
         categories: { type: [{ type : Schema.Types.ObjectId, ref: 'Categories' }], default: []},

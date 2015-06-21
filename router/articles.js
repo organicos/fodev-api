@@ -18,7 +18,7 @@ module.exports=function(app, mongoose, utils) {
                         
                 Articles
                 .find(filter, null, {sort: {updated: -1}})
-                .populate(['images'])
+                .populate(['images', 'author'])
                 .exec(function(err, articles) {
                         
                         if (err) {
@@ -51,7 +51,7 @@ module.exports=function(app, mongoose, utils) {
                 
                 Articles
                 .findOne(filter, null, {sort: {updated: -1}})
-                .deepPopulate(['images', 'products', 'products.images', 'visits'])
+                .deepPopulate(['author', 'author.profile_img', 'images', 'products', 'products.images', 'visits'])
                 .exec(function(err, article) {
                         
                         if (err) {
@@ -72,7 +72,7 @@ module.exports=function(app, mongoose, utils) {
                                         
                                         article.save(function(err, updatedArtile){
                                                 
-                                                Articles.deepPopulate(updatedArtile, ['images', 'products', 'products.images', 'visits'], function(err, updatedArticlePopulated) {
+                                                Articles.deepPopulate(updatedArtile, ['images', 'author', 'author.profile_img', 'products', 'products.images', 'visits'], function(err, updatedArticlePopulated) {
                                                 
                                                         if (err) {
                                                                 
@@ -111,10 +111,12 @@ module.exports=function(app, mongoose, utils) {
                 Articles.create({
 
                         title : req.body.title,
+                        
+                        author : req.body.author,
 
                         content : req.body.content,
                         
-                        img : 'http://images.elasticbeanstalk.com/300/https://s3-sa-east-1.amazonaws.com/fodev/img/global/logo.png',
+                        img : 'https://s3-sa-east-1.amazonaws.com/fodev/img/global/logo.png',
                         
                         encoded_url : req.body.encoded_url,
                         
@@ -156,9 +158,9 @@ module.exports=function(app, mongoose, utils) {
                                 
                                 article.title = req.body.title;
                                 
-                                article.content = req.body.content;
+                                article.author = req.body.author;
                                 
-                                article.img = req.body.img;
+                                article.content = req.body.content;
                                 
                                 article.images = req.body.images;
                                 
