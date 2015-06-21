@@ -10,8 +10,12 @@ module.exports=function(app, mongoose, utils, config) {
 
     app.get('/v1/users', utils.ensureAdmin, function(req, res) {
 
+        var filter = {};
+        
+        if(req.query.name) filter.name = new RegExp(req.query.name, "i");
+        
         Users
-        .find()
+        .find(filter)
         .populate(['profile_img'])
         .exec(function(err, users) {
 
