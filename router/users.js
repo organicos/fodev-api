@@ -281,8 +281,12 @@ module.exports=function(app, mongoose, utils, config) {
                         Users.create({
         
                                 name : req.body.name,
+                                
+                                brief : req.body.brief,
         
                                 email : req.body.email,
+                                
+                                phone : req.body.phone,
                                 
                                 newsletter : req.body.newsletter,
                                 
@@ -364,7 +368,9 @@ module.exports=function(app, mongoose, utils, config) {
                 } else {
                         
                     user.name = req.body.name;
+                    user.brief = req.body.brief;
                     user.email = req.body.email;
+                    user.phone = req.body.phone;
                     user.profile_img = req.body.profile_img;
                     user.newsletter = req.body.newsletter;
                     user.updated = Date.now();

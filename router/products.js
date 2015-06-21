@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports=function(app, mongoose, moment, utils) {
+module.exports=function(app, mongoose, utils) {
         
         var Products = require('./../modules/Products.js');
         

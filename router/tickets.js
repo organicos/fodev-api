@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports=function(app, mongoose, config, utils, moment) {
+module.exports=function(app, mongoose, config, utils) {
     
     var Schema = mongoose.Schema;
 

@@ -2,15 +2,17 @@
 
 module.exports=function(app, mongoose, utils) {
         
-    var Categories = require('./../modules/Categories.js');
+    var Addresses = require('./../modules/Addresses.js');
 
-    app.get('/v1/categories', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
+    app.get('/v1/addresses', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
         
-        var filter = {};
+        var filter = {
+            user: req.user._id
+        };
         
         if(req.query.name) filter.name = new RegExp(req.query.name, "i");
 
-        Categories.find(filter, function(err, categories) {
+        Addresses.find(filter, function(err, addresses) {
 
             if (err) {
                 
@@ -20,7 +22,7 @@ module.exports=function(app, mongoose, utils) {
                 
             } else {
                 
-                res.json(categories);
+                res.json(addresses);
                 
             }
 
@@ -28,9 +30,12 @@ module.exports=function(app, mongoose, utils) {
 
     });
     
-    app.get('/v1/category/:category_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
+    app.get('/v1/address/:address_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
 
-        Categories.findOne({_id: req.params.category_id}, function(err, category) {
+        var filter
+        user: req.user._id
+
+        Addresses.findOne(filter, function(err, address) {
 
             if (err) {
                 
@@ -40,7 +45,7 @@ module.exports=function(app, mongoose, utils) {
                 
             } else {
                 
-                res.json(category);
+                res.json(address);
                 
             }
 
@@ -48,13 +53,13 @@ module.exports=function(app, mongoose, utils) {
 
     });
 
-    app.post('/v1/category', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
+    app.post('/v1/address', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
 
-        Categories.create({
+        Addresses.create({
 
                 name : req.body.name
 
-        }, function(err, category) {
+        }, function(err, address) {
 
                 if (err) {
                     
@@ -64,7 +69,7 @@ module.exports=function(app, mongoose, utils) {
                 
                 } else {
                     
-                    res.json(category); 
+                    res.json(address); 
                         
                 }
 
@@ -72,9 +77,9 @@ module.exports=function(app, mongoose, utils) {
 
     });
     
-    app.put('/v1/category/:category_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res){
+    app.put('/v1/address/:address_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res){
 
-        Categories.findById(req.params.category_id, function(err, category) {
+        Addresses.findById(req.params.address_id, function(err, address) {
                 
             if (err) {
                     
@@ -84,9 +89,9 @@ module.exports=function(app, mongoose, utils) {
                     
             } else {
                     
-                category.name = req.body.name;
+                address.name = req.body.name;
 
-                category.save(function(err, updatedCategory) {
+                address.save(function(err, updatedAddress) {
 
                     if (err) {
                             
@@ -96,7 +101,7 @@ module.exports=function(app, mongoose, utils) {
 
                     } else {
                             
-                        res.send(updatedCategory);
+                        res.send(updatedAddress);
                             
                     }
 
@@ -108,13 +113,13 @@ module.exports=function(app, mongoose, utils) {
 
     });
     
-    app.delete('/v1/categories/:category_id', utils.ensureAdmin, function(req, res) {
+    app.delete('/v1/addresses/:address_id', utils.ensureAdmin, function(req, res) {
 
-            Categories.remove({
+            Addresses.remove({
 
-                    _id : req.params.category_id
+                    _id : req.params.address_id
 
-            }, function(err, category) {
+            }, function(err, address) {
 
                     if (err) {
                             
@@ -123,14 +128,14 @@ module.exports=function(app, mongoose, utils) {
                             
                     } else {
 
-                            Categories.find(function(err, categories) {
+                            Addresses.find(function(err, addresses) {
     
                                     if (err) {
                                             res.statusCode = 400;
                                             res.send(err);
                                     } else {
     
-                                            res.json(categories);
+                                            res.json(addresses);
                                             
                                     }
     

@@ -88,21 +88,23 @@ if(['dev', 'stg'].indexOf(config.env) > -1){
 
 require('./router/main')(app, express);
 
-require('./router/playground')(app, mongoose, moment, config, utils);
+require('./router/playground')(app, mongoose, config, utils);
 
-require('./router/products')(app, mongoose, moment, utils);
+require('./router/products')(app, mongoose, utils);
 
 require('./router/cdn')(app, mongoose, utils);
 
-require('./router/categories')(app, mongoose, moment, utils);
+require('./router/addresses')(app, mongoose, utils);
 
-require('./router/suppliers')(app, mongoose, moment, utils);
+require('./router/categories')(app, mongoose, utils);
 
-require('./router/tickets')(app, mongoose, config, utils, moment);
+require('./router/suppliers')(app, mongoose, utils);
+
+require('./router/tickets')(app, mongoose, config, utils);
 
 require('./router/newsletters')(app, mongoose, config, utils);
 
-require('./router/articles')(app, mongoose, moment, utils);
+require('./router/articles')(app, mongoose, utils);
 
 require('./router/files')(app, mongoose, utils);
 
