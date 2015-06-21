@@ -14,6 +14,10 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
         4: 'Problemas com o pagamento.',
         5: 'Inválido.'
     };
+    
+    var validCities = [
+        'Florianópolis'
+    ];
 
     app.get('/v1/orders', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
             
@@ -171,7 +175,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                 
                 validateOrder(req.body.basket, function(basket){
                     
-                    var invalidCity = req.body.basket.shipping.city == 'Florianópolis' ? false : true;
+                    var invalidCity = (validCities.indexOf(req.body.basket.shipping.city) == -1);
                     
                     if(basket.inactive_products.length > 0){
                         
