@@ -448,7 +448,7 @@ module.exports=function(app, mongoose, config, utils) {
         utils.sendMail({
             template: 'newsletter/news'
             , data: mailData
-            , subject: 'Produtos e artigos da semana.'
+            , subject: mailData.newsletter.title || 'Produtos e artigos da semana.'
             , receivers: mailData.newsletter.receivers
         });
 
