@@ -18,7 +18,7 @@ var Suppliers = new Schema({
     
     images: [{ type : Schema.Types.ObjectId, ref: 'Files' }],
     
-    products : [{ type : Schema.Types.ObjectId, ref: 'Addresses' }],
+    products : [{ type : Schema.Types.ObjectId, ref: 'Products' }],
 
     updated: { type: Date, default: Date.now }
 

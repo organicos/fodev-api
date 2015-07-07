@@ -10,8 +10,10 @@ module.exports=function(app, mongoose, utils) {
         
         if(req.query.name) filter.name = new RegExp(req.query.name, "i");
 
-        Suppliers.find(filter, function(err, suppliers) {
-
+        Suppliers
+        .find(filter, null, {sort: ['name']})
+        .exec(function(err, suppliers) {
+                    
             if (err) {
                 
                 res.statusCode = 400;
@@ -30,8 +32,13 @@ module.exports=function(app, mongoose, utils) {
     
     app.get('/v1/supplier/:supplier_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
 
-        Suppliers.findOne({_id: req.params.supplier_id}, function(err, supplier) {
-
+        var filter = {_id: req.params.supplier_id};
+        
+        Suppliers
+        .findOne(filter, null, {sort: ['name']})
+        .deepPopulate(['images', 'products', 'address'])
+        .exec(function(err, supplier) {
+            
             if (err) {
                 
                 res.statusCode = 400;
