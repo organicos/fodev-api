@@ -6,13 +6,19 @@ var Suppliers = new Schema({
 
     name : { type: String, trim: true, required: 'Informe o nome do fornecedor.' },
     
-    contacts : { type: String, trim: true },
+    desc : { type: String, trim: true },
+
+    phone : { type: String, trim: true },
     
-    img: { type : Schema.Types.ObjectId, ref: 'Files' },
+    email : { type: String, trim: true },
+    
+    orderRules : { type: String, trim: true },
+
+    address : { type : Schema.Types.ObjectId, ref: 'Addresses' },
     
     images: [{ type : Schema.Types.ObjectId, ref: 'Files' }],
     
-    addresses : [{ type : Schema.Types.ObjectId, ref: 'Addresses' }],
+    products : [{ type : Schema.Types.ObjectId, ref: 'Addresses' }],
 
     updated: { type: Date, default: Date.now }
 

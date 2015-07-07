@@ -53,6 +53,14 @@ module.exports=function(app, mongoose, utils) {
         Suppliers.create({
 
                 name : req.body.name
+                , desc : req.body.desc
+                , email : req.body.email
+                , phone : req.body.phone
+                , orderRules : req.body.orderRules
+                , address : req.body.address
+                , images : req.body.images
+                , products : req.body.products
+                , updated : req.body.updated
 
         }, function(err, supplier) {
 
@@ -85,6 +93,14 @@ module.exports=function(app, mongoose, utils) {
             } else {
                     
                 supplier.name = req.body.name;
+                supplier.desc = req.body.desc;
+                supplier.email = req.body.email;
+                supplier.phone = req.body.phone;
+                supplier.orderRules = req.body.orderRules;
+                supplier.address = req.body.address;
+                supplier.images = req.body.images;
+                supplier.products = req.body.products;
+                supplier.updated = req.body.updated;
 
                 supplier.save(function(err, updatedSupplier) {
 
