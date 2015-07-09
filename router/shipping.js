@@ -16,25 +16,25 @@ module.exports=function(app, moment) {
 
             if(today == 0){
                 shippingDates = [
-                    moment().day(3).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                    , moment().day(6).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                    , moment().add(1, 'weeks').day(3).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                    , moment().add(1, 'weeks').day(6).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                    , moment().add(2, 'weeks').day(3).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                    , moment().add(2, 'weeks').day(6).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                    , moment().add(3, 'weeks').day(3).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                    , moment().add(3, 'weeks').day(6).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
+                    moment().day(3).format('YYYY-MM-DD')
+                    , moment().day(6).format('YYYY-MM-DD')
+                    , moment().add(1, 'weeks').day(3).format('YYYY-MM-DD')
+                    , moment().add(1, 'weeks').day(6).format('YYYY-MM-DD')
+                    , moment().add(2, 'weeks').day(3).format('YYYY-MM-DD')
+                    , moment().add(2, 'weeks').day(6).format('YYYY-MM-DD')
+                    , moment().add(3, 'weeks').day(3).format('YYYY-MM-DD')
+                    , moment().add(3, 'weeks').day(6).format('YYYY-MM-DD')
                 ];
             } else {
                 shippingDates = [
-                    moment().add(1, 'weeks').day(3).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                    , moment().add(1, 'weeks').day(6).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                    , moment().add(2, 'weeks').day(3).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                    , moment().add(2, 'weeks').day(6).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                    , moment().add(3, 'weeks').day(3).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                    , moment().add(3, 'weeks').day(6).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                    , moment().add(4, 'weeks').day(3).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                    , moment().add(4, 'weeks').day(6).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
+                    moment().add(1, 'weeks').day(3).format('YYYY-MM-DD')
+                    , moment().add(1, 'weeks').day(6).format('YYYY-MM-DD')
+                    , moment().add(2, 'weeks').day(3).format('YYYY-MM-DD')
+                    , moment().add(2, 'weeks').day(6).format('YYYY-MM-DD')
+                    , moment().add(3, 'weeks').day(3).format('YYYY-MM-DD')
+                    , moment().add(3, 'weeks').day(6).format('YYYY-MM-DD')
+                    , moment().add(4, 'weeks').day(3).format('YYYY-MM-DD')
+                    , moment().add(4, 'weeks').day(6).format('YYYY-MM-DD')
                 ];
             }
 
@@ -42,20 +42,32 @@ module.exports=function(app, moment) {
         } else if(forSaturday.indexOf(today) > -1) {
             
             shippingDates = [
-                moment().day(6).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                , moment().add(1, 'weeks').day(3).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                , moment().add(1, 'weeks').day(6).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                , moment().add(2, 'weeks').day(3).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                , moment().add(2, 'weeks').day(6).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                , moment().add(3, 'weeks').day(3).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                , moment().add(3, 'weeks').day(6).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
-                , moment().add(4, 'weeks').day(3).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()
+                moment().day(6).format('YYYY-MM-DD')
+                , moment().add(1, 'weeks').day(3).format('YYYY-MM-DD')
+                , moment().add(1, 'weeks').day(6).format('YYYY-MM-DD')
+                , moment().add(2, 'weeks').day(3).format('YYYY-MM-DD')
+                , moment().add(2, 'weeks').day(6).format('YYYY-MM-DD')
+                , moment().add(3, 'weeks').day(3).format('YYYY-MM-DD')
+                , moment().add(3, 'weeks').day(6).format('YYYY-MM-DD')
+                , moment().add(4, 'weeks').day(3).format('YYYY-MM-DD')
             ];   
 
             
         }
         
         res.json(shippingDates);
+
+    });
+    
+    app.get('/v1/shipping/locations', function(req, res) {
+        
+        var shippingLocations = [
+            {_id: 1, city: 'Florianópolis', state: 'SC', price : '6'}
+            , {_id: 2,city: 'Palhoça', state: 'SC', price : '15'}
+            , {_id: 3,city: 'São José', state: 'SC', price : '12'}
+        ];
+        
+        res.json(shippingLocations);
 
     });
     

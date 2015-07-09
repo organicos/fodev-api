@@ -17,7 +17,8 @@ var Orders = mongoose.model('Orders', {
         state: { type: String, required: 'Informe o estado!' },
         country: { type: String, default: 'Brasil', required: 'Informe o país!' },
         address_ref: { type: String, required: 'Informe alguma referência!' },
-        deliveryOption: { type: String, required: 'Informe a data de entrega!' },
+        deliveryOption: { type: String },
+        date: { type: String, required: 'Informe a data de entrega!' },
         phone: { type: String, required: 'Informe um telefone para contato!' }
     },
     pagseguro: {

@@ -16,7 +16,9 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
     };
     
     var validCities = [
-        'Florianópolis'
+        'Florianópolis',
+        'Palhoça',
+        'São José'
     ];
 
     app.get('/v1/orders', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
@@ -48,11 +50,9 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
         };
 
         if(newBasket.shipping) {
-            newBasket.shipping.price = 6;
             newBasket.shipping.country = 'Brasil';
         } else {
             newBasket.shipping = {
-                price: 6,
                 country: 'Brasil'
             }
         }
