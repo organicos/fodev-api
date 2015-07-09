@@ -6,6 +6,8 @@ var app = express(); // create our app w/ express
 
 var moment  = require('moment');
 
+app.locals.moment = moment;
+
 var https = require('https');
 
 var http = require('http');

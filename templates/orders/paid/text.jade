@@ -19,7 +19,7 @@ block content
     a(href="https://feiraorganica.com/meu/pedido/#{_id}", hreflang="pt-br", style="text-decoration: none;") #{_id}
     
   b Entrega: 
-  | #{shipping.deliveryOption}
+  | #{moment(shipping.date).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()}
   br
   b CEP: 
   | #{shipping.cep}
@@ -55,4 +55,4 @@ block content
   | #{(total+shipping.price).toFixed(2)}
   br
   b Data: 
-  | #{updated}
+  | #{moment(updated).locale("pt-br").format('dddd, DD/MM/YYYY').toUpperCase()}
