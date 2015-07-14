@@ -51,7 +51,7 @@ module.exports=function(app, mongoose, utils) {
                 
                 Articles
                 .findOne(filter, null, {sort: {updated: -1}})
-                .deepPopulate(['author', 'author.profile_img', 'images', 'products', 'products.images', 'visits'])
+                .deepPopulate(['author', 'author.profile_img', 'images', 'products', 'products.images', 'products.prices', 'visits'])
                 .exec(function(err, article) {
                         
                         if (err) {
@@ -72,7 +72,7 @@ module.exports=function(app, mongoose, utils) {
                                         
                                         article.save(function(err, updatedArtile){
                                                 
-                                                Articles.deepPopulate(updatedArtile, ['images', 'author', 'author.profile_img', 'products', 'products.images', 'visits'], function(err, updatedArticlePopulated) {
+                                                Articles.deepPopulate(updatedArtile, ['images', 'author', 'author.profile_img', 'products', 'products.images', 'products.prices', 'visits'], function(err, updatedArticlePopulated) {
                                                 
                                                         if (err) {
                                                                 
