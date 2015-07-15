@@ -92,7 +92,7 @@ module.exports=function(app, mongoose, config, utils) {
     app.post('/v1/newsletter/:id/send', utils.ensureAdmin, function(req, res) {
         
         var filter = {_id: req.body._id};
-        
+        console.log('iuhiuhiuh');
         Newsletters
         .findOne(filter)
         .deepPopulate(['sections'])

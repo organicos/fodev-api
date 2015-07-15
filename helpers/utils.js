@@ -85,8 +85,6 @@ function sendMail(mailConfig){
     
     var path = require('path');
     
-    console.log(mailConfig.data.shipping.date);
-    
     mailConfig.data.moment  = require('moment');
     
     var templatesDir   = path.join(__dirname, '../templates/');
