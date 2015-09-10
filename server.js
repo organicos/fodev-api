@@ -1,5 +1,7 @@
 "use strict";
 
+var newrelic = require('newrelic');
+
 var express  = require('express');
 
 var app = express(); // create our app w/ express
