@@ -428,6 +428,7 @@ module.exports=function(app, mongoose, config, utils) {
             , data: user
             , subject: 'Cancelamento de assinatura de newsletter.'
             , receivers: user.email
+            , copyAdmins: true
         });
         
     }
@@ -439,6 +440,7 @@ module.exports=function(app, mongoose, config, utils) {
             , data: user
             , subject: 'Assinatura de newsletter.'
             , receivers: user.email
+            , copyAdmins: true
         });
 
     }
