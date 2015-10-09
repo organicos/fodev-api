@@ -102,6 +102,8 @@ require('./router/addresses')(app, mongoose, utils);
 
 require('./router/categories')(app, mongoose, utils);
 
+require('./router/discounts')(app, mongoose, utils);
+
 require('./router/suppliers')(app, mongoose, utils);
 
 require('./router/tickets')(app, mongoose, config, utils);
