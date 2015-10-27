@@ -1,10 +1,11 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var moment = require('moment');
 
 var Discounts = new Schema({
 
     customer: { type: Object, required: 'Identifique o cliente!' },
+
+    order: { type : Schema.Types.ObjectId, ref: 'Orders' },
     
     value: { type: Number, required: 'Informe o valor do desconto!' },
     

@@ -25,6 +25,12 @@ var Orders = mongoose.model('Orders', {
         checkout: { type: Object, default: {}, required: 'Os dados de checkout do Pagseguro não foram informados!' },
         transactions: { type: Array, default: [] }
     },
+    refound: {
+        option: { type: String, default: ""}, // 'cash','discount','products'
+        value: { type: Number, default: 0 },
+        discount: { type : Schema.Types.ObjectId, ref: 'Discounts' },
+        products: [{ type : Object }]
+    },
     active : { type: Boolean, default: true },
     garbage_free : { type: Boolean, default: true },
     status : { type: Number, default: 0 }, // payment_status_map

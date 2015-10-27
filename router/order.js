@@ -6,6 +6,8 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
     
     var Orders = require('./../modules/Orders.js');
 
+    var Discounts = require('./../modules/Discounts.js');
+
     var payment_status_map = {
         0: 'Pagamento pendente',
         1: 'Pago',
@@ -151,7 +153,10 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
 
     app.get('/v1/order/:order_id', utils.ensureAuthorized, function(req, res) {
 
-            Orders.findOne({_id: req.params.order_id}, function(err, product) {
+            Orders
+            .findOne({_id: req.params.order_id})
+            .populate(['refound.discount'])
+            .exec(function(err, order) {
 
                     if (err) {
                         
@@ -159,7 +164,7 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                         
                     } else {
                         
-                        res.json(product);
+                        res.json(order);
                         
                     }
 
@@ -291,6 +296,44 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
         }
     });
     
+    var _PutOrder = function(order, statusChanged, res) {
+
+        return order.save(function(err, updatedOrder) {
+
+                if (err) {
+                        
+                    res.statusCode = 400;
+
+                    return res.send(err);
+
+                } else {
+                    
+                    if(statusChanged){
+                        
+                        switch (updatedOrder.status) {
+                            case 1: // pago
+                                send_paid_email(updatedOrder);
+                                break;
+                            case 2: // entregue
+                                send_delivered_email(updatedOrder);
+                                break;         
+                            case 3: // cancelado
+                                send_canceled_email(updatedOrder);
+                                break;                                                 
+                            case 4: // aguardando pagamento
+                                send_awaiting_email(updatedOrder);
+                                break;
+                        }
+                        
+                    }
+                        
+                    return res.send(updatedOrder);
+                        
+                }
+
+        });
+    }
+
     app.put('/v1/order/:order_id', utils.ensureAdmin, function(req, res){
 
         return Orders.findById(req.params.order_id, function(err, order) {
@@ -304,51 +347,100 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
             } else {
                 
                 var statusChanged = order.status != req.body.status;
-                
-                order.shipping.phone = order.shipping.phone || "9";
                     
+                order.name = req.body.name;
+                order.total = req.body.total;
+                order.products = req.body.products;
+                order.customer = req.body.customer;
+                order.active = req.body.active;
+                order.garbage_free = req.body.garbage_free;
                 order.status = req.body.status;
-                
-                return order.save(function(err, updatedOrder) {
+                order.payment_date = req.body.payment_date;
+                order.shipping.cep = req.body.shipping.cep;
+                order.shipping.street = req.body.shipping.street;
+                order.shipping.number = req.body.shipping.number;
+                order.shipping.complement = req.body.shipping.complement;
+                order.shipping.district = req.body.shipping.district;
+                order.shipping.city = req.body.shipping.city;
+                order.shipping.state = req.body.shipping.state;
+                order.shipping.country = req.body.shipping.country;
+                order.shipping.address_ref = req.body.shipping.address_ref;
+                order.shipping.deliveryOption = req.body.shipping.deliveryOption;
+                order.shipping.date = req.body.shipping.date;
+                order.shipping.phone = req.body.shipping.phone;
+                order.refound.option = req.body.refound.option;
+                order.refound.products = req.body.refound.products;
 
-                        if (err) {
-                                
-                            res.statusCode = 400;
+                // check if the order status is going to be updated to 2: DELIVERED
+                if(order.status == 2){
 
-                            return res.send(err);
+                    if(order.refound.option == 'discount'){
 
-                        } else {
-                            
-                            if(statusChanged){
-                                
-                                switch (updatedOrder.status) {
-                                    case 1: // pago
-                                        send_paid_email(updatedOrder);
-                                        break;
-                                    case 2: // entregue
-                                        send_delivered_email(updatedOrder);
-                                        break;         
-                                    case 3: // cancelado
-                                        send_canceled_email(updatedOrder);
-                                        break;                                                 
-                                    case 4: // aguardando pagamento
-                                        send_awaiting_email(updatedOrder);
-                                        break;
-                                }
-                                
-                            }
-                                
-                            return res.send(updatedOrder);
-                                
+                        if(!order.refound.discount){
+
+                            order.refound.value = calculateRefoundValue(order);
+
+                            order.refound.discount = createNewDiscount(order, function(newDiscount){
+
+                                order.refound.discount = newDiscount;
+
+                                return _PutOrder(order, statusChanged, res);
+
+                            });
+
                         }
+                    }
 
-                });
+
+                } else {
+
+                    return _PutOrder(order, statusChanged, res);
+
+                }
                     
             }
 
         });
 
     });
+
+    var calculateRefoundValue = function(order){
+
+        var total = 0;
+
+        var arrayLength = order.products.length;
+
+        for (var i = 0; i < arrayLength; i++) {
+            var product = order.products[i];
+            if(product.unavaiable){
+                total += product.prices[0].price * product.quantity;
+            }
+
+        };
+
+        return total;
+
+    }
+
+    var createNewDiscount = function(order, callback){
+
+        var discount = {
+            customer: order.customer,
+            value: order.refound.value,
+            desc: 'Reembolso por falta de produto',
+            order: order,
+            startDate: moment(),
+            endDate: moment().add(1, 'year')
+
+        };
+
+        Discounts.create(discount, function(err, newDiscount) {
+
+            callback(newDiscount);
+
+        });
+
+    };
 
     var createPaymentOrder = function(order, callback) {
         
@@ -374,11 +466,14 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
         var arrayLength = order.products.length;
 
         for (var i = 0; i < arrayLength; i++) {
-            data['itemId'+ (i+1)] = order.products[i]._id;
-            data['itemDescription'+ (i+1)] = order.products[i].name;
-            data['itemAmount'+ (i+1)] = order.products[i].prices[0].price.toFixed(2);
-            data['itemQuantity'+ (i+1)] = order.products[i].quantity;
-            data['itemWeight'+ (i+1)] = order.products[i].weight || 1;
+
+            var product = order.products[i];
+
+            data['itemId'+ (i+1)] = product._id;
+            data['itemDescription'+ (i+1)] = product.name;
+            data['itemAmount'+ (i+1)] = product.prices[0].price.toFixed(2);
+            data['itemQuantity'+ (i+1)] = product.quantity;
+            data['itemWeight'+ (i+1)] = product.weight || 1;
         };
 
         data['itemId'+ (arrayLength+1)] = 'Frete';

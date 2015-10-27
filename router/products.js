@@ -222,7 +222,9 @@ module.exports=function(app, mongoose, utils) {
                                 
                                 suppliers: req.body.suppliers,
                                 
-                                season: req.body.season
+                                season: req.body.season,
+
+                                howmany: req.body.howmany
                                 
                         }, function(err, product) {
         
@@ -352,6 +354,8 @@ module.exports=function(app, mongoose, utils) {
                                         product.suppliers = req.body.suppliers;
                                         
                                         product.season = req.body.season;
+
+                                        product.howmany = req.body.howmany;
                                         
                                         product.updated = Date.now();
                                         
