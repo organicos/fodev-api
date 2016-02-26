@@ -2,27 +2,21 @@
 
 module.exports=function(app, mongoose, utils) {
         
-    var Discounts = require('./../modules/Discounts.js');
+    var Discounts = require('./../models/Discounts.js');
 
     app.get('/v1/discounts', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
         
         var filter = {};
         
-        if(req.query.name) filter.name = new RegExp(req.query.name, "i");
+        if(req.user.kind != 'admin') filter['customer._id'] = req.user._id;
 
-        Discounts.find(filter, function(err, discounts) {
+        Discounts.find(filter, null, {sort: {updated: 1}}, function(err, discounts) {
 
             if (err) {
-                
-                res.statusCode = 400;
-                
-                res.send(err)
-                
-            } else {
-                
-                res.json(discounts);
-                
+                    res.send(err);       
             }
+
+            res.json(discounts);
 
         });
 

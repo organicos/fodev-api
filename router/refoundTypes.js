@@ -1,18 +1,16 @@
 "use strict";
 
-module.exports=function(app, mongoose, utils) {
+module.exports=function(app, utils) {
         
-    var Categories = require('./../models/Categories.js');
+    var RefoundTypes = require('./../models/RefoundTypes.js');
 
-    app.get('/v1/categories', utils.getRequestUser, function(req, res) {
+    app.get('/v1/refoundTypes', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
         
-        var filter = {
-            
-        };
+        var filter = {};
         
         if(req.query.name) filter.name = new RegExp(req.query.name, "i");
 
-        Categories.find(filter, function(err, categories) {
+        RefoundTypes.find(filter, function(err, refoundTypes) {
 
             if (err) {
                 
@@ -22,7 +20,7 @@ module.exports=function(app, mongoose, utils) {
                 
             } else {
                 
-                res.json(categories);
+                res.json(refoundTypes);
                 
             }
 
@@ -30,9 +28,9 @@ module.exports=function(app, mongoose, utils) {
 
     });
     
-    app.get('/v1/category/:category_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
+    app.get('/v1/refoundType/:refoundType_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
 
-        Categories.findOne({_id: req.params.category_id}, function(err, category) {
+        RefoundTypes.findOne({_id: req.params.refoundType_id}, function(err, refoundType) {
 
             if (err) {
                 
@@ -42,7 +40,7 @@ module.exports=function(app, mongoose, utils) {
                 
             } else {
                 
-                res.json(category);
+                res.json(refoundType);
                 
             }
 
@@ -50,13 +48,13 @@ module.exports=function(app, mongoose, utils) {
 
     });
 
-    app.post('/v1/category', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
+    app.post('/v1/refoundType', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
 
-        Categories.create({
+        RefoundTypes.create({
 
                 name : req.body.name
 
-        }, function(err, category) {
+        }, function(err, refoundType) {
 
                 if (err) {
                     
@@ -66,7 +64,7 @@ module.exports=function(app, mongoose, utils) {
                 
                 } else {
                     
-                    res.json(category); 
+                    res.json(refoundType); 
                         
                 }
 
@@ -74,9 +72,9 @@ module.exports=function(app, mongoose, utils) {
 
     });
     
-    app.put('/v1/category/:category_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res){
+    app.put('/v1/refoundType/:refoundType_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res){
 
-        Categories.findById(req.params.category_id, function(err, category) {
+        RefoundTypes.findById(req.params.refoundType_id, function(err, refoundType) {
                 
             if (err) {
                     
@@ -86,9 +84,9 @@ module.exports=function(app, mongoose, utils) {
                     
             } else {
                     
-                category.name = req.body.name;
+                refoundType.name = req.body.name;
 
-                category.save(function(err, updatedCategory) {
+                refoundType.save(function(err, updatedRefoundType) {
 
                     if (err) {
                             
@@ -98,7 +96,7 @@ module.exports=function(app, mongoose, utils) {
 
                     } else {
                             
-                        res.send(updatedCategory);
+                        res.send(updatedRefoundType);
                             
                     }
 
@@ -110,13 +108,13 @@ module.exports=function(app, mongoose, utils) {
 
     });
     
-    app.delete('/v1/categories/:category_id', utils.ensureAdmin, function(req, res) {
+    app.delete('/v1/refoundTypes/:refoundType_id', utils.ensureAdmin, function(req, res) {
 
-            Categories.remove({
+            RefoundTypes.remove({
 
-                    _id : req.params.category_id
+                    _id : req.params.refoundType_id
 
-            }, function(err, category) {
+            }, function(err, refoundType) {
 
                     if (err) {
                             
@@ -125,14 +123,14 @@ module.exports=function(app, mongoose, utils) {
                             
                     } else {
 
-                            Categories.find(function(err, categories) {
+                            RefoundTypes.find(function(err, refoundTypes) {
     
                                     if (err) {
                                             res.statusCode = 400;
                                             res.send(err);
                                     } else {
     
-                                            res.json(categories);
+                                            res.json(refoundTypes);
                                             
                                     }
     

@@ -2,11 +2,11 @@
 
 module.exports=function(app, mongoose, utils) {
         
-        var Articles = require('./../modules/Articles.js');
+        var Articles = require('./../models/Articles.js');
         
-        var Products = require('./../modules/Products.js');
+        var Products = require('./../models/Products.js');
         
-        var Visits = require('./../modules/Visits.js');
+        var Visits = require('./../models/Visits.js');
         
         var ObjectId = mongoose.Types.ObjectId;
         

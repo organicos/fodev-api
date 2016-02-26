@@ -2,10 +2,14 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var Addresses = new Schema({
+        
+        user: { type : Schema.Types.ObjectId, ref: 'Users', required: "Não conseguimos identificar o usuário."},
 
         name : { type: String, trim: true },
+        
+        phone: { type: String },
 
-        cep: { type: String, required: 'Informe o cep!' },
+        cep: { type: String },
         
         street: { type: String, required: 'Informe o endereço!' },
         
@@ -17,16 +21,14 @@ var Addresses = new Schema({
         
         district: { type: String, required: 'Informe o bairro!' },
         
-        city: { type: String, required: 'Informe a cidade!' },
+        city: { type : Schema.Types.ObjectId, ref: 'Cities', required: "Não conseguimos identificar a cidade."},
         
-        state: { type: String, required: 'Informe o estado!' },
+        ref: { type: String, required: 'Por favor, informe alguma referência!' },
         
-        country: { type: String, default: 'Brasil', required: 'Informe o país!' },
-        
-        address_ref: { type: String, required: 'Informe alguma referência!' },
+        lastUse: { type: Date, default: Date.now },
         
         updated: { type: Date, default: Date.now }
 
 });
-        
+
 module.exports = mongoose.model('Addresses', Addresses);

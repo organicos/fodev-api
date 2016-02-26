@@ -2,7 +2,7 @@
 
 module.exports = function (app, mongoose, utils) {
 
-    var Files = require('./../modules/Files.js');
+    var Files = require('./../models/Files.js');
     
     var validTypes = {
         images: [

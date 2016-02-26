@@ -2,37 +2,35 @@
 
 module.exports=function(app, mongoose, utils) {
         
-    var Categories = require('./../models/Categories.js');
+    var Countries = require('./../models/Countries.js');
 
-    app.get('/v1/categories', utils.getRequestUser, function(req, res) {
+    app.get('/v1/countries', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
         
-        var filter = {
-            
-        };
+        var filter = {};
         
         if(req.query.name) filter.name = new RegExp(req.query.name, "i");
 
-        Categories.find(filter, function(err, categories) {
-
+        Countries
+        .find(filter)
+        .populate(['state', 'country'])
+        .sort({name:1})
+        .exec(function(err, countries) {
+                
             if (err) {
-                
-                res.statusCode = 400;
-                
-                res.send(err)
-                
-            } else {
-                
-                res.json(categories);
-                
+                    
+                    res.statusCode = 400;
+                    res.send(err);       
             }
 
+            res.json(countries);
+                
         });
 
     });
     
-    app.get('/v1/category/:category_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
+    app.get('/v1/country/:country_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
 
-        Categories.findOne({_id: req.params.category_id}, function(err, category) {
+        Countries.findOne({_id: req.params.country_id}, function(err, country) {
 
             if (err) {
                 
@@ -42,7 +40,7 @@ module.exports=function(app, mongoose, utils) {
                 
             } else {
                 
-                res.json(category);
+                res.json(country);
                 
             }
 
@@ -50,13 +48,17 @@ module.exports=function(app, mongoose, utils) {
 
     });
 
-    app.post('/v1/category', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
+    app.post('/v1/country', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
 
-        Categories.create({
+        Countries.create({
 
                 name : req.body.name
+                
+                , code : req.body.code
+                
+                , active : req.body.active
 
-        }, function(err, category) {
+        }, function(err, country) {
 
                 if (err) {
                     
@@ -66,7 +68,7 @@ module.exports=function(app, mongoose, utils) {
                 
                 } else {
                     
-                    res.json(category); 
+                    res.json(country); 
                         
                 }
 
@@ -74,9 +76,9 @@ module.exports=function(app, mongoose, utils) {
 
     });
     
-    app.put('/v1/category/:category_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res){
+    app.put('/v1/country/:country_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res){
 
-        Categories.findById(req.params.category_id, function(err, category) {
+        Countries.findById(req.params.country_id, function(err, country) {
                 
             if (err) {
                     
@@ -86,9 +88,13 @@ module.exports=function(app, mongoose, utils) {
                     
             } else {
                     
-                category.name = req.body.name;
+                country.name = req.body.name;
+                
+                country.code = req.body.code;
+                
+                country.active = req.body.active;
 
-                category.save(function(err, updatedCategory) {
+                country.save(function(err, updatedCountry) {
 
                     if (err) {
                             
@@ -98,7 +104,7 @@ module.exports=function(app, mongoose, utils) {
 
                     } else {
                             
-                        res.send(updatedCategory);
+                        res.send(updatedCountry);
                             
                     }
 
@@ -110,13 +116,13 @@ module.exports=function(app, mongoose, utils) {
 
     });
     
-    app.delete('/v1/categories/:category_id', utils.ensureAdmin, function(req, res) {
+    app.delete('/v1/countries/:country_id', utils.ensureAdmin, function(req, res) {
 
-            Categories.remove({
+            Countries.remove({
 
-                    _id : req.params.category_id
+                    _id : req.params.country_id
 
-            }, function(err, category) {
+            }, function(err, country) {
 
                     if (err) {
                             
@@ -125,14 +131,14 @@ module.exports=function(app, mongoose, utils) {
                             
                     } else {
 
-                            Categories.find(function(err, categories) {
+                            Countries.find(function(err, countries) {
     
                                     if (err) {
                                             res.statusCode = 400;
                                             res.send(err);
                                     } else {
     
-                                            res.json(categories);
+                                            res.json(countries);
                                             
                                     }
     

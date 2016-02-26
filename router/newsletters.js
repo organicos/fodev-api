@@ -4,9 +4,9 @@ module.exports=function(app, mongoose, config, utils) {
     
     var Schema = mongoose.Schema;
     
-    var Users = require('./../modules/Users.js');
-    var Products = require('./../modules/Products.js');
-    var Articles = require('./../modules/Articles.js');
+    var Users = require('./../models/Users.js');
+    var Products = require('./../models/Products.js');
+    var Articles = require('./../models/Articles.js');
     
     var crypto = require('crypto');
     
@@ -35,7 +35,8 @@ module.exports=function(app, mongoose, config, utils) {
         }
         
         Newsletters
-        .find(filter, null, {sort: {updated: -1}})
+        .find(filter)
+        .sort({updated: -1})
         .deepPopulate(['sections'])
         .exec(function(err, newsletters) {
                 

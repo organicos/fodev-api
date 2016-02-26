@@ -2,19 +2,19 @@
 
 module.exports=function(app, mongoose, config, utils) {
 
-    var Articles = require('./../modules/Articles.js');
+    var Articles = require('./../models/Articles.js');
     
-    var Users = require('./../modules/Users.js');
+    var Users = require('./../models/Users.js');
     
-    var Products = require('./../modules/Products.js');
+    var Products = require('./../models/Products.js');
     
-    var Files = require('./../modules/Files.js');
+    var Files = require('./../models/Files.js');
 
-    var Prices = require('./../modules/Prices.js');
+    var Prices = require('./../models/Prices.js');
     
-    var Suppliers = require('./../modules/Suppliers.js');
+    var Suppliers = require('./../models/Suppliers.js');
     
-    var Categories = require('./../modules/Categories.js');
+    var Categories = require('./../models/Categories.js');
 
     app.get('/v1/playground', function(req, res) {
 

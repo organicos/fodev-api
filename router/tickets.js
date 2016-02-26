@@ -4,7 +4,7 @@ module.exports=function(app, mongoose, config, utils) {
     
     var Schema = mongoose.Schema;
 
-    var Users = require('./../modules/Users.js');
+    var Users = require('./../models/Users.js');
     
     var TicketUpdates = mongoose.model('TicketUpdates', {
         user: { type : Schema.Types.ObjectId, ref: 'Users', required: 'O responsável pela mensagem não foi informado!' }

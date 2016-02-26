@@ -6,7 +6,7 @@ module.exports=function(app, mongoose, utils, config) {
     
     var crypto = require('crypto');
     
-    var Users = require('./../modules/Users.js');
+    var Users = require('./../models/Users.js');
 
     app.get('/v1/users', utils.ensureAdmin, function(req, res) {
 
@@ -54,7 +54,7 @@ module.exports=function(app, mongoose, utils, config) {
         });
 
     });
-
+    
     app.post('/v1/retrievePassword', function(req, res) {
         Users.findOne({email: req.body.email}, function(err, user) {
             if (err) {

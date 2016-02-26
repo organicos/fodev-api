@@ -2,7 +2,7 @@
 
 module.exports=function(app, mongoose, utils) {
         
-    var Suppliers = require('./../modules/Suppliers.js');
+    var Suppliers = require('./../models/Suppliers.js');
 
     app.get('/v1/suppliers', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
         

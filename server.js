@@ -1,7 +1,5 @@
 "use strict";
 
-var newrelic = require('newrelic');
-
 var express  = require('express');
 
 var app = express(); // create our app w/ express
@@ -37,6 +35,14 @@ var utils = require('./helpers/utils');
 var errorHandler = require('errorhandler');
 
 var compression = require('compression');
+
+var newrelic = false;
+
+if(config.env == 'prod'){
+    
+    newrelic = require('newrelic');
+
+}
 
 app.use(compression());
 
@@ -86,43 +92,33 @@ if(['dev', 'stg'].indexOf(config.env) > -1){
     
 } else {
     config.envTag = '';
-};
+}
 
 // load the routes
-
-require('./router/main')(app, express);
-
-require('./router/playground')(app, mongoose, config, utils);
-
-require('./router/products')(app, mongoose, utils);
-
-require('./router/cdn')(app, mongoose, utils);
-
-require('./router/addresses')(app, mongoose, utils);
-
-require('./router/categories')(app, mongoose, utils);
-
-require('./router/discounts')(app, mongoose, utils);
-
-require('./router/suppliers')(app, mongoose, utils);
-
-require('./router/tickets')(app, mongoose, config, utils);
-
-require('./router/newsletters')(app, mongoose, config, utils);
-
+require('./router/storeConfigs')(app, utils);
+require('./router/addresses')(app, utils);
 require('./router/articles')(app, mongoose, utils);
-
+require('./router/baskets')(app, utils);
+require('./router/categories')(app, mongoose, utils);
+require('./router/cdn')(app, mongoose, utils);
+require('./router/cities')(app, mongoose, utils);
+require('./router/countries')(app, mongoose, utils);
+require('./router/discounts')(app, mongoose, utils);
+require('./router/statuses')(app, mongoose, utils);
 require('./router/files')(app, mongoose, utils);
-
 require('./router/groups')(app, mongoose, utils);
-
-require('./router/shipping')(app, moment);
-
-require('./router/order')(app, mongoose, moment, utils, config, https);
-
-require('./router/users')(app, mongoose, utils, config);
-
+require('./router/main')(app, express);
+require('./router/newsletters')(app, mongoose, config, utils);
+require('./router/orders')(app, mongoose, moment, utils, config, https);
+require('./router/packings')(app, mongoose, utils);
+require('./router/playground')(app, mongoose, config, utils);
+require('./router/products')(app, mongoose, utils);
+require('./router/shippings')(app, moment);
 require('./router/s3')(app, mongoose, utils, config);
+require('./router/states')(app, mongoose, utils);
+require('./router/suppliers')(app, mongoose, utils);
+require('./router/tickets')(app, mongoose, config, utils);
+require('./router/users')(app, mongoose, utils, config);
 
 require('./router/app')(app, express, config);
 

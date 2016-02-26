@@ -2,35 +2,34 @@
 
 module.exports=function(app, mongoose, utils) {
         
-    var Groups = require('./../models/Groups.js');
+    var Packings = require('./../models/Packings.js');
 
-    app.get('/v1/groups', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
+    app.get('/v1/packings', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
         
         var filter = {};
         
         if(req.query.name) filter.name = new RegExp(req.query.name, "i");
 
-        Groups.find(filter, function(err, groups) {
-
+        Packings
+        .find(filter)
+        .sort({name:1})
+        .exec(function(err, packings) {
+                
             if (err) {
-                
-                res.statusCode = 400;
-                
-                res.send(err)
-                
-            } else {
-                
-                res.json(groups);
-                
+                    
+                    res.statusCode = 400;
+                    res.send(err);       
             }
 
+            res.json(packings);
+                
         });
-
+        
     });
     
-    app.get('/v1/group/:group_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
+    app.get('/v1/packing/:packing_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
 
-        Groups.findOne({_id: req.params.group_id}, function(err, group) {
+        Packings.findOne({_id: req.params.packing_id}, function(err, packing) {
 
             if (err) {
                 
@@ -40,7 +39,7 @@ module.exports=function(app, mongoose, utils) {
                 
             } else {
                 
-                res.json(group);
+                res.json(packing);
                 
             }
 
@@ -48,13 +47,19 @@ module.exports=function(app, mongoose, utils) {
 
     });
 
-    app.post('/v1/group', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
+    app.post('/v1/packing', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
 
-        Groups.create({
+        Packings.create({
 
                 name : req.body.name
+                
+                , price : req.body.price
+                
+                , active : req.body.active
+                
+                , desc : req.body.desc
 
-        }, function(err, group) {
+        }, function(err, packing) {
 
                 if (err) {
                     
@@ -64,7 +69,7 @@ module.exports=function(app, mongoose, utils) {
                 
                 } else {
                     
-                    res.json(group); 
+                    res.json(packing); 
                         
                 }
 
@@ -72,9 +77,9 @@ module.exports=function(app, mongoose, utils) {
 
     });
     
-    app.put('/v1/group/:group_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res){
+    app.put('/v1/packing/:packing_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res){
 
-        Groups.findById(req.params.group_id, function(err, group) {
+        Packings.findById(req.params.packing_id, function(err, packing) {
                 
             if (err) {
                     
@@ -84,9 +89,15 @@ module.exports=function(app, mongoose, utils) {
                     
             } else {
                     
-                group.name = req.body.name;
+                packing.name = req.body.name;
+                
+                packing.price = req.body.price;
+                
+                packing.active = req.body.active;
+                
+                packing.desc = req.body.desc;
 
-                group.save(function(err, updatedGroup) {
+                packing.save(function(err, updatedPacking) {
 
                     if (err) {
                             
@@ -96,7 +107,7 @@ module.exports=function(app, mongoose, utils) {
 
                     } else {
                             
-                        res.send(updatedGroup);
+                        res.send(updatedPacking);
                             
                     }
 
@@ -108,13 +119,13 @@ module.exports=function(app, mongoose, utils) {
 
     });
     
-    app.delete('/v1/groups/:group_id', utils.ensureAdmin, function(req, res) {
+    app.delete('/v1/packings/:packing_id', utils.ensureAdmin, function(req, res) {
 
-            Groups.remove({
+            Packings.remove({
 
-                    _id : req.params.group_id
+                    _id : req.params.packing_id
 
-            }, function(err, group) {
+            }, function(err, packing) {
 
                     if (err) {
                             
@@ -123,14 +134,14 @@ module.exports=function(app, mongoose, utils) {
                             
                     } else {
 
-                            Groups.find(function(err, groups) {
+                            Packings.find(function(err, packings) {
     
                                     if (err) {
                                             res.statusCode = 400;
                                             res.send(err);
                                     } else {
     
-                                            res.json(groups);
+                                            res.json(packings);
                                             
                                     }
     

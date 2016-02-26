@@ -2,11 +2,11 @@
 
 module.exports=function(app, mongoose, utils) {
         
-        var Products = require('./../modules/Products.js');
+        var Products = require('./../models/Products.js');
         
-        var Prices = require('./../modules/Prices.js');
+        var Prices = require('./../models/Prices.js');
         
-        var Visits = require('./../modules/Visits.js');
+        var Visits = require('./../models/Visits.js');
         
         var adminFields = '-costs';
         
