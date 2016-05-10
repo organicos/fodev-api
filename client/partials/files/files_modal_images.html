@@ -1,0 +1,15 @@
+<div class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
+  <a href="javascript:void(0)" class="btn btn-lg" ng-class="!onlySelected ? 'btn-info' : 'btn-default'" ng-click="onlySelected = false" role="button">
+    Tudo
+  </a>
+  <a href="javascript:void(0)" class="btn btn-lg" ng-class="onlySelected ? 'btn-info' : 'btn-default'" ng-click="onlySelected = true" role="button">
+    Selecionados
+  </a>
+</div>
+<div class="row">
+  <div class="col-infinite col-xs-8 col-sm-6 col-md-4 col-lg-3 clearfix" ng-repeat="image in imagesFiltered = (onlySelected ? selectedItems : images) track by image._id">
+    <div class="click" ng-class="isSelectedFile(image) ? 'background-green round-12' : ''" ng-dblclick="selectFile(image, 'true')" ng-click="selectFile(image)">
+      <img class="img-responsive img-wide img-circle" ng-src="https://feiraorganica.com/cdn/image/100x100/?url={{image.url}}"></img>
+    </div>
+  </div>
+</div>

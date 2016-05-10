@@ -1,0 +1,20 @@
+<form class="form" role="form">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="modalOptions.close()"><span aria-hidden="true">&times;</span></button>
+    <h3>Arquivos</h3>
+  </div>
+  <div class="modal-body">
+    <ul class="nav nav-tabs nav-justified">
+      <li role="presentation" ng-class="typeTab == 'upload' ? 'active' : ''"><a href="javascript:void(0)" ng-click="typeTab = 'upload'">Enviar</a></li>
+      <li role="presentation" ng-class="typeTab == 'images' ? 'active' : ''"><a href="javascript:void(0)" ng-click="typeTab = 'images'">Imagens</a></li>
+      <li role="presentation" ng-class="typeTab == 'videos' ? 'active' : ''"><a href="javascript:void(0)" ng-click="typeTab = 'videos'">Vídeos</a></li>
+      <li role="presentation" ng-class="typeTab == 'audios' ? 'active' : ''"><a href="javascript:void(0)" ng-click="typeTab = 'audios'">Audios</a></li>
+    </ul>
+    <br>
+    <div ng-include="'/partials/files/files_modal_'+typeTab+'.html'" onload="prepareModalContent(typeTab)" autoscroll></div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-default" ng-click="modalOptions.close();">Fechar</button>
+    <button class="btn btn-success" ng-click="modalOptions.select()" ng-disabled="selectedItems.length == 0">Selecionar</button>
+  </div>
+</form>

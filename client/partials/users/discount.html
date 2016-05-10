@@ -1,0 +1,14 @@
+<div class="row">
+    <div class="col-sm-offset-3 col-sm-18">
+        
+        <h1>Dados do desconto <span class="text-violet" ng-bind="discount.name"></span></h1>
+        
+        <p><strong>Cliente:</strong> <span ng-bind="::discount.customer.name"></span></p>
+        <p><strong>Valor:</strong> <span ng-bind="::discount.value"></span></p>
+        <p><strong>Motivo:</strong> <span ng-bind="::discount.desc"></span></p>
+        <p ng-if="discount.order"><strong>Pedido:</strong> <a href="/meu/pedido/{{discount.order}}" ng-bind="::discount.order"></a></p>
+        <p><strong>Data:</strong> <span ng-bind="::discount.startDate | date:'dd/MM/yyyy'"></span></p>
+        <p><strong>Validade:</strong> <span ng-bind="::discount.endDate | date:'dd/MM/yyyy'"></span></p>
+        
+    </div>
+</div>

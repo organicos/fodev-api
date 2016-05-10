@@ -1,0 +1,30 @@
+{
+  "name": "FODEV",
+  "description": "Organic Food E-commerce",
+  "version": "0.0.0",
+  "homepage": "https://feiraorganica.com",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "angular": "1.3.x",
+    "angular-route": "~1.3.x",
+    "angular-loader": "~1.3.x",
+    "angular-mocks": "~1.3.x",
+    "angular-animate": "~1.3.x",
+    "angular-sanitize": "~1.3.x",
+    "angular-i18n": "~1.3.x",
+    "html5-boilerplate": "~5.2.0",
+    "ngstorage": "0.3.7",
+    "angular-filter": "~0.5.4",
+    "satellizer": "~0.10.1",
+    "angular-bootstrap": "~0.13.0",
+    "angularjs-socialshare": "~0.1.7",
+    "angular-chart.js": "~0.7.1",
+    "font-awesome": "~4.3.0",
+    "ng-file-upload": "~5.0.4",
+    "ngImgCrop": "~0.3.2"
+  },
+  "resolutions": {
+    "angular": "1.3.x"
+  }
+}

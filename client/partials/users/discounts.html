@@ -1,0 +1,53 @@
+<div class="row">
+    <div class="col-sm-22 col-sm-offset-1">
+        <h1 class="">
+            Meus descontos (<span ng-bind="filteredDiscounts.length"></span>)
+            <span class="pull-right">
+                <span ng-click="showSearchForm = !showSearchForm"><i class="fa fa-search click"></i></span>
+            </span>
+        </h1>
+
+        <p class="text-center" ng-if="loadingDiscounts">Buscando descontos <i class="fa fa-cog fa-spin"></i></p>    
+        
+        <div ng-if="!loadingDiscounts">
+
+            <div ng-if="!discounts.length > 0" class="well well-mini background-violet text-white text-center">
+                <h3>Você não possui nenhum desconto</h3>
+            </div>
+
+            <div ng-if="discounts.length > 0">
+    
+                <form class="form-inline text-right" ng-if="showSearchForm" class="animate-if">
+                    <div class="form-group">
+                		<input class="form-control input-xs" id="discountQuery" name="discountQuery" ng-model="$parent.discountQuery" type="text" placeholder="Buscar descontos">
+                    </div>
+                </form>
+                
+                <br>
+
+                <table class="table table-condensed table-stripped table-hover">
+                    <thead>
+                        <tr>
+                            <td>Desconto</td>
+                            <td>Data</td>
+                            <td>Status</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="discount in $parent.$parent.filteredDiscounts = (discounts | filter: discountQuery | orderBy: selectedOrder)">
+                            <td><a href="/meu/desconto/{{discount._id}}" ng-bind="discount.desc || '???'"></a></td>
+                            <td ng-bind="discount.updated | date:'dd/MM/yyyy'"></td>
+                            <td>
+                                <span ng-if="discount.used" class="label label-danger">Usado</span>
+                                <span ng-if="!discount.used" class="label label-success">Disponível</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+            </div>
+
+        </div>
+        
+    </div>
+</div>

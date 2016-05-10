@@ -1,0 +1,158 @@
+<div class="row">
+    <div class="col-sm-22 col-sm-offset-1">
+        <h1>Revise seu pedido</h1>
+        
+        <h4><i class="fo-logo"></i> Produtos</h4>
+
+        <fodev-basket></fodev-basket> <!-- /directives/basket/basketDirective.js -->
+
+        <hr>
+        
+        <h4>
+            <i class="fo-logo"></i> Data de entrega
+        </h4>
+        <div class="form-group">
+            <select class="form-control" ng-options="(shippingDate | date:'fullDate') for shippingDate in shipping.nextDates" ng-model="order.shipping.date"></select>
+        </div>
+        
+        <hr>
+
+        <h4>
+            <i class="fo-logo"></i> Endereço 
+            <small>
+                <button type="button" class="btn btn-info btn-xs" ng-click="addressService.openAddressesList(true, order.shipping.address, setAddressCbk)" ng-if="order.shipping.address._id">alterar</button>
+            </small>
+        </h4>
+
+        <div class="well well-mini">
+            
+            <p ng-if="order.shipping.address._id">
+                <span ng-bind="order.shipping.address.name"></span>
+                - <span ng-bind="order.shipping.address.city.name"></span>
+            </p>
+
+            <p ng-if="!order.shipping.address._id">
+                <button type="button" class="btn btn-info btn-block" ng-click="addressService.openAddressesList(true, order.shipping.address, setAddressCbk)">
+                    Adicionar endereço de entrega
+                </button>
+            </p>
+
+        </div>
+        
+        <hr>
+
+        <h4>
+            <i class="fo-logo"></i> Embalagem 
+            <small>
+                <button type="button" class="btn btn-info btn-xs" ng-click="showFormOptions.packing = !showFormOptions.packing;">alterar</button>
+            </small>
+        </h4>
+
+        <div class="well well-mini">
+            
+            <p ng-if="order.shipping.packing._id">
+                <span ng-bind="order.shipping.packing.name"></span>
+                - <span ng-bind="order.shipping.packing.price | currency:'R$':2"></span>
+            </p>
+
+            <p ng-if="!order.shipping.packing._id">
+                <button type="button" class="btn btn-info btn-block" ng-click="showFormOptions.packing = !showFormOptions.packing;">
+                    Selecionar embalagem
+                </button>
+            </p>
+            
+        </div>
+        
+        <div class="row" ng-if="showFormOptions.packing">
+            <div ng-repeat="packing in packings" class="col-sm-6">
+                <button type="button" class="btn btn-lg btn-block" ng-click="order.shipping.packing = packing; showFormOptions.packing = false;" ng-class="order.shipping.packing._id == packing._id ? 'btn-primary' : 'btn-default'">
+                    <span ng-bind="::packing.name"></span>
+                    <br>
+                    <small>Valor: <span ng-bind="::packing.price | currency:'R$':2"></span></small>
+                </button>
+                <p class="text-center"><small ng-bind="::packing.desc"></small></p>
+            </div>
+        </div>
+        
+        <hr>
+        
+        <h4>
+            <i class="fo-logo"></i> Na falta de um produto 
+            <small>
+                <button type="button" class="btn btn-info btn-xs" ng-click="showFormOptions.refound = !showFormOptions.refound;">alterar</button>
+            </small>
+        </h4>
+
+        <div class="well well-mini">
+
+            <p ng-if="order.refound.type">
+                <span ng-bind="getSelectedRefoundOption().name"></span>
+                - <span ng-bind="getSelectedRefoundOption().desc"></span>
+            </p>
+
+            <p ng-if="!order.refound.type">
+                <button type="button" class="btn btn-info btn-block" ng-click="showFormOptions.refound = !showFormOptions.refound;">
+                    Selecionar tipo de reembolso
+                </button>
+            </p>
+            
+        </div>
+
+        <div class="row" ng-if="showFormOptions.refound">
+            <div class="col-sm-8" ng-repeat="refoundOption in refoundOptions">
+                <button type="button" class="btn btn-lg btn-block" ng-click="order.refound.type = refoundOption.type; selectedRefoundIndex = $index; showFormOptions.refound = false;" ng-class="order.refound.type == refoundOption.type ? 'btn-primary' : 'btn-default'" ng-bind="::refoundOption.name"></button>
+                <p class="text-center"><small ng-bind="::refoundOption.desc"></small></p>
+            </div>
+        </div>
+        
+        <hr>
+        
+        <h4><i class="fo-logo"></i> Resumo</h4>
+        <table class="table table-condensed table-striped table-hover small">
+            <thead>
+                <tr>
+                    <td class="col-sm-13 col-md-15 col-lg-17">Desc</td>
+                    <td align="right" class="col-sm-4 col-md-3 col-lg-2">Valor</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Cesta orgânica</td>
+                    <td align="right" ng-bind="order.basket.total | currency:'R$':2"></td>
+                </tr>
+                <tr>
+                    <td>Frete: <span ng-bind="order.shipping.address.city.name"></span></td>
+                    <td align="right" ng-bind="order.shipping.address.city.shipping_price | currency:'R$':2"></td>
+                </tr>
+                <tr>
+                    <td>Embalagem: <span ng-bind="order.shipping.packing.name"></span></td>
+                    <td align="right" ng-bind="order.shipping.packing.price | currency:'R$':2"></td>
+                </tr>
+                <tr ng-repeat="discount in order.discounts" class="text-danger">
+                    <td>
+                        <span ng-bind="discount.desc" ng-if="!discount.order"></span>
+                        <a href="/meu/pedido/{{discount.order}}" ng-bind="discount.desc" ng-if="discount.order"></a>
+                    </td>
+                    <td align="right">- <span ng-bind="discount.value | currency:'R$':2"></span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4 class="text-right">Valor final <span class="text-success" ng-bind="orderTotal() | currency:'R$':2"></span></h4>
+        
+        <!-- Footer -->
+        <div class="form-group text-right">
+            <a href="/feira">Continuar comprando</a>
+            &nbsp;
+            <button 
+                type="submit"
+                class="btn btn-success" 
+                ng-disabled="!orderReady || processingOrder || orderTotal() < 35" ng-click="processOrder()">
+                <i class="fa fa-spinner fa-spin" ng-if="processingOrder"></i>
+                Concluir compra
+                <i class="fa fa-truck fa-flip-horizontal"></i>
+            </button>
+        </div>
+
+    </div>
+</div>

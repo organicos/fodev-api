@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /administracao
+Disallow: /eu
+Disallow: /eu/*
+Disallow: /meus/*
+Disallow: /minhas/*

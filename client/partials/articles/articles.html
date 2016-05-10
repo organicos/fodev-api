@@ -1,0 +1,36 @@
+<div class="row">
+    <div class="col-sm-22 col-sm-offset-1">
+        
+        <h1>Artigos <span ng-bind="filteredArticles.length"></span></h1>
+        
+        <form class="form-inline text-right">
+            <div class="form-group">
+        		<input class="form-control input-xs" id="orderQuery" name="orderQuery" ng-model="orderQuery" type="text" placeholder="Buscar artigo">
+            </div>
+            <a class="btn btn-default" href="/artigo">+</a>
+        </form>
+        
+        <br><br>
+    
+        <table class="table table-condensed table-stripped table-hover small">
+            <thead>
+                <tr>
+                    <td class="click" ng-click="orderByField='title'; reverseSort = !reverseSort">Título</td>
+                    <td class="click" ng-click="orderByField='visits.length'; reverseSort = !reverseSort">Visualizações</td>
+                    <td class="click" ng-click="orderByField='encoded_url'; reverseSort = !reverseSort">Slug</td>
+                    <td class="click" ng-click="orderByField='updated'; reverseSort = !reverseSort">Modificado</td>
+                    <td>Ações</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="article in filteredArticles = (articles | filter: orderQuery | orderBy:orderByField:reverseSort)">
+                    <td><a href="/artigo/{{article._id}}" ng-bind="article.title" title="{{article.content}}"></a></td>
+                    <td ng-bind="article.visits.length"></td>
+                    <td ng-bind="article.encoded_url"></td>
+                    <td ng-bind="article.updated | date:'dd/MM/yyyy'"></td>
+                    <td><a ng-click="dropArticle(article)" href="javascrip:void(0)">x</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

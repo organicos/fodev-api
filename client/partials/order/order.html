@@ -1,0 +1,151 @@
+<div class="row">
+    <div class="col-sm-22 col-sm-offset-1">
+        
+        <h1>Pedido <span ng-bind="order._id"></span> </h1>
+
+        <div class="row">
+            <div class="col-sm-12">
+                
+                <h4><i class="fo-logo"></i> Dados</h4>
+                <p><strong>Status do pagamento: </strong> 
+                    <span class="label" 
+                        ng-class="order.status == 1 ? 'label-success' : order.status == 2 ? 'label-warning' : 'label-danger'" 
+                        ng-cloak 
+                        ng-bind="statuses[order.status].name"
+                    ></span>
+                    <small ng-class="order.status == 1 ? 'text-success' : 'text-danger'"  ng-bind="statuses[order.status].desc"></small>
+                    <span ng-if="!changingStatus && order.status != 2">
+                        <select ng-model="order.status" ng-change="changeStatus(order.status, {{order.status}})" ng-options="status.id as status.name for status in statuses"></select>
+                    </span>
+                    <span ng-if="changingStatus"><i class="fa fa-spinner fa-spin"></i></span>
+                </p>
+                <p ng-if="order.payment_date"><strong>Data do pagamento:</strong> <span ng-bind="order.payment_date"></span></p>
+                <p><strong>Cliente: </strong> <a href="/user/{{order.customer._id}}" ng-bind="order.customer.name || order.customer.email"></a></p>
+                <p><strong>Valor da cesta: </strong> <span ng-bind="order.total | currency:'R$':2"></span></p>
+                <p><strong>Valor do frete: </strong> <span ng-bind="order.shipping.price | currency:'R$':2"></span></p>
+                <p><strong>Valor final: </strong> <span ng-bind="order.total + order.shipping.price | currency:'R$':2"></span></p>
+                <p><strong>Data: </strong> <span ng-bind="order.updated | date:'dd/MM/yyyy'"></span></p>
+            </div>
+            <div class="col-sm-12">
+                
+                <h4><i class="fo-logo"></i> Entrega</h4>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p><strong>CEP: </strong> <span ng-bind="order.shipping.address.cep"></span></p>
+                        <p><strong>Rua: </strong> <span ng-bind="order.shipping.address.street"></span></p>
+                        <p><strong>Número: </strong> <span ng-bind="order.shipping.address.number"></span></p>
+                        <p><strong>Complemento: </strong> <span ng-bind="order.shipping.address.complement"></span></p>
+                        <p><strong>Bairro: </strong> <span ng-bind="order.shipping.address.district"></span></p>
+                    </div>
+                    <div class="col-sm-12">
+                        <p><strong>Cidade: </strong> <span ng-bind="order.shipping.address.city.name"></span></p>
+                        <p><strong>Estado: </strong> <span ng-bind="order.shipping.address.city.state.name"></span></p>
+                        <p><strong>Entrega: </strong> <span ng-bind="order.shipping.date | date:'EEEE, dd/MM/yyyy' || order.shipping.deliveryOption"></span></p>
+                        <p><strong>Referência: </strong> <span ng-bind="order.shipping.address.ref"></span></p>   
+                        <p><strong>Fone: </strong> <span ng-bind="order.shipping.address.phone"></span></p>  
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+        <h4><i class="fo-logo"></i> Resumo</h4>
+        <table class="table table-condensed table-striped table-hover small">
+            <thead>
+                <tr>
+                    <td class="col-sm-13 col-md-15 col-lg-17">Item</td>
+                    <td align="right" class="col-sm-4 col-md-3 col-lg-2">Valor</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Cesta orgânica</td>
+                    <td align="right" ng-bind="order.basket.total | currency:'R$':2"></td>
+                </tr>
+                <tr>
+                    <td>Frete: <span ng-bind="order.shipping.address.city.name"></span></td>
+                    <td align="right" ng-bind="order.shipping.address.city.shipping_price | currency:'R$':2"></td>
+                </tr>
+                <tr>
+                    <td>Embalagem: <span ng-bind="order.shipping.packing.name"></span></td>
+                    <td align="right" ng-bind="order.shipping.packing.price | currency:'R$':2"></td>
+                </tr>
+                <tr ng-repeat="discount in order.discounts" class="text-danger">
+                    <td>
+                        <span ng-bind="discount.desc" ng-if="!discount.order"></span>
+                        <a href="/meu/pedido/{{discount.order}}" ng-bind="discount.desc" ng-if="discount.order"></a>
+                    </td>
+                    <td align="right">- <span ng-bind="discount.value | currency:'R$':2"></span></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h4><i class="fo-logo"></i> Produtos</h4>
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <td>Produto</td>
+                    <td align="right">Quantidade</td>
+                    <td align="right">Preço unitário</td>
+                    <td align="right">Total</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="product in order.basket.products" ng-class="product.unavaiable ? 'text-danger text-del' : 'text-success'">
+                    <td>
+                        <i ng-if="order.status == 1" 
+                            class="fa" 
+                            ng-class="product.unavaiable ? 'fa-square-o' : 'fa-check-square-o'" 
+                            ng-click="product.unavaiable = product.unavaiable ? !product.unavaiable : true"></i>
+                        <span ng-bind="product.name"
+    					   tooltip-placement="right"
+    					   tooltip-html-unsafe="{{product.name}} <hr> {{product.dscr}}" 
+    					   tooltip-append-to-body="true"></span>
+                    </td>
+                    <td ng-bind="product.quantity" align="right"></td>
+                    <td ng-bind="product.prices[0].price | currency:'R$':2" align="right"></td>
+                    <td ng-bind="product.quantity*product.prices[0].price | currency:'R$':2" align="right"></td>
+                </tr>
+                <tr class="text-danger" ng-if="refreshRefoundValue() > 0">
+                    <td colspan="2">
+                        <strong>Forma de reembolso: </strong>
+                        <span ng-if="order.status == 2"> <!-- order.status == 2 - Delivered -->
+                            <span ng-if="order.refound.option == 'discount'"><a href="/discount/{{order.refound.discount._id}}">Desconto</a></span>
+                            <span ng-if="order.refound.option == 'cash'">Dinheiro</span>
+                            <span ng-if="order.refound.option == 'products'">Produtos</span>
+                        </span>
+                        <span ng-if="order.status != 2"> <!-- order.status != 2 - Waiting for Delivery -->
+                            <input ng-model="order.refound.option" type="radio" name="order.refound.option.discount" value="discount">
+                            <label for="order.refound.option.discount">Desconto</label>
+                            <input ng-model="order.refound.option" type="radio" name="order.refound.option.cash" value="cash">
+                            <label for="order.refound.option.cash">Dinheiro</label>
+                            <input ng-model="order.refound.option" type="radio" name="order.refound.option.products" value="products">
+                            <label for="order.refound.option.products">Produtos</label>
+                        </span>
+                    </td>
+                    <td align="right">Total em falta:</h5></td>
+                    <td align="right" ng-bind="refreshRefoundValue() | currency:'R$':2"></td></td>
+                </tr>
+                <tr>
+                    <td colspan="2"></td>
+                    <td align="right">Total entregue:</h5></td>
+                    <td align="right" ng-bind="orderTotal() | currency:'R$':2"></td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td align="right">Frete:</td>
+                    <td align="right" ng-bind="order.shipping.price | currency:'R$':2"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td align="right"><h4>Preço final:</h4></td>
+                    <td align="right"><h4 ng-bind="orderTotal() + order.shipping.price | currency:'R$':2"></h4></td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>

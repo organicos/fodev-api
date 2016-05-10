@@ -1,0 +1,64 @@
+<div class="row">
+    <div class="col-sm-22 col-sm-offset-1">
+        <h1>Produtos <span ng-bind="filteredProducts.length"></span></h1>
+        
+        <form class="form-inline text-right">
+            <div class="form-group">
+            	<label for="productQuery">Buscar produto</label>
+        		<input class="form-control input-xs" id="productQuery" name="productQuery" ng-model="productQuery" type="text" placeholder="Buscar produto">
+            </div>
+            <a class="btn btn-default" href="/produto">+</a>
+        </form>
+		
+		<br>
+
+		<div class="btn-group" role="group" aria-label="productKind">
+			<button type="button" class="btn btn-sm btn-primary" ng-class="selectedCategory == '' ? 'active' : ''" ng-click="selectCategory('')">Tudo</button>
+			<button type="button" class="btn btn-sm btn-primary" ng-class="selectedCategory == product[0].categories[0].name ? 'active' : ''" ng-click="selectCategory(product[0].categories[0].name)" ng-repeat="product in filteredProducts = (products | filter: productQuery | orderBy: 'categories[0].name' | groupBy: 'categories[0].name')">{{product[0].categories[0].name}}</button>
+		</div>
+		
+		<hr>
+		
+        <table class="table table-condensed table-stripped table-hover">
+            <thead>
+                <tr>
+                    <td class="click" ng-click="orderByField='name'; reverseSort = !reverseSort">Nome</td>
+                    <td class="click" ng-click="orderByField='costs[0].price'; reverseSort = !reverseSort">Custo</td>
+                    <td class="click" ng-click="orderByField='prices[0].price'; reverseSort = !reverseSort">Preço</td>
+                    <td>Margem</td>
+                    <td class="click" ng-click="orderByField='categories[0].name'; reverseSort = !reverseSort">Categoria</td>
+                    <td class="click" ng-click="orderByField='visits.length'; reverseSort = !reverseSort">Visualizações</td>
+                    <td class="click" ng-click="orderByField='active'; reverseSort = !reverseSort">Ativo</td>
+                    <td class="click" ng-click="orderByField='encoded_url'; reverseSort = !reverseSort">Slug</td>
+                    <td class="click" ng-click="orderByField='highlight'; reverseSort = !reverseSort">Destaque</td>
+                    <td class="click" ng-click="orderByField='updated'; reverseSort = !reverseSort">Ultima modificação</td>
+                    <td>Ações</td>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr ng-repeat="product in filteredProducts = (products | filter: productQuery | filter: {categories : {name: selectedCategory}} | orderBy:orderByField:reverseSort) track by product._id">
+                    <td><a class="text-violet" href="/produto/{{product._id}}" ng-bind="::product.name"></a></td>
+                    <td>
+                        <span ng-bind="::product.costs[0].price | currency"></span>
+                        <span ng-if="product.costs[1].price > product.costs[0].price"><i class="fa fa-arrow-down text-success" title="Era {{product.costs[1].price | currency:'R$':2}}"></i></span>
+                        <span ng-if="product.costs[1].price < product.costs[0].price"><i class="fa fa-arrow-up text-danger" title="Era {{product.costs[1].price | currency:'R$':2}}"></i></span>
+                    </td>
+                    <td>
+                        <span ng-bind="::product.prices[0].price | currency"></span>
+                        <span ng-if="product.prices[1].price > product.prices[0].price"><i class="fa fa-arrow-down text-success" title="Era {{product.prices[1].price | currency:'R$':2}}"></i></span>
+                        <span ng-if="product.prices[1].price < product.prices[0].price"><i class="fa fa-arrow-up text-danger" title="Era {{product.prices[1].price | currency:'R$':2}}"></i></span>
+                    </td>
+                    <td ng-class="((product.prices[0].price / (product.costs[0].price / 100)) - 100) < 30 ? 'danger' : ((product.prices[0].price / (product.costs[0].price / 100)) - 100) < 50 ? 'warning' : ((product.prices[0].prices / (product.costs[0].price / 100)) - 100) >= 50 ? 'success' : ''">{{(product.prices[0].price / (product.costs[0].price / 100)) - 100 || 0 | number:1}}%</td>
+                    <td ng-bind="::product.categories[0].name"></td>
+                    <td ng-bind="::product.visits.length"></td>
+                    <td><i ng-if="product.active" class="fa fa-check"></i></td>
+                    <td ng-bind="::product.encoded_url"></td>
+                    <td><i ng-if="product.highlight" class="fa fa-check"></i></td>
+                    <td ng-bind="::product.updated | date:'dd/MM/yyyy'"></td>
+                    <td><a href="javascript:void(0)" ng-click="dropProduct(product)">x</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

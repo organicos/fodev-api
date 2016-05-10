@@ -4,25 +4,65 @@ var StoreConfigs = require('./../models/StoreConfigs.js');
 
 module.exports=function(app, utils) {
     
-    app.get('/v1/configs', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
+    app.get('/v1/storeConfigs', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
             
         var filter = {};
         
         StoreConfigs
-        .first(filter)
-        .exec(function(err, orders) {
+        .findOne(filter)
+        .exec(function(err, storeConfigs) {
                 
             if (err) {
                     res.send(err);    
             }
 
-            res.json(orders);
+            res.json(storeConfigs);
 
         });
 
     });
     
-    app.put('/v1/configs', utils.ensureAdmin, function(req, res){
+    app.put('/v1/storeConfigs', utils.ensureAdmin, function(req, res){
+        
+        var filter = {};
+        
+        StoreConfigs
+        .findOne(filter)
+        .exec(function(err, storeConfigs) {
+                
+            if (err) {
+
+                    res.send(err);
+
+            } else {
+                
+                if(storeConfigs){
+                    
+                    storeConfigs = req.params.storeConfigs;
+                    
+                } else {
+                    
+                    storeConfigs = new StoreConfigs(req.params.storeConfigs);
+                    
+                }
+                
+                storeConfigs.save(function(err, storeConfigs){
+                   
+                    if (err) {
+        
+                            res.send(err);
+        
+                    } else {
+                
+                        res.json(storeConfigs);
+                        
+                    }
+                    
+                });
+                
+            }
+
+        });
         
         var config = new StoreConfigs();
         

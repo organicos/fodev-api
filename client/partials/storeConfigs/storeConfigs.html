@@ -1,0 +1,108 @@
+<div class="row">
+    <div class="col-sm-offset-3 col-sm-18">
+        
+        <h1>Configurações da loja <span class="text-violet" ng-bind="storeConfigs.name"></span></h1>
+        
+        
+        <form class="form" role="form" ng-submit="saveStoreConfigs()">
+            <h2>Loja</h2>
+            <div class="form-group">
+                <label for="name">Nome</label>
+                <input class="form-control" type="text" name="name" id="name" ng-model="storeConfigs.name"/>
+            </div>
+            <div class="form-group">
+                <label for="slogan">Slogan</label>
+                <input class="form-control" type="text" name="slogan" id="slogan" ng-model="storeConfigs.slogan"/>
+            </div>
+            <div class="form-group">
+                <label for="address">Endereço</label>
+                <input class="form-control" type="text" name="address" id="address" ng-model="storeConfigs.address"/>
+            </div>
+            <div class="form-group">
+                <label for="phone">Telefone</label>
+                <input class="form-control" type="text" name="phone" id="phone" ng-model="storeConfigs.phone"/>
+            </div>
+            <div class="form-group">
+                <label for="deliveryWeekDays">Dias da semana de entrega</label>
+                <input class="form-control" type="text" name="deliveryWeekDays" id="deliveryWeekDays" ng-model="storeConfigs.deliveryWeekDays"/>
+            </div>
+            
+            <h2>Pagseguro</h2>
+            <div class="form-group">
+                <label for="pagseguro.host">Host</label>
+                <input class="form-control" type="text" name="pagseguro.host" id="pagseguro.host" ng-model="storeConfigs.pagseguro.host"/>
+            </div>
+            <div class="form-group">
+                <label for="pagseguro.email">E-mail</label>
+                <input class="form-control" type="text" name="pagseguro.email" id="pagseguro.email" ng-model="storeConfigs.pagseguro.email"/>
+            </div>
+            <div class="form-group">
+                <label for="pagseguro.token">Token</label>
+                <input class="form-control" type="text" name="pagseguro.token" id="pagseguro.token" ng-model="storeConfigs.pagseguro.token"/>
+            </div>
+            
+            <h2>Pagseguro Sandbox</h2>
+            <div class="form-group">
+                <label for="pagseguroSandbox.host">Host</label>
+                <input class="form-control" type="text" name="pagseguroSandbox.host" id="pagseguroSandbox.host" ng-model="storeConfigs.pagseguroSandbox.host"/>
+            </div>
+            <div class="form-group">
+                <label for="pagseguroSandbox.email">E-mail</label>
+                <input class="form-control" type="text" name="pagseguroSandbox.email" id="pagseguroSandbox.email" ng-model="storeConfigs.pagseguroSandbox.email"/>
+            </div>
+            <div class="form-group">
+                <label for="pagseguroSandbox.token">Token</label>
+                <input class="form-control" type="text" name="pagseguroSandbox.token" id="pagseguroSandbox.token" ng-model="storeConfigs.pagseguroSandbox.token"/>
+            </div>
+            
+            <h2>Mandrill App</h2>
+            <div class="form-group">
+                <label for="mandrill.apiKey">Título</label>
+                <input class="form-control" type="text" name="mandrill.apiKey" id="mandrill.apiKey" ng-model="storeConfigs.mandrill.apiKey"/>
+            </div>
+            
+            <h2>Mandrill Sandbox</h2>
+            <div class="form-group">
+                <label for="mandrillSandbox.apiKey">Api Key</label>
+                <input class="form-control" type="text" name="mandrillSandbox.apiKey" id="mandrillSandbox.apiKey" ng-model="storeConfigs.mandrillSandbox.apiKey"/>
+            </div>
+            
+            <h2>Mail</h2>
+            <div class="form-group">
+                <label for="mail.from">De: (email) </email></label>
+                <input class="form-control" type="text" name="mail.from" id="mail.from" ng-model="storeConfigs.mail.from"/>
+            </div>
+            <div class="form-group">
+                <label for="mail.fromAlias">De: (nome)</label>
+                <input class="form-control" type="text" name="mail.fromAlias" id="mail.fromAlias" ng-model="storeConfigs.mail.fromAlias"/>
+            </div>
+            <div class="form-group">
+                <label for="mail.replyTo">Responder para: (email)</label>
+                <input class="form-control" type="text" name="mail.replyTo" id="mail.replyTo" ng-model="storeConfigs.mail.replyTo"/>
+            </div>
+
+            <h2>Amazon S3</h2>
+            <div class="form-group">
+                <label for="s3.host">Host</label>
+                <input class="form-control" type="text" name="s3.host" id="s3.host" ng-model="storeConfigs.s3.host"/>
+            </div>
+            <div class="form-group">
+                <label for="s3.bucket">Bucket</label>
+                <input class="form-control" type="text" name="s3.bucket" id="s3.bucket" ng-model="storeConfigs.s3.bucket"/>
+            </div>
+            <div class="form-group">
+                <label for="s3.accessKeyID">Access Key ID</label>
+                <input class="form-control" type="text" name="s3.accessKeyID" id="s3.accessKeyID" ng-model="storeConfigs.s3.accessKeyID"/>
+            </div>
+            <div class="form-group">
+                <label for="s3.secretAccessKey">Secret Access Key</label>
+                <input class="form-control" type="text" name="s3.secretAccessKey" id="s3.secretAccessKey" ng-model="storeConfigs.s3.secretAccessKey"/>
+            </div>
+            
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary" ng-disabled="processingStatusUpdate">Salvar</button>
+            </div>
+        </form>
+        
+    </div>
+</div>

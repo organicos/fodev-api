@@ -1,0 +1,31 @@
+<div class="row">
+    <div class="col-sm-22 col-sm-offset-1">
+        <h1>Endereços <span ng-bind="filteredAddresses.length"></span></h1>
+        
+        <form class="form-inline text-right">
+            <div class="form-group">
+        		<input class="form-control input-xs" id="addressQuery" name="addressQuery" ng-model="addressQuery" type="text" placeholder="Buscar endereço">
+            </div>
+            <a class="btn btn-default" href="/meu/endereco">+</a>
+        </form>
+        
+        <br>
+
+        <table class="table table-condensed table-stripped table-hover">
+            <thead>
+                <tr>
+                    <td>Nome</td>
+                    <td></td>
+                    <td class="col-xs-1"></td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="address in filteredAddresses = (addresses | filter: addressQuery | orderBy: selectedOrder)">
+                    <td><a href="/meu/endereco/{{address._id}}" ng-bind="address.name || '???'"></a></td>
+                    <td ng-bind="address.updated | date:'dd/MM/yyyy'" align="right"></td>
+                    <td align="right"><button class="btn btn-default btn-xs" ng-click="dropAddress(address)"><i class="fa fa-trash"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

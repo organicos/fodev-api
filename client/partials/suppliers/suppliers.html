@@ -1,0 +1,34 @@
+<div class="row">
+    <div class="col-sm-22 col-sm-offset-1">
+        <h1>Fornecedores <span ng-bind="filteredSuppliers.length"></span></h1>
+        
+        <form class="form-inline text-right">
+            <div class="form-group">
+            	<label for="supplierQuery">Buscar fornecedores</label>
+        		<input class="form-control input-xs" id="supplierQuery" name="supplierQuery" ng-model="supplierQuery" type="text" placeholder="Buscar fornecedores">
+            </div>
+            <a class="btn btn-default" href="/fornecedor">+</a>
+        </form>
+        
+        <br>
+
+        <table class="table table-condensed table-stripped table-hover">
+            <thead>
+                <tr>
+                    <td ng-click="selectedOrder = 'name'; reverseSort = !reverseSort" class="click">Nome</td>
+                    <td ng-click="selectedOrder = 'email'; reverseSort = !reverseSort" class="click">E-mail</td>
+                    <td ng-click="selectedOrder = 'phone'; reverseSort = !reverseSort" class="click">Telefone</td>
+                    <td align="center">Ações</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="supplier in filteredSuppliers = (suppliers | filter: supplierQuery | orderBy: selectedOrder:reverseSort)">
+                    <td><a href="/fornecedor/{{supplier._id}}" ng-bind="supplier.name || '???'"></a></td>
+                    <td ng-bind="supplier.email"></td>
+                    <td ng-bind="supplier.phone"></td>
+                    <td align="center"><button class="btn btn-xs btn-default" ng-click="dropSupplier(supplier)"><i class="fa fa-remove"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

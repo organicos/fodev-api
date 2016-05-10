@@ -1,0 +1,84 @@
+<div class="row">
+    <div class="col-sm-offset-3 col-sm-18">
+        <h1>Opções de frete</h1>
+
+
+        <h2>Dias de entrega</h2>
+        <form class="form-inline" role="form">
+            <div class="row">
+                <div class="col-sm-3" ng-repeat="deliveryWeekDay in deliveryWeekDays track by $index">
+                    <button type="button" class="btn btn-block" ng-class="deliveryWeekDay ? 'btn-primary' : 'btn-default'" ng-click="deliveryWeekDay = !deliveryWeekDay;" ng-bind="getWeekDay($index) | date:'EEEE'"></button>
+                </div>
+            </div>
+        </form>
+        
+        <hr>
+        
+        <h2>Datas sem atendimento</h2>
+        <form class="form-inline" role="form" ng-submit="addOffDay(newOffDay)">
+            <div class="form-group">
+                <input type="date" class="form-control" name="newOffDay.date" id="newOffDay.date" ng-model="newOffDay.date">
+                <input type="text" class="form-control" name="newOffDay.desc" id="newOffDay.desc" ng-model="newOffDay.desc">
+                <button type="submit" class="btn btn-success">Adicionar</button>                
+            </div>
+        </form>
+        
+        <table class="table table-condensed table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Dia da semana</th>
+                    <th>Motivo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="offDay in offDays track by $index">
+                    <td ng-bind="offDay.date | date:'dd/MM/yyyy'"></td>
+                    <td ng-bind="offDay.date | date:'EEEE'"></td>
+                    <td ng-bind="offDay.desc"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Cidades</h2>
+
+        <form class="form-inline ng-cloak" role="form" ng-submit="addShippingCity(city)">
+            <div class="form-group">
+                <label class="sr-only" for="city.name">Email address</label>
+                <input class="form-control" type='text' ng-model="city.name" name='city.name' id='city.name' placeholder="Cidade"/>
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="city.price">Password</label>
+                <input class="form-control" type='text' ng-model="city.price" name='city.price' id='city.price' placeholder="Preço"/>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="city.active" ng-model="city.active"> Ativa
+                </label>
+            </div>
+            <button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+        </form>
+
+        <table class="table table-condensed table-hover table-stripped">
+            <thead>
+                <tr>
+                    <th ng-click="selectedOrder = 'name'; reverseSort = !reverseSort">Produto</th>
+                    <th ng-click="selectedOrder = 'price'; reverseSort = !reverseSort">Preço</th>
+                    <th ng-click="selectedOrder = 'active'; reverseSort = !reverseSort">Ativo</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="shipping_city in filteredSuppliers = (shipping.cities | filter: cityQuery | orderBy: selectedOrder:reverseSort) track by $index">
+                    <td ng-bind="shipping_city.name"></td>
+                    <td ng-bind="shipping_city.price"></td>
+                    <td><i class="fa fa-check text-success" ng-if="shipping_city.active"></i></td>
+                    <td align="center">
+                        <button class="btn btn-xs btn-default" ng-click="dropCityFromOptions(shipping_city)"><i class="fa fa-remove"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+                    
+    </div>
+</div>

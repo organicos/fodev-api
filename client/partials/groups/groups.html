@@ -1,0 +1,32 @@
+<div class="row">
+    <div class="col-sm-22 col-sm-offset-1">
+        <h1>Grupos <span ng-bind="filteredGroups.length"></span></h1>
+        
+        <form class="form-inline text-right">
+            <div class="form-group">
+            	<label for="groupQuery">Buscar grupos</label>
+        		<input class="form-control input-xs" id="groupQuery" name="groupQuery" ng-model="groupQuery" type="text" placeholder="Buscar categorias">
+            </div>
+            <a class="btn btn-default" href="/grupo">+</a>
+        </form>
+        
+        <br>
+
+        <table class="table table-condensed table-stripped table-hover">
+            <thead>
+                <tr>
+                    <td>nome</td>
+                    <td>Ultima modificação</td>
+                    <td>Ações</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="group in filteredGroups = (groups | filter: groupQuery | orderBy: selectedOrder)">
+                    <td><a href="/grupo/{{group._id}}" ng-bind="group.name || '???'"></a></td>
+                    <td ng-bind="group.updated"></td>
+                    <td><a href="javascript:void(0)" ng-click="dropGroup(group)">x</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

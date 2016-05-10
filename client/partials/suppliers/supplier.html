@@ -1,0 +1,89 @@
+<div class="row">
+    <div class="col-sm-offset-3 col-sm-18">
+        
+        <h1>Fornecedor <span class="text-violet" ng-bind="supplier.name"></span></h1>
+        
+        <div class="row">
+            <div class="col-sm-16">
+                <h2>Dados</h2>
+                <form class="form" role="form" ng-submit="supplierFormSubmit()">
+                    <div class="form-group">
+                        <label for="name">Nome</label>
+                        <input class="form-control" type="text" name="name" id="name" ng-model="supplier.name"/>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="name">Email</label>
+                                <input class="form-control" type="text" name="email" id="email" ng-model="supplier.email"/>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="name">Telefone</label>
+                                <input class="form-control" type="text" name="phone" id="phone" ng-model="supplier.phone"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Descrição</label>
+                        <textarea class="form-control" rows="5" name="desc" id="desc" ng-model="supplier.desc"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Como efetuar pedido</label>
+                        <textarea class="form-control" rows="5" name="orderRules" id="orderRules" ng-model="supplier.orderRules"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary" ng-disabled="processingSupplierUpdate">Salvar</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-8">
+                <h2>Produtos vendidos</h2>
+                <div class="form-group">
+                    <label for="name">Vincule um novo produto</label>
+                    <div class="row">
+                        <div class="col-xs-20">
+                            <input 
+                                type="text" 
+                                ng-model="selectedProduct" 
+                                placeholder="Produtos" 
+                                typeahead="product.name for product in getProducts($viewValue)" 
+                                typeahead-loading="loadingProducts" 
+                                typeahead-on-select="selectProduct($item, $model, $label)" 
+                                class="form-control"
+                            >
+                        </div>
+                        <div class="col-xs-4">
+                            <i ng-show="loadingProducts" class="fa fa-spin fa-spinner"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="ng-cloak" ng-if="supplier.products">
+                    <table class="table table-condensed table-hover table-stripped">
+                        <thead>
+                            <tr>
+                                <th>Produto</th>
+                                <th>Preço</th>
+                                <th>Ativo</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="product in supplier.products">
+                                <td ng-bind="product.name"></td>
+                                <td ng-bind="product.price"></td>
+                                <td ng-click="statusToggle(product)"><i class="fa fa-check text-success" ng-if="product.active"></i></td>
+                                <td align="center">
+                                    <button class="btn btn-xs btn-default" ng-click="dropProductFromSupplier(product)"><i class="fa fa-remove"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

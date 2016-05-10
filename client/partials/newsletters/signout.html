@@ -1,0 +1,14 @@
+<div class="row">
+    <div class="col-sm-offset-7 col-sm-10">
+        <h1>Cancelar assinatura de newsletter</h1>
+        <form class="form" role="form" ng-submit="submitNewsletterSignout()">
+            <div class="form-group">
+                <label for="email">Informe o seu e-mail</label>
+                <input class="form-control" type="email" ng-model="email" placeholder="e-mail" />
+            </div>
+            <div class="form-group">
+                <button ng-disabled="newsletterCanceled" class="btn btn-danger" type="submit">Cancelar assinatura</button>
+            </div>
+        </form>
+    </div>
+</div>

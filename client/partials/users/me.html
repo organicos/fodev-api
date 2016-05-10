@@ -1,0 +1,45 @@
+<div class="row">
+    <div class="col-sm-offset-1 col-sm-22">
+        
+        <h1>Meus dados</h1>
+
+        <div class="row">
+            <div class="col-sm-12 col-lg-8">
+
+                <img class="img-responsive img-responsive-wide img-rounded click" alt="user.profile_img.name" ng-src="https://feiraorganica.com/cdn/image/200x200/?url={{user.profile_img.url || 'https://s3-sa-east-1.amazonaws.com/fodev/img/global/no-profile-image.jpg'}}" ng-click="filesService.selectUserFile(changeUserImage)"></img>
+
+            </div>
+            <div class="col-sm-12 col-lg-16">
+
+                <form class="form" role="form" ng-submit="updateUser()">
+                    <div class="form-group">
+                        <label for="name">Nome</label>
+                        <input class="form-control" type="text" name="name" id="name" ng-model="user.name"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">E-mail</label>
+                        <input class="form-control" type="text" name="email" id="email" ng-model="user.email"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Telefone</label>
+                        <input class="form-control" type="text" name="phone" id="phone" ng-model="user.phone"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="brief">Resumo</label>
+                        <textarea class="form-control" rows="5" name="brief" id="brief" ng-model="user.brief"></textarea>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="newsletter" ng-model="user.newsletter"> Desejo receber semanalmente a lista de produtos e promoções.
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary" ng-disabled="processingUserUpdate">Salvar</button>
+                    </div>
+                </form>
+        
+            </div>
+        </div>
+
+    </div>
+</div>

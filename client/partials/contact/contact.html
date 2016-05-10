@@ -1,0 +1,60 @@
+<div class="row">
+	<div class="col-sm-offset-1 col-sm-22">
+		<h1>Entre em contato conosco.</h1>
+		<p>Para compras ou em caso de dúvidas, criticas e sugestões, deixe seu recado que responderemos em breve.</p>
+
+		<div class="row">
+			
+			<div class="col-xs-24 col-sm-offset-1 col-sm-7 pull-right">
+                <address>
+                  <strong>Feira Orgânica Delivery</strong>
+                  <br>
+                  Rodovia Admar Gonzaga, 5200
+                  <br>
+                  Florianópolis, SC
+                  <br>
+                  <p>
+                    <i class="fa fa-phone fa-2x fa-fw" title="Telefone"></i> +55 (48) 9145 6527
+                    <br>
+                    <i class="fa fa-whatsapp fa-2x fa-fw" title="Whatsapp"></i> +55 (48) 9676 9212
+                    <br>
+                    <i class="fa fa-twitter fa-2x fa-fw" title="Twitter"></i> <a href="https://twitter.com/feira_organica" target="_blank">twitter.com/feira_organica</a>
+                    <br>
+                    <i class="fa fa-facebook fa-2x fa-fw" title="Facebook"></i> <a href="https://www.facebook.com/feiraorganicadelivery" target="_blank">fb.com/feiraorganicadelivery</a>
+                    <br>
+                    <i class="fa fa-instagram fa-2x fa-fw" title="Instagram"></i> <a href="https://instagram.com/feiraorganica" target="_blank">instagram.com/feiraorganica</a>
+                    <br>
+                    <i class="fa fa-envelope-o fa-2x fa-fw" title="E-mail"></i> <a href="mailto:info@feiraorganica.com">info@feiraorganica.com</a>
+                  </p>
+                </address>
+			</div>
+			
+			<div class="col-xs-24 col-sm-16 pull-left">
+				<form class="form" method="POST" role="form" name="contactForm" ng-submit="submitContact()">
+					<div class="form-group">
+						<label for="contact-name">Nome</label>
+						<input class="form-control" type="text" name="name" ng-model="name" id="name" placeholder="Nome"/>
+					</div>
+					<div class="form-group">
+						<label for="contact-email">E-mail *</label>
+						<input class="form-control" type="text" name="email" ng-model="email" id="email" placeholder="E-mail"/>
+					</div>
+					<div class="form-group">
+						<label for="contact-phone">Telefone</label>
+						<input class="form-control" type="text" name="phone" ng-model="phone" id="phone" placeholder="Telefone"/>
+					</div>
+					<div class="form-group">
+						<label for="contact-msg">Mensagem</label>
+						<textarea class="form-control" rows="5" name="msg" ng-model="msg" id="msg" placeholder="Mensagem"></textarea>
+					</div>
+					<div class="form-group">
+						<button type="submit" class="btn btn-success" ng-disabled="submitingContact">Enviar</button>
+					</div>
+				</form>
+			</div>
+
+		</div>
+		
+	</div>
+	
+</div>

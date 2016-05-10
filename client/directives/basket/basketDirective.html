@@ -1,0 +1,24 @@
+<table class="table table-condensed table-striped table-hover small">
+    <thead>
+        <tr>
+            <td class="col-xs-8 col-md-15 col-lg-17">Desc</td>
+            <td class="col-xs-4 col-md-3 col-lg-1">Qtd</td>
+            <td align="right" class="col-xs-6 col-md-3 col-lg-2">Und</td>
+            <td align="right" class="col-xs-6 col-md-3 col-lg-2">Total</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="product in basket.getProducts()">
+            <td ng-bind="product.name"></td>
+            <td align="center">
+                <input type="number" ng-model="product.quantity" ng-change="orderTotal()">
+            </td>
+            <td ng-bind="product.prices[0].price | number:2" align="right"></td>
+            <td ng-bind="product.quantity*product.prices[0].price | number:2" align="right"></td>
+        </tr>
+        <tr>
+            <td align="right" colspan="3">Total produtos</td>
+            <td align="right" ng-bind="basket.getTotal() | currency:'R$':2"></td>
+        </tr>
+    </tbody>
+</table>

@@ -46,7 +46,7 @@ if(config.env == 'prod'){
 
 app.use(compression());
 
-app.use(express.static(__dirname + "../fodev-app", { maxAge: 86400000 }));
+app.use(express.static(__dirname + "/client", { maxAge: 86400000 }));
 
 // Add headers
 app.use(function (req, res, next) {
@@ -104,12 +104,12 @@ require('./router/cdn')(app, mongoose, utils);
 require('./router/cities')(app, mongoose, utils);
 require('./router/countries')(app, mongoose, utils);
 require('./router/discounts')(app, mongoose, utils);
-require('./router/statuses')(app, mongoose, utils);
+require('./router/orderSteps')(app, mongoose, utils);
 require('./router/files')(app, mongoose, utils);
 require('./router/groups')(app, mongoose, utils);
 require('./router/main')(app, express);
 require('./router/newsletters')(app, mongoose, config, utils);
-require('./router/orders')(app, mongoose, moment, utils, config, https);
+require('./router/orders')(app, moment, utils, config);
 require('./router/packings')(app, mongoose, utils);
 require('./router/playground')(app, mongoose, config, utils);
 require('./router/products')(app, mongoose, utils);

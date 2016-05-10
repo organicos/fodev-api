@@ -1,0 +1,34 @@
+<div class="row">
+    <div class="col-sm-22 col-sm-offset-1">
+        <h1>Embalagens <span ng-bind="filteredPackings.length"></span></h1>
+        
+        <form class="form-inline text-right">
+            <div class="form-group">
+            	<label for="packingQuery">Buscar categorias</label>
+        		<input class="form-control input-xs" id="packingQuery" name="packingQuery" ng-model="packingQuery" type="text" placeholder="Buscar categorias">
+            </div>
+            <a class="btn btn-default" href="/packing">+</a>
+        </form>
+        
+        <br>
+
+        <table class="table table-condensed table-stripped table-hover">
+            <thead>
+                <tr>
+                    <td>Nome</td>
+                    <td align="right">Valor frete</td>
+                    <td>Ativa</td>
+                    <td>Ações</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="packing in filteredPackings = (packings | filter: packingQuery | orderBy: selectedOrder)">
+                    <td><a href="/packing/{{packing._id}}" ng-bind="packing.name || '???'"></a></td>
+                    <td align="right" ng-bind="packing.price | currency:'R$':2"></td>
+                    <td><i class="fa" ng-class="packing.active ? 'fa-check text-success' : 'fa-close text-danger'"></i></td>
+                    <td><a href="javascript:void(0)" ng-click="dropPacking(packing)">x</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

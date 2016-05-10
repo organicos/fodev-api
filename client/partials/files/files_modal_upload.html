@@ -1,0 +1,37 @@
+<div class="text-center" ng-if="!uploading">
+  <h3>Envie um arquivo do seu computador.</h3>
+  
+  <p>Primeiro defina a privacidade</p>
+  <div class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
+    <a href="javascript:void(0)" class="btn btn-lg" ng-class="getPrivacy() == 'public' ? 'btn-info' : 'btn-default'" ng-click="setPrivacy('public')" role="button">
+      Público
+      <br>
+      <small>Qualquer pessoa poderá acessar este arquivo.</small>
+    </a>
+    <a href="javascript:void(0)" class="btn btn-lg" ng-class="getPrivacy() == 'private' ? 'btn-warning' : 'btn-default'" ng-click="setPrivacy('private')" role="button">
+      Privado
+      <br>
+      <small>Somente você poderá acessar este arquivo.</small>
+    </a>
+  </div>
+
+  <br>
+  
+  <div ng-if="privacy">
+    <p>Selecione o seu arquivo</p>
+    <button 
+      class="btn btn-primary btn-lg" 
+      ngf-accept="'image/*'" 
+      ngf-select 
+      ngf-change="upload($files)" 
+      ng-click="filesService.showModal()"
+      ng-disabled="uploading"
+    >Escolher o arquivo</button>
+  </div>
+  
+</div>
+
+<div ng-if="uploading">
+  <p>Enviando um arquivo do seu computador...</p>
+  <progressbar animate="false" value="progress" type="primary"><b>{{progress}}%</b></progressbar>
+</div>

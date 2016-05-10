@@ -1,0 +1,110 @@
+<br>
+
+<form class="form" role="form" ng-submit="articleFormSubmit()">
+
+<div class="row">
+    
+    <div class="col-sm-offset-1 col-sm-3">
+        <button class="btn btn-default btn-block" type="button" ng-click="filesService.selectAppFile(setProductImages, 'true', article.images)">Alterar imagens</button>
+		<br>
+        
+		<div class="thumbnail" ng-repeat="image in article.images">
+		    <p class="text-right">
+		        <a ng-click="dropImageFromArticle(image)"><i class="fa fa-remove"></i></a>
+		    </p>
+			<a href="/image/{{image._id}}">
+				<img class="img-responsive" alt="{{image.name}}" ng-src="https://feiraorganica.com/cdn/image/200x200/?url={{image.url}}">
+			</a>
+		</div>
+    </div>
+
+    <div class="col-sm-16">
+        
+        <p class="text-right">
+            <button class="btn btn-danger" ng-click="dropArticle(article)" ng-if="article"><i class="fa fa-trash"></i></button>
+        </p>
+        
+        <div class="row">
+            <div class="col-sm-20">
+                <p><b>Visualizações:</b> <span ng-bind="article.visits.length"></span></p>
+            
+                <div class="row">
+                    <div class="col-sm-18">
+                        <div class="form-group">
+                            <input class="form-control" type="text" ng-model="article.encoded_url" placeholder="nome-codificado-sem-caracter-especial">
+                        </div>
+                    </div>
+                    <div class="checkbox col-sm-6">
+                        <label>
+                            <input type="checkbox" name="active" ng-model="article.highlight"> Destaque
+                        </label>
+                        <label>
+                            <input type="checkbox" name="active" ng-model="article.active"> Ativo
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" ng-model="article.title" placeholder="Título">
+                </div>        
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <input 
+                        type="text" 
+                        ng-model="selectedAuthor" 
+                        placeholder="Autor" 
+                        typeahead="user.name for user in getAuthors($viewValue)" 
+                        typeahead-loading="loadingAuthors" 
+                        typeahead-on-select="selectAuthor($item, $model, $label)" 
+                        class="form-control"
+                        >
+                    <i ng-show="loadingAuthors" class="fa fa-spin fa-spinner"></i>
+                    <img class="img-responsive img-rounded" alt="article.author.profile_img.name" ng-src="https://feiraorganica.com/cdn/image/200x200/?url={{article.author.profile_img.url || 'https://s3-sa-east-1.amazonaws.com/fodev/img/global/no-profile-image.jpg'}}"></img>
+                </div>
+            </div>
+        </div>
+    
+        <div class="form-group">
+            <textarea class="form-control" rows="20" ng-model="article.content" placeholder="Conteúdo do artigo"></textarea>
+        </div>
+
+        <div class="form-group">
+            <button class="btn btn-success" type="submit" ng-model="title" placeholder="Título">Salvar</button>
+        </div>
+    </div>
+    
+    <div class="col-sm-3">
+        <div class="form-group">
+            <input 
+                type="text" 
+                ng-model="selectedProduct" 
+                placeholder="Produtos" 
+                typeahead="product.name for product in getProducts($viewValue)" 
+                typeahead-loading="loadingProducts" 
+                typeahead-on-select="selectProduct($item, $model, $label)" 
+                class="form-control"
+                >
+            <i ng-show="loadingProducts" class="fa fa-spin fa-spinner"></i>
+        </div>
+        
+		<div class="thumbnail" ng-repeat="product in article.products">
+			<a href="/feira/produto/{{product.encoded_url}}">
+				<img class="img-responsive" alt="week_product" ng-src="https://feiraorganica.com/cdn/image/200x200/?url={{product.images[0].url}}">
+			</a>
+			<hr>
+			<div style="height:80px;">
+				<p>
+					<span ng-bind="product.price | currency:'R$':2"></span>
+					<span class="pull-right">
+						<a ng-if="product.category" ng-click="selectCategory(product.category)" ng-bind="product.category"></a>
+					</span>
+				</p>
+				<h4 class="text-violet"><a href="/feira/produto/{{product.encoded_url}}" ng-bind="product.name"></a></h4>
+			</div>
+
+			<button class="btn btn-danger btn-block" ng-click="dropProductFromArticle(product)">Remover</button>
+
+		</div>
+    </div>
+</div>
+</form>

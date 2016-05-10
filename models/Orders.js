@@ -5,19 +5,12 @@ var Baskets = require('./../models/Baskets.js');
 var Cities = require('./../models/Cities.js');
 var Packings = require('./../models/Packings.js');
 var Addresses = require('./../models/Addresses.js');
-var Statuses = require('./../models/Statuses.js');
+var OrderSteps = require('./../models/OrderSteps.js');
 var Discounts = require('./../models/Discounts.js');
 var AppConfig = require('./../config/env_config');
 
 // Constants
-var payment_status_map = {
-    0: 'Pagamento pendente',
-    1: 'Pago',
-    2: 'Entregue',
-    3: 'Cancelado',
-    4: 'Problemas com o pagamento.',
-    5: 'Inválido.'
-};
+
 var minimumOrderTotal = 35;
 
 // Class Schema
@@ -29,9 +22,14 @@ var OrdersSchema = new Schema({
                 message: 'Desconto já utilizado!'
             }
         }],
+    discountsTotal: Number,
     customer : { type : Schema.Types.ObjectId, ref: 'Users', required: "Não conseguimos identificar o dono desta cesta."},
     basket : { type : Schema.Types.ObjectId, ref: 'Baskets', required: "Não foram adicionados produtos nessa cesta até o momento."},
-    refound_type : { type : String, default: "discount"},
+    refound : { 
+        type : { type : String, required: "Informe a forma de reembolso."},
+        value : { type : Number },
+        discount : { type : Schema.Types.ObjectId, ref: 'Discounts'}
+    },
     total : { type : Number, default: 0, min: [minimumOrderTotal, 'O valor total do pedido deve ser maior que R$' + minimumOrderTotal.toFixed(2)], required: "Informe o total do pedido."},
     shipping : {
         packing: { type : Packings.schema, required: 'Informe o tipo de embalagem' },
@@ -46,7 +44,7 @@ var OrdersSchema = new Schema({
         transactions: { type: Array, required: false }
     }, required: true},
     payment : { type : Schema.Types.ObjectId, ref: 'Payments'},
-    status : { type : Schema.Types.ObjectId, ref: 'Statuses', required: "Informe o status do pedido."},
+    step : { type : Schema.Types.ObjectId, ref: 'OrderSteps', required: "Informe o step do pedido."},
     updated: { type: Date, default: Date.now }
 });
 
@@ -54,21 +52,21 @@ var OrdersSchema = new Schema({
 var Orders = mongoose.model('Orders', OrdersSchema);
 
 // Public Methods
-OrdersSchema.statics._PutOrder = function(order, statusChanged, res) {
+OrdersSchema.statics._PutOrder = function(order, stepChanged, res) {
 
     return order.save(function(err, updatedOrder) {
 
             if (err) {
                     
-                res.statusCode = 400;
+                res.stepCode = 400;
 
-                return res.send(err);
+                return err;
 
             } else {
                 
-                if(statusChanged){
+                if(stepChanged){
                     
-                    switch (updatedOrder.status) {
+                    switch (updatedOrder.step) {
                         case 1: // pago
                             sendNewStatusMail(updatedOrder, 'orders/paid');
                             break;
@@ -91,25 +89,6 @@ OrdersSchema.statics._PutOrder = function(order, statusChanged, res) {
             
     });
 };
-OrdersSchema.statics.createNewDiscount = function(order, callback){
-
-    var discount = {
-        customer: order.customer,
-        value: order.refound.value,
-        desc: 'Reembolso por falta de produto',
-        order: order,
-        startDate: moment(),
-        endDate: moment().add(1, 'year')
-
-    };
-
-    Discounts.create(discount, function(err, newDiscount) {
-
-        callback(newDiscount);
-
-    });
-
-};
 
 // Private Methods
 function discountsValidation(discount){
@@ -117,6 +96,7 @@ function discountsValidation(discount){
     return !discount.used;
 
 }
+
 var calculateTotals = function(order, callback){
     
     calculateDiscountsTotal(order);
@@ -130,46 +110,44 @@ var calculateDiscountsTotal = function(order){
     
     order.discountsTotal = 0;
     
-    if(order.discounts && order.discounts.length){
+    var arrayLength = order.discounts ? order.discounts.length : 0;
+    
+    if(arrayLength){
         
-        var arrayLength = order.discounts.length;
+        var getDiscountsValues = function(pointer){
+            
+            Discounts.findOne({_id:order.discounts[pointer]})
+            .exec(function(err, discount){
+                
+                if(err){
+                    
+                    console.log('erro ao carregar desconto: ' + order.discounts[pointer].id);
+    
+                } else {
+                    
+                    order.discountsTotal += discount.value;
+                    
+                }
         
-        for (var i = 0; i < arrayLength; i++) {
-
-            var discount = order.discounts[i];
-
-            order.discountsTotal += discount.value;
-
+                if(arrayLength > pointer){
+                    pointer++;
+                    getDiscountsValues(pointer);
+                }
+        
+            });
+            
         };
         
+        getDiscountsValues(0);
+
     }
         
-    return order.discountsTotal;    
-        
-      var paidStatusesRefer = ['3', '4'];
-        
-        order.discountsTotal = 0;
-        
-        if(order.discounts && order.discounts.length){
-            
-            var arrayLength = order.discounts.length;
-            
-            for (var i = 0; i < arrayLength; i++) {
-    
-                var discount = order.discounts[i];
-    
-                order.discountsTotal += discount.value;
-
-            };
-            
-        }
-            
-        return order.discountsTotal;
+    return order.discountsTotal;
   
 };
 var calculateRefoundValue = function(order){
 
-        order.refoundValue = 0;
+        order.refound.value = 0;
 
         var arrayLength = order.basket.products.length;
 
@@ -179,23 +157,32 @@ var calculateRefoundValue = function(order){
             
             if(product.unavaiable){
             
-                order.refoundValue += product.prices[0].price * product.quantity;
+                order.refound.value += product.prices[0].price * product.quantity;
             
             }
 
         };
 
-        return order.refoundValue;
+        return order.refound.value;
 
     };
 var calculateOrderTotal = function(order){
     
-    order.total = 0;
-    order.total += order.basket.total;
-    order.total += order.shipping.address ? order.shipping.address.city.shipping_price : 0;
-    order.total += order.shipping.packing ? order.shipping.packing.price : 0;
-    order.total -= order.discountsTotal;
-    order.total -= order.refoundValue;
+      order.total = 0;
+
+      // products total
+      order.total += order.basket.total;
+      
+      // shiping price
+      order.total += order.shipping.address ? order.shipping.address.city.shipping_price : 0;
+      
+      // packing price
+      order.total += order.shipping.packing ? order.shipping.packing.price : 0;
+  
+      // discunts
+      order.total -= order.discountsTotal;
+      
+      return order.total;
 
 };
 var validateOrder = function(order, callback){
@@ -308,19 +295,19 @@ var checkPaymentOptions = function(order, callback){
 };
 var checkStatus = function(order, callback){
     
-    if(order.status){
+    if(order.step){
 
         callback(order);
 
     } else {
         
-        Statuses.findOne()
-        .exec(function(err, status){
+        OrderSteps.findOne()
+        .exec(function(err, step){
             if(err){
                 
             } else {
                 
-                order.status = status;
+                order.step = step;
                 
                 callback(order);
                 
@@ -335,6 +322,62 @@ var checkStatus = function(order, callback){
         
 
 };
+var markDiscountsAsUsed = function(order){
+  
+    for (var i = 0, len = order.discounts.length; i < len; i++) {
+        
+        Discounts.findOne({_id:order.discounts[i]._id})
+        .exec(function(err, discount){
+            if(err){
+                
+                console.log('erro ao carregar desconto: ' + order.discounts[i]._id);
+
+            } else {
+                
+                discount.used = new Date();
+                discount.used_by = order._id;
+                discount.save();
+                
+            }
+    
+        });
+
+    }
+  
+};
+var generateDiscount = function(order){
+  
+    
+    var validFrom = new Date();
+    var validTo = (validFrom + 0).setYear(validFrom.getYear()+1);
+
+    var discount = new Discounts();
+    discount.customer = order.customer._id;
+    discount.order = order._id;
+    discount.value = order.refound.value;
+    discount.value_kind = 'absolute';
+    discount.desc  = 'Reembolso por falta de produto.';
+    discount.validFrom = validFrom;
+    discount.validTo = validTo;
+
+    discount.save(function(err, discount){
+
+        if(err){
+            
+            console.log('erro ao gerar desconto para a ordem: ' + order._id);
+
+        } else {
+
+            order.refound.discount = discount;
+            
+            order.save();
+            
+        }
+
+    });
+
+};
+
 
 // Middleware - Runs when functions like save and update are called
 // Middleware => Validate - Validates the order before run the save proccess
@@ -350,8 +393,6 @@ OrdersSchema.pre("validate", function(next) {
         // search the basket for missing products
         if(ValidatedOrder.basket.inactiveProducts && ValidatedOrder.basket.inactiveProducts.length > 0){
 
-            res.statusCode = 400;
-            
             next(new Error('Infelizmente alguns produtos da sua cesta não estão mais disnponíveis. Por favor, verifique novamente seus produtos.'));
             
         } else {
@@ -362,6 +403,40 @@ OrdersSchema.pre("validate", function(next) {
 
     });
     
+});
+
+OrdersSchema.post('save', function() {
+    
+    var SavedOrder = this;
+    
+    // after save, we need to check the step 
+    switch (SavedOrder.step.step) { 
+        case 0: // case the step is 0: NEW and is there any discount, we need to mark the discounts as used
+            
+            if(SavedOrder.discounts && SavedOrder.discounts.length > 0){
+              
+                markDiscountsAsUsed(SavedOrder);
+              
+            }
+            
+            break;
+        
+        case 2: // case step is 2: DELIVERED, we need to check if there is any missing product and generate the discount
+            
+            // if there is any refound to be applied
+            if(order.refound.value > 0){
+                
+                if(order.refound.type == 'discount' && order.refound.discount){
+
+                    generateDiscount(order);
+
+                }
+                
+            }
+            
+            break;
+    }
+
 });
 
 module.exports = Orders;

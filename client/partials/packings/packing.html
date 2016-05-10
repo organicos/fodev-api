@@ -1,0 +1,31 @@
+<div class="row">
+    <div class="col-sm-offset-3 col-sm-18">
+        
+        <h1>Dados da embalagem <span class="text-violet" ng-bind="packing.name"></span></h1>
+        
+        
+        <form class="form" role="form" ng-submit="packingFormSubmit()">
+            <div class="form-group">
+                <label for="name">Título</label>
+                <input class="form-control" type="text" name="name" id="name" ng-model="packing.name"/>
+            </div>
+            <div class="form-group">
+                <label for="price">Preço</label>
+                <input class="form-control" type="text" name="price" id="price" ng-model="packing.price"/>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="active" ng-model="packing.active"> Ativo
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="desc">Resumo</label>
+                <textarea class="form-control" rows="5" name="desc" id="desc" ng-model="packing.desc"></textarea>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary" ng-disabled="processingPackingUpdate">Salvar</button>
+            </div>
+        </form>
+        
+    </div>
+</div>

@@ -1,0 +1,46 @@
+<div class="row">
+    <div class="col-sm-offset-3 col-sm-18">
+        
+        <h1>Dados do desconto <span class="text-violet" ng-bind="discount.name"></span></h1>
+        
+        
+        <form class="form" role="form" ng-submit="discountFormSubmit()">
+            <div class="form-group">
+                <label for="customer">Cliente</label>
+                <input class="form-control" type="text" name="customer" id="customer" ng-model="discount.customer.name"/>
+            </div>
+            <div class="form-group">
+                <label for="value">Valor</label>
+                <input class="form-control" type="text" name="value" id="value" ng-model="discount.value"/>
+            </div>
+            <div class="form-group">
+                <label for="desc">Motivo</label>
+                <input class="form-control" type="text" name="desc" id="desc" ng-model="discount.desc"/>
+            </div>
+            <div class="form-group">
+                <label for="startDate">Data inicial</label>
+                <input class="form-control" type="text" name="startDate" id="startDate" ng-model="discount.startDate"/>
+            </div>
+            <div class="form-group">
+                <label for="endDate">Data final</label>
+                <input class="form-control" type="text" name="endDate" id="endDate" ng-model="discount.endDate"/>
+            </div>
+            <div class="form-group">
+                <input 
+                    type="text" 
+                    ng-model="selectedOrder" 
+                    placeholder="Pedido" 
+                    typeahead="order._id for order in getOrders($viewValue)" 
+                    typeahead-loading="loadingOrders"
+                    typeahead-on-select="selectOrder($item, $model, $label)" 
+                    class="form-control"
+                    >
+                <i ng-show="loadingOrders" class="fa fa-spin fa-spinner"></i>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary" ng-disabled="processingDiscountUpdate">Salvar</button>
+            </div>
+        </form>
+        
+    </div>
+</div>

@@ -1,0 +1,61 @@
+<div class="row">
+
+    <div class="col-sm-22 col-sm-offset-1">
+        <h1>Pedidos <span ng-bind="filteredOrders.length"></span></h1>
+        
+        <form class="form-inline clearfix">
+            <div class="form-group pull-right">
+        		<input class="form-control input-xs" id="orderQuery" name="orderQuery" ng-model="orderQuery" type="text" placeholder="Buscar pedido">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-default" ng-click="showCheckedOrderProductsCondensed()" type="button">Mostrar lista de produtos condensados</button>
+            </div>
+        </form>
+        
+        <br>
+        
+        <table class="table table-condensed table-stripped table-hover small">
+            <thead>
+                <tr>
+                    <td><input type="checkbox" ng-click="checkAllOrders()" ng-model="checkAllStatus"></td>
+                    <td class="click" ng-click="orderByField='_id'; reverseSort = !reverseSort">Ref</td>
+                    <td class="click" ng-click="orderByField='customer.name'; reverseSort = !reverseSort">Cliente</td>
+                    <td class="click" ng-click="orderByField='shipping.phone'; reverseSort = !reverseSort">Fone</td>
+                    <td class="click" ng-click="orderByField='shipping.city'; reverseSort = !reverseSort">Cidade</td>
+                    <td class="click" ng-click="orderByField='shipping.district'; reverseSort = !reverseSort">Bairro</td>
+                    <td class="click" ng-click="orderByField='products.length'; reverseSort = !reverseSort">Produtos</td>
+                    <td class="click" ng-click="orderByField='updated'; reverseSort = !reverseSort">Compra</td>
+                    <td class="click" ng-click="orderByField='payment_date'; reverseSort = !reverseSort">Pagamento</td>
+                    <td class="click" ng-click="orderByField='shipping.deliveryOption'; reverseSort = !reverseSort">Entrega</td>
+                    <td class="click" ng-click="orderByField='status'; reverseSort = !reverseSort">Status</td>
+                    <td class="click" ng-click="orderByField='total'; reverseSort = !reverseSort">valor</td>
+                    <td>Ações</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="order in filteredOrders = (orders | filter: orderQuery | orderBy: orderByField:reverseSort)">
+                    <td><input type="checkbox" ng-model="order.checked"></td>
+                    <td><a href="/pedido/{{order._id}}" ng-bind="order._id"></a></td>
+                    <td><a href="/usuario/{{order.customer._id}}" ng-bind="order.customer.name || order.customer.email"></a></td>
+                    <td ng-bind="order.shipping.phone"></td>
+                    <td ng-bind="order.shipping.city"></td>
+                    <td ng-bind="order.shipping.district"></td>
+                    <td ng-bind="order.products.length"></td>
+                    <td ng-bind="order.updated | date:'dd/MM/yyyy'"></td>
+                    <td ng-bind="order.payment_date | date:'dd/MM/yyyy'"></td>
+                    <td ng-bind="order.shipping.date | date:'EEEE, dd/MM/yyyy' || order.shipping.deliveryOption"></td>
+                    <td ng-switch="order.status" title="{{statuses[order.status].name}} - {{statuses[order.status].desc}}">
+                        <i ng-switch-when="0" class="fa fa-fw fa-money text-info"></i>
+                        <i ng-switch-when="1" class="fa fa-fw fa-truck fa-flip-horizontal text-warning"></i>
+                        <i ng-switch-when="2" class="fa fa-fw fa-check text-success"></i>
+                        <i ng-switch-when="3" class="fa fa-fw fa-close text-danger"></i>
+                        <i ng-switch-when="4" class="fa fa-fw fa-exclamation text-danger"></i>
+                        <i ng-switch-when="5" class="fa fa-fw fa-ban text-danger"></i>
+                    </td>
+                    <td ng-bind="order.total | currency:'R$':2"></td>
+                    <td><a ng-click="dropOrder(order)" href="javascrip:void(0)">x</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,164 @@
+
+
+<div class="row">
+    <div class="col-sm-22 col-sm-offset-1">
+        
+        <br>
+
+        <div class="row">
+            
+            <div class="col-sm-4">
+                <button class="btn btn-default btn-block" type="button" ng-click="filesService.selectAppFile(setProductImages, 'true', product.images)">Alterar imagens</button>
+        		<br>
+        		<div class="thumbnail" ng-repeat="image in product.images">
+        		    <p class="text-right">
+        		        <a ng-click="dropImage(image)"><i class="fa fa-remove"></i></a>
+        		    </p>
+        			<a href="/image/{{image._id}}">
+        				<img class="img-responsive" alt="{{image.name}}" ng-src="https://feiraorganica.com/cdn/image/200x200/?url={{image.url}}">
+        			</a>
+        		</div>
+            </div>
+        
+            <div class="col-sm-20">
+                
+                <p class="text-right">
+                    <button class="btn btn-danger" ng-click="dropProduct(product)" ng-if="product"><i class="fa fa-trash"></i></button>
+                </p>
+                
+                <p><b>Visualizações:</b> <span ng-bind="product.visits.length"></span></p>
+                
+                
+                <form class="form-horizontal" role="form">
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="name">Nome</label>
+                        <div class="col-sm-20">
+                            <input class="form-control" type="text" id="name" ng-model="product.name" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="encoded_url">Slug</label>
+                        <div class="col-sm-14">
+                            <input class="form-control" type="text" ng-model="product.encoded_url" placeholder="nome-codificado-sem-caracter-especial">
+                        </div>
+                        <div class="checkbox col-sm-6">
+                            <label>
+                                <input type="checkbox" name="active" ng-model="product.highlight"> Destaque
+                            </label>
+                            <label>
+                                <input type="checkbox" name="active" ng-model="product.active"> Ativo
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="cost">Custo</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" type="text" id="cost" ng-model="product.costs[0].price">
+                        </div>
+                        <div class="col-sm-2">
+                            <span ng-if="product.costs[1].price > product.costs[0].price"><i class="fa fa-arrow-down text-success"></i> <del><small class="text-danger" ng-bind="product.costs[1].price | currency:'R$':2"></small></del></span>
+                            <span ng-if="product.costs[1].price < product.costs[0].price"><i class="fa fa-arrow-up text-danger"></i> <del><small class="text-danger" ng-bind="product.costs[1].price | currency:'R$':2"></small></del></span>
+                        </div>
+                        <label class="col-sm-4 control-label" for="price">Preço</label>
+                        <div class="col-sm-6">
+                            <input class="form-control" type="text" id="price" ng-model="product.prices[0].price">
+                        </div>
+                        <div class="col-sm-2">
+                            <span ng-if="product.prices[1].price > product.prices[0].price"><i class="fa fa-arrow-down text-success"></i> <del><small class="text-danger" ng-bind="product.prices[1].price | currency:'R$':2"></small></del></span>
+                            <span ng-if="product.prices[1].price < product.prices[0].price"><i class="fa fa-arrow-up text-danger"></i> <del><small class="text-danger" ng-bind="product.prices[1].price | currency:'R$':2"></small></del></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-4 col-sm-8">
+                            <canvas id="line" class="chart chart-line" data="costsChartData.data" labels="costsChartData.labels" series="costsChartData.series"></canvas> 
+                        </div>
+                        <div class="col-sm-offset-4 col-sm-8">
+                            <canvas id="line" class="chart chart-line" data="pricesChartData.data" labels="pricesChartData.labels" series="pricesChartData.series"></canvas> 
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="categories">Categorias</label>
+                        <div class="col-sm-4">
+                            <input 
+                                id="categories"
+                                name="categories"
+                                type="text" 
+                                ng-model="selectedCategory" 
+                                placeholder="Categorias" 
+                                typeahead="category.name for category in getCategories($viewValue)" 
+                                typeahead-loading="loadingCategories" 
+                                typeahead-on-select="selectCategory($item, $model, $label)" 
+                                class="form-control"
+                                >
+                            <i ng-show="loadingImages" class="fa fa-spin fa-spinner"></i>
+                        </div>
+                        <div class="col-sm-16">
+                            <span ng-repeat="category in product.categories">
+                                &nbsp;<span class="label label-info"><span ng-bind="category.name"></span> <a href="javascript:void(0)" ng-click="dropCategory(category)">x</a></span> 
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="suppliers">Fornecedores</label>
+                        <div class="col-sm-4">
+                            <input 
+                                id="suppliers"
+                                name="suppliers"
+                                type="text" 
+                                ng-model="selectedSupplier" 
+                                placeholder="Fornecedores" 
+                                typeahead="supplier.name for supplier in getSuppliers($viewValue)" 
+                                typeahead-loading="loadingSuppliers" 
+                                typeahead-on-select="selectSupplier($item, $model, $label)" 
+                                class="form-control"
+                                >
+                            <i ng-show="loadingSuppliers" class="fa fa-spin fa-spinner"></i>
+                        </div>
+                        <div class="col-sm-16">
+                            <span ng-repeat="supplier in product.suppliers">
+                                <span class="label label-info"><span ng-bind="supplier.name"></span> <a href="javascript:void(0)" ng-click="dropSupplier(supplier)">x</a></span> 
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="season">Época</label>
+                        <div class="col-sm-20">
+                            <input class="form-control" type="text" id="season" ng-model="product.season">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="howmany">Volume aproximado</label>
+                        <div class="col-sm-20">
+                            <input class="form-control" type="text" id="howmany" ng-model="product.howmany">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="dscr">Descrição</label>
+                        <div class="col-sm-20">
+                            <textarea class="form-control" rows="5" id="dscr" ng-model="product.dscr"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-4 col-sm-20">
+                            <button type="button" class="btn btn-primary" ng-click="producFormSubmit()" ng-class="saving_selectedProduct ? 'disabled' : ''">Salvar</button>
+                        </div>
+                    </div>
+
+                </form>
+                
+            </div>
+    
+        </div>
+
+
+    </div>
+</div>

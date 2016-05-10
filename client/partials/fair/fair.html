@@ -1,0 +1,83 @@
+<br>
+
+<p class="text-center" ng-if="loadingProducts">Buscando produtos <i class="fa fa-cog fa-spin"></i></p>
+
+<div class="row" ng-if="!loadingProducts" ng-cloak>
+    <div class="col-sm-22 col-sm-offset-1">
+
+		<form class="ng-cloak form-inline text-right">
+			<div class="form-group">
+				<label for="productQuery" sr-only="true">Buscar produto</label>
+				<input class="form-control input-xs" id="productQuery" ng-blur="showFilter.def = false;" ng-focus="showFilter.def = true" name="productQuery" ng-model="productQuery" type="text" placeholder="Buscar produto">
+			</div>
+			<div class="form-group">
+				<label for="selectedOrder">Ordem</label>
+				<select class="form-control" id="selectedOrder" name="selectedOrder" ng-model="selectedOrder">
+					<option value="name">Nome</option>
+					<option value="prices[0].price">Preço</option>
+					<option value="categories[0].name">Categoria</option>
+					<option value="highlight">Destaque</option>
+				</select>
+			</div>
+		</form>
+		
+	</div>
+</div>
+
+<br>
+
+<div ng-if="showFilter.def" ng-cloak class="row background-blue">
+	
+	<div class="col-md-24">
+		
+		<br>
+		
+			<span class="label label-success click" ng-class="!selectedCategory ? 'active' : ''" ng-mousedown="selectCategory(false)">Tudo</span>
+			
+			<span ng-repeat="category in categories">
+				<span class="label label-success click" ng-class="selectedCategory == category.name ? 'active' : ''" ng-mousedown="selectCategory(category.name)" ng-bind="category.name"></span>
+			</span>
+		
+		<br><br>
+		
+	</div>
+	
+</div>
+		
+<div class="row" ng-if="!loadingProducts" ng-cloak>
+    <div class="col-sm-22 col-sm-offset-1">
+		
+		<br>
+		
+		<hr>
+
+		<div class="row">
+			<div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" ng-repeat="product in filteredProducts = (products | filter: productQuery | orderBy: selectedOrder | filter: {categories : {name: selectedCategory}}) track by product._id">
+		
+		
+				<div class="thumbnail">
+					<a href="/feira/{{::product.encoded_url}}" hreflang="pt-br">
+						<img class="img-responsive img-responsive-wide img-centered" alt="{{::product.name}}" ng-src="https://feiraorganica.com/cdn/image/200x200/?url={{::product.images[0].url}}" src="assets/img/global/no_image.jpeg" ng-dblclick="basketService.addToBasket(product)">
+					</a>
+					<hr>
+					<div style="height:100px;">
+						<p>
+							<span class="text-success" ng-bind="::product.prices[0].price | currency:'R$':2"></span> <span ng-if="product.prices[1].price > product.prices[0].price"><i class="fa fa-arrow-down text-success"></i> <del><small class="text-muted text-danger" ng-bind="::product.prices[1].price | currency:'R$':2"></small></del></span>
+						</p>
+						<h4 class="text-violet"><a href="/feira/{{::product.encoded_url}}" ng-bind="::product.name" hreflang="pt-br"></a></h4>
+					</div>
+		
+					<button class="btn btn-success btn-block" ng-click="basketService.addToBasket(product)">Colocar na cesta 
+						<span class="label label-warning" ng-bind="(basketService.getProducts() | filter : {_id: product._id})[0].quantity"></span>
+					</button>
+		
+				</div>
+		
+		
+			</div>
+			<div class="col-xs-24" ng-if="!filteredProducts.length">Nesta semana não temos nenhum produto da categoria {{selectedCategory}}!
+				<br></br>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,30 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="modalOptions.close()"><span aria-hidden="true">&times;</span></button>
+  <h3>Lista condensada de produtos</h3>
+</div>
+<div class="modal-body">
+  
+    <table class="table table-hover table-striped table-condensed small">
+      <thead>
+        <tr>
+          <th class="click" ng-click="orderByField='name'; reverseSort = !reverseSort">Produto</th>
+          <th class="click" ng-click="orderByField='quantity'; reverseSort = !reverseSort">Quantidade</th>
+          <th class="click" ng-click="orderByField='prices[0].price'; reverseSort = !reverseSort">Preço</th>
+          <th class="click" ng-click="orderByField='(product.prices[0].price * product.quantity)'; reverseSort = !reverseSort">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="product in filteredProducts = (products | orderBy:orderByField:reverseSort) track by product._id">
+          <td ng-bind="::product.name"></td>
+          <td ng-bind="::product.quantity"></td>
+          <td ng-bind="::product.prices[0].price | currency:'R$':2"></td>
+          <td ng-bind="::(product.prices[0].price * product.quantity) | currency:'R$':2"></td>
+        </tr>
+      </tbody>
+    </table>
+
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary" ng-click="modalOptions.print()">Imprimir</button>
+  <button type="button" class="btn btn-default" ng-click="modalOptions.close()">Fechar</button>
+</div>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="pt-br" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="pt-br" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="pt-br" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="pt-br" ng-app="myApp" class="no-js"> <!--<![endif]-->
+<head ng-controller="headCtrl">
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="content-language" content="pt-br">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="organicos florianopolis, florianopolis, feira florianopolisfeira organica, feiras organicas, organico, organicos, organica, organicas, cesta, cestas, sustentavel, sustentaveis, sustentabilidade, alimento, alimentos, delivery, entrega, flroanopolis, agricultura, agricultura familiar, ecologicamente correto, ecologicamente correta, ecologico, ecologica, selo sustentavel, selo organico, selo, certificacao organica, certificado organico, frutas, verduras, saladas, saudaveis, saldavel, entrega em casa, entrega no trabalho, produto orgânico, feira, feirante, agricultor, produtor, ortaliças, compra de produtos. compra de produto, agronegocio, agronegocios, sem agrotoxico, compostagem, meio ambiente, responsavel, responsabilidade ambiental, responsabilidade social, socioambiental, socioambientais">
+    
+    <meta name="author" content="Bruno da Silva João">
+    <meta name="reply-to" content="info@feiraorganica.com">
+    <meta name="generator" content="Sublime Text">
+      
+    <!-- START:  Social meta tags -->
+
+      <title ng-bind="HtmlMetaTagService.tag('title')">Feira orgânica Delivery - Produtos orgânicos entregues na sua porta.</title>
+      <meta name="description" content="Produtos orgânicos entregues na sua porta. Entregamos alimentos orgânicos certificados, organizados em cestas que você mesmo monta. Oferecemos produtos de todos os grupos alimentares indicados pelos nutricionistas para pessoas com interesse em ter uma vida saudável e uma alimentação equilibrada. Temos a preocupação de entregar apenas produtos certificados pelo Ministério da Agricultura e órgãos fiscalizadores, com a garantia de qualidade e confiabilidade. Afinal, dentre a infinidade de alimentos que consumimos, poucos são realmente saudáveis. De quebra... ajudamos o meio ambiente e ajudamos você a ajudar o meio ambiente, além de contribuir com questões socioambientais e facilitar aos produtores de orgânicos a comercialização de seus produtos certificados." />
+      
+      <link rel="author" href="https://plus.google.com/+BrunoJoão1"/>
+      <link rel='publisher' href="https://plus.google.com/107566665570039529018" />
+    
+      <!-- Schema.org markup for Google+ -->
+      <meta itemprop="name" content="Feira orgânica Delivery">
+      <meta itemprop="description" content="Produtos orgânicos entregues na sua porta.">
+      <meta itemprop="image" content="https://s3-sa-east-1.amazonaws.com/fodev/img/global/marca.png">
+
+      <!-- Twitter Card data -->
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:site" content="@feira_organica">
+      <meta name="twitter:title" content="Feira orgânica Delivery">
+      <meta name="twitter:description" content="Produtos orgânicos entregues na sua porta.">
+
+      <!-- Open Graph data -->
+      <meta property="og:title" content="Feira orgânica Delivery" />
+      <meta property="og:description" content="Produtos orgânicos entregues na sua porta." />
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content="https://feiraorganica.com" />
+      <meta property="og:image" content="https://s3-sa-east-1.amazonaws.com/fodev/img/global/marca_wide.png" />
+      <meta property="og:site_name" content="Feira orgânica Delivery" />
+      <meta property="fb:admins" content="100000036122524" />
+      
+    <!-- END: Social meta tags -->
+
+    
+    <!-- Icons -->
+    <base href="/">
+
+    <!-- Icons -->
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="icon" sizes="16x16 32x32 64x64" href="https://s3-sa-east-1.amazonaws.com/fodev/img/icons/favicon.ico">
+    <link rel="icon" type="image/png" sizes="196x196" href="https://s3-sa-east-1.amazonaws.com/fodev/img/icons/favicon-192.png">
+    <link rel="icon" type="image/png" sizes="160x160" href="https://s3-sa-east-1.amazonaws.com/fodev/img/icons/favicon-160.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="https://s3-sa-east-1.amazonaws.com/fodev/img/icons/favicon-96.png">
+    <link rel="icon" type="image/png" sizes="64x64" href="https://s3-sa-east-1.amazonaws.com/fodev/img/icons/favicon-64.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://s3-sa-east-1.amazonaws.com/fodev/img/icons/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://s3-sa-east-1.amazonaws.com/fodev/img/icons/favicon-16.png">
+    <link rel="apple-touch-icon" href="https://s3-sa-east-1.amazonaws.com/fodev/img/icons/favicon-57.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="https://s3-sa-east-1.amazonaws.com/fodev/img/icons/favicon-114.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="https://s3-sa-east-1.amazonaws.com/fodev/img/icons/favicon-72.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="https://s3-sa-east-1.amazonaws.com/fodev/img/icons/favicon-144.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="https://s3-sa-east-1.amazonaws.com/fodev/img/icons/favicon-60.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="https://s3-sa-east-1.amazonaws.com/fodev/img/icons/favicon-120.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://s3-sa-east-1.amazonaws.com/fodev/img/icons/favicon-76.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="https://s3-sa-east-1.amazonaws.com/fodev/img/icons/favicon-152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://s3-sa-east-1.amazonaws.com/fodev/img/icons/favicon-180.png">
+    <meta name="msapplication-TileColor" content="#FFFFFF">
+    <meta name="msapplication-TileImage" content="https://s3-sa-east-1.amazonaws.com/fodev/img/icons/favicon-144.png">
+    <meta name="msapplication-config" content="https://s3-sa-east-1.amazonaws.com/fodev/img/icons/browserconfig.xml">
+
+    <!-- Minified and concatenated CSS -->
+    <link href="/app.min.css?v=1.1" rel="stylesheet">
+
+    <!-- Font awesome -->
+    <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/bower_components/fodev-font/styles.css">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    <style type="text/css">
+      /** ANGULAR ngCloak **/
+      [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+        display: none !important;
+      }
+    </style>
+    
+  </head>
+  <body ng-controller="myAppCtrl">
+    
+    <!-- Body SEO -->
+    <facebook app-id="1062165583797773"></facebook>
+    <a href="https://plus.google.com/+BrunoJoão1?rel=author" style="display:none;"></a>
+    <a href="https://plus.google.com/+BrunoJoão1" rel="me" style="display:none;"></a>
+    <!-- Body SEO -->
+    
+    <nav class="navbar navbar-fixed-top ng-cloak" ng-class="$storage.user.kind == 'admin' ? 'navbar-fixed-top-admin' : ''" ng-controller="NavBarCtrl" ng-cloak>
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed navbar-btn btn btn-default" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar" ng-click="isCollapsed = !isCollapsed">
+            <span class="sr-only">Toggle navigation</span><i class="fa fa-bars"></i>
+          </button>
+
+          <a class="navbar-brand" href="/" hreflang="pt-br">
+            <img ng-src="https://feiraorganica.com/cdn/image/46/?url=https://s3-sa-east-1.amazonaws.com/fodev/img/global/logo_transparent.png">
+          </a>
+
+          <a href="#" class="navbar-brand" ng-click="basketService.openBasket()">
+            <i class="fa fa-shopping-cart fa-2x"></i> 
+            <small class="fa-embed-text" ng-bind="basketService.productsAmount()"></small>
+          </a>
+
+          <div class="navbar-text navbar-right">
+            <a href="/feira" class="btn btn-primary visible-xs-inline-block"><i class="fo-logo"></i> Feira</a>
+          </div>
+          
+        </div>
+        <div id="navbar" class="collapse navbar-collapse" collapse="isCollapsed">
+          <ul class="nav navbar-nav navbar-right">
+            <li><p class="navbar-btn"><a href="/feira" class="btn btn-primary hidden-xs" hreflang="pt-br"><i class="fo-logo"></i> Feira</a></p></li>
+            <li class="divider-vertical"></li>
+            <li ng-class="location.path() == '/administracao' ? 'active' : ''"><a href="/administracao" ng-cloak ng-if="$storage.user.kind == 'admin'" hreflang="pt-br">Admin</a></li>
+            <li ng-class="location.path() == '/blog' ? 'active' : ''"><a href="/blog" hreflang="pt-br">Blog</a></li>
+            <li ng-class="location.path() == '/#como-funciona' ? 'active' : ''"><a href="/#como-funciona" hreflang="pt-br">Como funciona</a></li>
+            <li ng-class="location.path() == '/sobre' ? 'active' : ''"><a href="/sobre" hreflang="pt-br">Sobre</a></li>
+            <li ng-class="location.path() == '/sustentabilidade' ? 'active' : ''"><a href="/sustentabilidade" hreflang="pt-br">Sustentabilidade</a></li>
+            <li ng-class="location.path() == '/certificacao' ? 'active' : ''"><a href="/certificacao" hreflang="pt-br">Certificação</a></li>
+            <li ng-class="location.path() == '/contato' ? 'active' : ''"><a href="/contato" hreflang="pt-br">Contato</a></li>
+            <li ng-class="location.path() == '/entrar' ? 'active' : ''"><a href="/entrar" hreflang="pt-br" ng-cloak ng-if="!$storage.user.token">Entrar</a></li>
+            <li dropdown ng-cloak ng-if="$storage.user.token">
+              <img class="img-responsive img-circle" id="profile-img" ng-src="https://feiraorganica.com/cdn/image/100x100/?url={{$storage.user.profile_img.url || 'https://s3-sa-east-1.amazonaws.com/fodev/img/global/no-profile-image.jpg'}}" dropdown-toggle></img>
+              <ul class="dropdown-menu" role="menu">
+                <li role="presentation" class="dropdown-header" ng-bind="$storage.user.name || $storage.user.email"></li>
+                <li ng-class="location.path() == '/eu' ? 'active' : ''"><a href="/eu" hreflang="pt-br">Meus dados</a></li>
+                <li ng-class="location.path() == '/meus/descontos' ? 'active' : ''"><a href="/meus/descontos" hreflang="pt-br">Meus descontos</a></li>
+                <li ng-class="location.path() == '/meus/pedidos' ? 'active' : ''"><a href="/meus/pedidos" hreflang="pt-br">Meus pedidos</a></li>
+                <li ng-class="location.path() == '/meus/enderecos' ? 'active' : ''"><a href="/meus/enderecos" hreflang="pt-br">Meus endereços</a></li>
+                <li ng-class="location.path() == '/alterar-senha' ? 'active' : ''"><a href="/alterar-senha" hreflang="pt-br">Alterar senha</a></li>
+                <li class="divider" role="presentation"></li>
+                <li><a href="/sair" hreflang="pt-br">Sair</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+    
+    <div class="container-fluid" ng-cloak>
+      <div id="alertWrapper">
+        <alert ng-repeat="alert in alerts track by $index" type="{{alert.kind}}" close="closeAlert($index)">
+          <strong ng-bind="alert.title"></strong>
+          <ul>
+            <li ng-repeat="message in alert.msg track by $index" ng-bind="message"></li>
+          </ul>
+        </alert>
+      </div>
+    </div>
+
+    <!--[if lt IE 7]>
+      <p class="browsehappy text-center background-green text-white">Você está utilizando um navegador <strong>antigo</strong>. Por favor <a href="https://browsehappy.com/">atualize seu navegador</a> para ter uma melhor experiência na Feira Orgânica Delivery.</p>
+    <![endif]-->
+
+    <div ng-view class="container-fluid main-container" autoscroll="true">
+      
+      <div class="row text-center background-green text-white">
+        <div class="col-xs-24">
+          <h1 class="hidden">Feira Orgânica Delivery</h1>
+
+          <h2>Olá,</h2>
+          <h3>Que bom que você encontrou a Feira Orgânica Delivery! Estamos preparando as coisas para lhe atender direitinho.</h4>
+          <h3>A feira estará pronta logo, logo...
+            <i class="fa fa-spinner fa-spin"></i>
+          </h3>
+
+        </div>
+      </div>
+
+    </div>
+
+    <br></br>
+
+    <div class="container-fluid clearfix footer small" ng-controller="FooterCtrl">
+
+      <br>
+
+      <p class="text-center"><span class="text-violet">Próxima entrega:</span> <span ng-bind="followingShippingDate"></span></p>
+
+      <div class="row">
+        <div class="col-xs-offset-1 col-xs-22">
+          <div class="row">
+            <div class="col-sm-5 text-muted">
+              <h4 class="text-center">Compra</h4>
+              <p>O valor mínimo para a compra de produtos é de R$35,00.</p>
+              <p>Taxa de entrega:</p>
+              <p>Florianópolis: R$6,00</p>
+              <p>Palhoça: R$15,00</p>
+              <p>São José: R$12,00</p>
+
+            </div>
+            <div class="col-sm-5 text-muted">
+              <h4 class="text-center">Pagamento</h4>
+              <p>Os pedidos só serão confirmados após a identificação do pagamento.</p>
+              <p>Pagamentos via boleto podem levar até 72 horas para serem identificados.</p>
+              <img class="img-responsive" src="https://feiraorganica.com/cdn/image/200/?url=https://s3-sa-east-1.amazonaws.com/fodev/img/global/pagseguro.png">
+            </div>
+            <div class="col-sm-5 text-muted text-">
+              <h4 class="text-center">Entrega</h4>
+              <p>Pedidos confirmados até as 23:59 de DOMINGO têm entrega realizada na QUARTA-FEIRA.</p>
+              <p>Pedidos confirmados até as 23:59 de QUINTA-FEIRA têm entrega realizada no SÁBADO.</p>
+              <p>As entregas são feitas em período integral.</p>
+            </div>
+            <div class="col-sm-5 text-muted">
+              <h4 class="text-center">Termos e Condições</h4>
+              <p>Ao utilizar o site feiraorgânica.com você concorda com os <a href="/blog/termos" hreflang="pt-br">Termos e Condições de Uso.</a>
+                <p>A lista de produtos e preços é atualizada semanalmente sem aviso prévio.</p>
+              </p>
+            </div>
+            <div class="col-sm-4 text-muted">
+              <h4 class="text-center">Contatos</h4>
+              <address>
+                <strong>Feira Orgânica Delivery</strong>
+                <br>
+                Rodovia Admar Gonzaga, 5200
+                <br>
+                Lagoa da Conceição - Florianópolis - SC
+                <br>
+                <p>
+                  <i class="fa fa-phone fa-2x fa-fw" title="Telefone"></i> +55 (48) 9145 6527
+                  <br>
+                  <i class="fa fa-whatsapp fa-2x fa-fw" title="Whatsapp"></i> +55 (48) 9676 9212
+                  <br>
+                  <i class="fa fa-twitter fa-2x fa-fw" title="Twitter"></i> <a href="https://twitter.com/feira_organica" hreflang="pt-br" target="_blank">twitter.com/feira_organica</a>
+                  <br>
+                  <i class="fa fa-facebook fa-2x fa-fw" title="Facebook"></i> <a href="https://www.facebook.com/feiraorganicadelivery" hreflang="pt-br" target="_blank">fb.com/feiraorganicadelivery</a>
+                  <br>
+                  <i class="fa fa-instagram fa-2x fa-fw" title="Instagram"></i> <a href="https://instagram.com/feiraorganica" hreflang="pt-br" target="_blank">instagram.com/feiraorganicadelivery</a>
+                  <br>
+                  <i class="fa fa-envelope-o fa-2x fa-fw" title="E-mail"></i> <a href="mailto:info@feiraorganica.com" hreflang="pt-br">info@feiraorganica.com</a>
+                </p>
+              </address>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script src="/bower_components/angular/angular.min.js"></script>
+    <script src="/bower_components/satellizer/satellizer.min.js"></script>
+  <!-- Sortable.js -->
+  <script src="https://rubaxa.github.io/Sortable/Sortable.js"></script>
+
+  <!-- ng-sortable.js -->
+  <script src="https://rubaxa.github.io/Sortable/ng-sortable.js"></script>
+    <script src="/app.min.js?v=03112015"></script>
+    <script src="/config/env_config.js"></script>
+    
+
+    <!-- Google Analytics-->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-61586521-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+
+  </body>
+</html>

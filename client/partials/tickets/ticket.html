@@ -1,0 +1,42 @@
+<div class="row">
+    <div class="col-md-offset-4 col-md-16">
+        <h1>Dados do ticket {{ticket._id}}</h1>
+        
+        <p><strong>Data:</strong> <span ng-bind="ticket.updated | date:'dd/MM/yyyy HH:mm'"></span></p>
+        <p><strong>Nome:</strong> <span ng-bind="ticket.customer.name"></span></p>
+        <p><strong>E-mail:</strong> <span ng-bind="ticket.customer.email"></span></p>
+        <p><strong>Tipo:</strong> <span ng-bind="ticket.kind"></span></p>
+        <p><strong>Telefone:</strong> <span ng-bind="ticket.customer.phone"></span></p>
+        <p class="well well-mini text-justify background-blue text-white"><strong>Mensagem:</strong> <span ng-bind-html="ticket.msg" style="white-space: pre-wrap;"></span></p>
+
+        <hr>
+        
+        <div class="well well-mini text-white" ng-class="update.user._id == ticket.customer._id ? 'background-blue' : 'background-violet'" ng-repeat="update in ticket.updates">
+            
+            <p>
+                <span class="pull-right" ng-bind="update.date | date:'dd/MM/yyyy HH:mm'"></span>
+                <strong>Nome:</strong> <span ng-bind="update.user.name"></span> (<span ng-bind="update.user.email"></span>)
+            </p>
+            <p class="text-justify" ng-bind-html="update.msg" style="white-space: pre-wrap;"></p>
+            
+        </div>
+
+        <form class="form" role="form">
+            
+            <div class="form-group">
+                
+                <textarea class="form-control" rows="3" name="newUpdateMessage" ng-model="newUpdateMessage"></textarea>
+            
+            </div>
+            
+            <div class="form-group">
+                
+                <button type="button" class="btn btn-primary" ng-click="addUpdate(0)" ng-disabled="processingTicketUpdate">Responder</button>
+                <button type="submit" class="btn btn-default" ng-click="addUpdate(1)" ng-disabled="processingTicketUpdate">Adicionar resposta de cliente</button>
+                
+            </div>
+            
+        </form>
+        
+    </div>
+</div>

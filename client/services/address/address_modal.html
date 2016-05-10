@@ -1,0 +1,115 @@
+<div class="modal-body">
+    <h1>Endereços <span ng-bind="filteredAddresses.length"></span></h1>
+    
+	<div ng-if="!addresses.length">
+		<h3>Você não possui nenhum endereço cadastrado!</h3>
+		<p>Informe os endereços onde deseja receber seus produtos e nunca mais tenha que digitá-los novamente.</p>
+        <button type="button" class="btn btn-primary btn-block btn-lg" ng-click="addNew()">Informe seu endereço</button>
+	</div>
+	
+	<div ng-if="addresses.length">
+	    
+        <form class="form-inline text-right">
+            <div class="form-group">
+        		<input class="form-control input-xs" id="addressQuery" name="addressQuery" ng-model="addressQuery" type="text" placeholder="Buscar endereço">
+            </div>
+            <button type="button" class="btn btn-success" ng-click="addNew()">+</button>
+        </form>
+        
+        <br>
+    	
+        <div class="row well well-mini background-violet text-white" ng-repeat="(i, address) in filteredAddresses = (addresses | filter: addressQuery | orderBy: selectedOrder) track by $index">
+            <div class="col-xs-24">
+                
+                <div class="row click" ng-click="showDetailsOf._id = showDetailsOf._id == address._id ? false : address._id;">
+                    <div class="col-sm-15 col-xs-24">
+                        <h4 ng-bind="address.name"></h4>
+                    </div>
+                    <div class="col-sm-9 col-xs-24 text-right">
+                        <button type="button" class="btn btn-success" ng-disabled="processingAddressUpdate" ng-if="selectable" ng-click="modalOptions.select($event, address)">Selecionar</button>
+                        <button type="button" class="btn btn-danger" ng-disabled="processingAddressUpdate" ng-click="dropAddress($event, address)"><i class="fa fa-trash"></i></button>
+                    </div>
+                </div>
+                
+                <div ng-if="showDetailsOf._id == address._id">
+                    
+                    <br>
+                    
+                    <div class="row well well-mini background-white text-black">
+                        <div class="col-xs-24">
+    
+                            <form class="form" role="form" ng-submit="addressFormSubmit(address)">
+                                
+                                {{address.data | json}}
+                                
+                                <div class="form-group">
+                                    <label for="name" class="control-label">Nome do endereço</label>
+                                    <input type="text" class="form-control" id="name" placeholder="Dê um nome para este endereço" ng-model="address.name">
+                                </div>
+                    
+                                <h3><i class="fo-logo"></i> Cidade</h3>
+                                <div class="row">
+                                    <div ng-repeat="city in cities track by city._id" class="col-sm-8">
+                                        <button type="button" class="btn btn-lg btn-block" ng-click="address.city = city;" ng-class="address.city._id == city._id ? 'btn-primary' : 'btn-default'">
+                                            <span ng-bind="::city.name"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <h3><i class="fo-logo"></i> Endereço</h3>
+                                <div class="row">
+                                    <div class="form-group col-sm-5">
+                                        <label for="cep" class="control-label">CEP</label>
+                                        <input type="text" class="form-control" id="cep" placeholder="CEP" ng-model="address.cep" ng-blur="searchCEP(address)">
+                                    </div>
+                                    <div class="form-group col-sm-11">
+                                        <label for="street" class="control-label">Rua</label>
+                                        <input type="text" class="form-control" id="street" placeholder="Rua" ng-model="address.street">
+                                    </div>
+                                    <div class="form-group col-sm-2">
+                                        <label for="number" class="control-label">Nº</label>
+                                        <input type="text" class="form-control" id="number" placeholder="Número" ng-model="address.number">
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label for="complement" class="control-label">Complemento</label>
+                                        <input type="text" class="form-control" id="complement" placeholder="Complemento" ng-model="address.complement">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6">
+                                        <label for="district" class="control-label">Bairro</label>
+                                        <input type="text" class="form-control" id="district" placeholder="Bairro" ng-model="address.district">
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label for="phone" class="control-label">Telefone</label>
+                                        <input type="text" class="form-control" id="phone" placeholder="Telefone" ng-model="address.phone">
+                                    </div>
+                                </div>
+                    
+                                <div class="form-group">
+                                    <label for="address.ref" class="control-label">Dados complementares de entrega.</label>
+                                    <textarea rows="4" class="form-control" id="address.ref" placeholder="Dados complementares de entrega" ng-model="address.ref"></textarea>
+                                    <p class="help-block">Forneça dados que nos auxiliem na entrega, como pontos de referência próximos a sua casa, pessoas autorizadas a receber a cesta...</p>
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary" ng-disabled="processingAddressUpdate">Salvar</button>
+                                </div>
+                    
+                            </form>
+    
+                        </div>
+                    </div>                
+                    
+                </div>
+    
+            </div>
+    
+    	</div>	    
+	    
+	</div>
+	
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-link" ng-click="modalOptions.cancel()">Cancelar</button>
+</div>

@@ -1,0 +1,39 @@
+<div class="modal-body">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="modalOptions.close()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <h1>Minha Cesta</h1>
+    
+	<div ng-if="!basket.products.length">
+		<h3>A sua cesta está vazia!</h3>
+        <p>Mas você pode continuar suas compras em nossa feira.
+        <p>O preço e a disponibilidade dos itens estão sujeitos a alterações.</p>
+        <p>A cesta orgânica é um local temporário para armazenar uma lista de seus itens da feira e reflete o preço mais recente de cada um deles.</p>
+        <p>Caso já tenha uma conta, <a href="/entrar" ng-click="modalOptions.goTo('/entrar')">Faça o login</a> para ver seu carrinho.</p></p>
+		<p>Vá até a <a href="/feira" ng-click="modalOptions.goTo('/fair')">Feira</a> e adicione novos produtos clicando no botão "Colocar na cesta".</p>
+		<button type="button" class="btn btn-primary btn-block btn-lg" ng-click="modalOptions.goTo('/fair')">Continuar comprando</button>
+	</div>
+
+	<div ng-if="basket.products.length">
+
+        <fodev-basket></fodev-basket> <!-- /directives/basket/basketDirective.js -->
+
+    </div>
+</div>
+<div class="modal-footer" ng-if="basket.products.length">
+    <div class="row">
+        <div class="col-xs-24 col-sm-8 pull-right clearfix">
+            <button type="submit" class="btn btn-success btn-block" ng-click="modalOptions.ok();" ng-disabled="getTotal() < 35">Finalizar pedido <i class="fa fa-caret-right"></i></button>
+            <br>
+        </div>
+        <div class="col-xs-24 col-sm-8 pull-left clearfix">
+            <button type="button" class="btn btn-primary btn-block" ng-click="modalOptions.goTo('feira')"><i class="fo-logo"></i> Feira</button>
+            <br>
+        </div>
+        <div class="col-xs-24 col-sm-8 pull-left clearfix">
+            <button type="button" class="btn btn-link btn-block" ng-click="modalOptions.clearBasket()">Esvaziar cesta</button>
+            <br>
+        </div>
+    </div>
+    
+</div>

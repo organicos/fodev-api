@@ -1,0 +1,36 @@
+<div class="row">
+    <div class="col-sm-22 col-sm-offset-1">
+        <h1>Estados <span ng-bind="filteredStates.length"></span></h1>
+        
+        <form class="form-inline text-right">
+            <div class="form-group">
+            	<label for="stateQuery">Buscar estados</label>
+        		<input class="form-control input-xs" id="stateQuery" name="stateQuery" ng-model="stateQuery" type="text" placeholder="Buscar categorias">
+            </div>
+            <a class="btn btn-default" href="/state">+</a>
+        </form>
+        
+        <br>
+
+        <table class="table table-condensed table-stripped table-hover">
+            <thead>
+                <tr>
+                    <td>Nome</td>
+                    <td>Código</td>
+                    <td>País</td>
+                    <td>Ativo</td>
+                    <td>Ações</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="state in filteredStates = (states | filter: stateQuery | orderBy: selectedOrder)">
+                    <td><a href="/state/{{state._id}}" ng-bind="state.name"></a></td>
+                    <td><a href="/state/{{state._id}}" ng-bind="state.code"></a></td>
+                    <td><a href="/country/{{state.country._id}}" ng-bind="state.country.name"></a></td>
+                    <td><i class="fa" ng-class="state.active ? 'fa-check text-success' : 'fa-close text-danger'"></i></td>
+                    <td><a href="javascript:void(0)" ng-click="dropState(state)">x</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

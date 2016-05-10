@@ -1,0 +1,41 @@
+<div class="row">
+    <div class="col-sm-offset-3 col-sm-18">
+        
+        <h1>Dados da cidade <span class="text-violet" ng-bind="city.name"></span></h1>
+        
+        
+        <form class="form" role="form" ng-submit="cityFormSubmit()">
+            <div class="form-group">
+                <label for="name">Título</label>
+                <input class="form-control" type="text" name="name" id="name" ng-model="city.name"/>
+            </div>
+            <div class="form-group">
+                <label for="shipping_price">Valor frete</label>
+                <input class="form-control" type="text" name="shipping_price" id="shipping_price" ng-model="city.shipping_price"/>
+            </div>
+            <div class="form-group">
+                <label for="state">Estado</label>
+                <input 
+                    name="state"
+                    type="text" 
+                    ng-model="city.state.name"
+                    placeholder="Estado" 
+                    typeahead="state.name for state in getStates($viewValue)" 
+                    typeahead-loading="loadingStates" 
+                    typeahead-on-select="selectState($item, $model, $label)" 
+                    class="form-control"
+                    >
+                <i ng-show="loadingStates" class="fa fa-spin fa-spinner"></i>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="active" ng-model="city.active"> Ativo
+                </label>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary" ng-disabled="processingCityUpdate">Salvar</button>
+            </div>
+        </form>
+        
+    </div>
+</div>

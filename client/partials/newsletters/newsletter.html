@@ -1,0 +1,227 @@
+<div class="row">
+    <div class="col-sm-24">
+        <div class="row ng-cloak" ng-if="newsletterLoaded">
+            <div class="col-sm-10">
+                <h1>Newsletter</h1>
+                <form class="form" role="form" ng-submit="submitNewsletterForm()" ng-if="newsletter.status != 1">
+                    
+                    <div class="form-group">
+                        <label for="title"></label>
+                        <input class="form-control input-sm" type="text" name="title" ng-model="newsletter.title" placeholder="Título da newsletter"/>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="top"></label>
+                        <textarea class="form-control input-sm" rows="3" name="newsletter.top" ng-model="newsletter.top" placeholder="Texto superior da newsletter"></textarea>
+                    </div>
+                    
+                    <div ng-repeat="section in newsletter.sections" class="well well-mini background-violet">
+                        
+                        <div class="clearfix">
+                            <button type="button" class="btn btn-xs pull-right" ng-click="dropSection(section)"><i class="fa fa-remove"></i></button>
+                        </div>
+                        
+                        <div clas="form-group">
+                            <label for="section.title"></label>
+                            <input class="form-control input-sm" type="text" name="section.title" ng-model="section.title" placeholder="Título da seção"/>
+                        </div>
+
+                        <div clas="form-group">
+                            <label for="section.top"></label>
+                            <textarea class="form-control input-sm" rows="3" name="section.top" ng-model="section.top" placeholder="Texto superior da sessão"></textarea>
+                        </div>
+
+                        <div clas="form-group" ng-if="section.articles.length == 0">
+                            <label for="section.products"></label>
+                            <input name="products_search"
+                                type="text" 
+                                ng-model="selectedProduct" 
+                                placeholder="Produtos" 
+                                typeahead="product.name for product in getProducts($viewValue)" 
+                                typeahead-loading="loadingProducts" 
+                                typeahead-on-select="selectProduct($item, $model, $label, section); selectedProduct = ''" 
+                                class="form-control input-sm"
+                                >
+                            <i ng-show="loadingProducts" class="fa fa-spin fa-spinner"></i>
+                            <span ng-repeat="product in section.products">
+                                &nbsp;<span class="label label-info"><span ng-bind="product.name"></span><a href="javascript:void(0)" ng-click="dropProduct(product, section)">x</a></span> 
+                            </span>
+                        </div>
+                        
+                        <div clas="form-group" ng-if="section.products.length == 0">
+                            <label for="section.articles"></label>
+                            <input name="articles_search"
+                                type="text" 
+                                ng-model="selectedArticle" 
+                                placeholder="Artigos" 
+                                typeahead="article.title for article in getArticles($viewValue)" 
+                                typeahead-loading="loadingArticles" 
+                                typeahead-on-select="selectArticle($item, $model, $label, section); selectedArticle = ''" 
+                                class="form-control input-sm"
+                                >
+                            <i ng-show="loadingArticles" class="fa fa-spin fa-spinner"></i>
+                            <span ng-repeat="article in section.articles">
+                                &nbsp;<span class="label label-info"><span ng-bind="article.title"></span> <a href="javascript:void(0)" ng-click="dropArticle(article, section)">X</a></span>
+                            </span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="section.bottom"></label>
+                            <textarea class="form-control input-sm" rows="3" name="section.bottom" ng-model="section.bottom" placeholder="Texto inferior da seção"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <button type="button" class="btn btn-lg btn-default" ng-click="addNewSection()"><i class="fa fa-plus"></i> Nova seção</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="bottom"></label>
+                        <textarea class="form-control input-sm" rows="3" name="newsletter.bottom" ng-model="newsletter.bottom" placeholder="Texto inferior da newsletter"></textarea>
+                    </div>
+                    
+                    <div class="form-group" ng-if="!newsletter._id || newsletter.status == 0">
+                        <button type="submit" class="btn btn-primary" ng-disabled="savingNewsletter" ng-if="!newsletterSent"><i class="fa fa-plus"></i> Salvar</button>
+                        <button type="button" class="btn btn-danger" ng-click="sendNewsletter()" ng-disabled="savingNewsletter" ng-if="!newsletterSent && newsletter._id"><i class="fa fa-send"></i> Enviar</button>
+                    </div>
+                    
+                </form>
+                
+                <div ng-if="newsletter.status == 1">
+                    <p>Esta newsletter foi enviada para <a href="javascript:void(0)" ng-click="showReceivers = !showReceivers"><span ng-bind="newsletter.receivers.length"></span> pessoa<span ng-if="newsletter.receivers.length != 1">s</span>.</a></p>
+                    <table class="table table-hover table-striped table-condensed" role="table" ng-if="showReceivers">
+                        <thead>
+                            <tr>
+                                <th>E-mail</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="receiver in newsletter.receivers">
+                                <td ng-bind="receiver"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>  
+
+            </div>
+
+            <div class="col-sm-14">
+                
+                <h1 class="text-center">Preview do e-mail <a class="btn" href="/news/{{newsletter._id}}" target="_blank"><i class="fa fa-external-link"></i></a></h1>
+                
+                <div>
+                    <table width="100%" style="background-color:#FFFFFF; text-align: justify; -ms-word-break: break-all; word-break: break-all; word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; -ms-hyphens: auto; hyphens: auto;">
+                        <tr>
+                            <td>
+                                <table width="600" align="center">
+                                    <tr>
+                                        <td width="600">
+                                            <table width="600" style="background-color:#0079BF;">
+                                                <tr>
+                                                    <td align="center">
+                                                        <a href="https://feiraorganica.com" style="color:white; text-decoration:none; font-size: 1.5em; margin-top: 0.83em; margin-bottom: 0.83em; margin-left: 0; margin-right: 0; font-weight: bold">Feira Orgânica Delivery</a>
+                                                    </td>
+                                                </tr>    
+                                            </table>
+                                            <table width="600" style="background-color:#F0F0F0;">
+                                                <tr>
+                                                    <td width="15"><img src="https://s3-sa-east-1.amazonaws.com/fodev/img/email/pixeltransparent.png" width="15" height="1" /></td>
+                                                    <td width="570">
+                                                        <table>
+                                                            <tr style="color:#1D9E74; font-size: 2em; margin-top: 0.67em; margin-bottom: 0.67em; margin-left: 0; margin-right: 0; font-weight: bold;"><td ng-bind="newsletter.title"></td></tr>
+                                                            <tr><td>
+                                                                <div style="padding-top:10px; margin-bottom:15px; white-space: pre-wrap;" ng-bind-html="newsletter.top"></div>
+                                                            </td></tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <table width="570" ng-repeat="section in newsletter.sections">
+                                                                        <tr><td align="center" ng-bind="section.title" style="background-color:#a349a4; color:white;"></td></tr>
+                                                                        <tr><td>
+                                                                            <div style="padding-top:10px; margin-bottom:15px; white-space: pre-wrap;" ng-bind-html="section.top"></div>
+                                                                        </td></tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <table nf-if="section.articles.length" ng-repeat="article in section.articles">
+                                                                                    <tr>
+                                            											<td valign="top" style="padding-bottom: 30px; padding-right: 35px; padding-top: 3px;">
+                                            												<div>
+                                            												    <div>
+                                            												        <a href="https://feiraorganica.com/feira/{{article.encoded_url}}">
+                                            												            <img alt="{{article.title}}" ng-src="https://feiraorganica.com/cdn/image/140x150/?url={{article.images[0].url}}" border="0" style="max-width: 510px; border: 1px solid #dddddd; display: inline; height: 140px; width: 150px;">
+                                            												        </a>
+                                        												        </div>
+                                        												    </div>
+                                            											</td>
+                                            											<td valign="top" style="padding-bottom: 25px;">
+                                            												<div style="font-size: 20px; font-weight: bold; margin: 0; font-family: 'Helvetica Neue',Helvetica,arial,sans-serif; line-height: 115%; padding-top: 0; display: block; text-align: left; font-style: normal; padding-bottom: 0; letter-spacing: normal; width: 323px; color: #50bbb6 !important; text-decoration: none;">
+                                            												    <a href="https://feiraorganica.com/blog/{{article.encoded_url}}" style="color: #50bbb6; text-decoration: none;" ng-bind="article.title"></a>
+                                            												</div>
+                                        												    <div style="font-family: 'Helvetica Neue',Helvetica,arial,sans-serif; font-size: 14px; line-height: 150%; color: #444444;">
+                                        												        <p>
+                                        												            "<span ng-bind="article.content | limitTo: 200 "></span>..."
+                                        												        </p>
+                                        												        <p>
+                                        												            <a href="https://feiraorganica.com/blog/{{article.encoded_url}}" style="color: #50bbb6 !important;">Ler artigo</a>
+                                        												        </p>
+                                        												    </div>
+                                            											</td>
+                                            										</tr>
+                                                                                </table>
+                                                                                
+                                                                                <table nf-if="section.products.length">
+                                                        							<tbody>
+                                                        							    <tr ng-repeat="rowProducts in section.products | groupIntoRowsBy:4">
+                                                            								<td ng-repeat="product in rowProducts" valign="top" align="center" style="padding-left:5px; padding-bottom: 23px; padding-top: 10px; width: 137px;">
+                                                            								    <a href="https://feiraorganica.com/feira/{{product.encoded_url}}">
+                                                            								        <img border="0" alt="{{product.name}}" ng-src="https://feiraorganica.com/cdn/image/137x120/?url={{product.images[0].url}}" style="width: 137px; height: 120px;">
+                                                            								        <b ng-bind="product.name"></b>
+                                                            								        <p>
+                                                            								            <span ng-bind="product.prices[0].price | currency:'R$':2" style="color: green;"></span>
+                                                            								            <span ng-if="product.prices[1] && product.prices[0].price < product.prices[1].price">
+                                                            								                <b style="color: red;">&dArr;</b>
+                                                            								                <del ng-bind="product.prices[1].price | currency:'R$':2" style="color:#b2b2b2;"></del>
+                                                            								            </span>
+                                                            								        </p>
+                                                            								    </a>
+                                                        								    </td>
+                                                        							    </tr>
+                                                        						    </tbody>
+                                                        						</table>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr><td>
+                                                                            <div style="padding-top:10px; margin-bottom:15px; white-space: pre-wrap;" ng-bind-html="section.bottom"></div>
+                                                                        </td></tr>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                            <tr><td>
+                                                                <div style="padding-top:10px; margin-bottom:15px; white-space: pre-wrap;" ng-bind-html="newsletter.bottom"></div>
+                                                            </td></tr>
+                                                            <tr><td style="font-size: .67em; margin-top: 2.33em; margin-bottom: 2.33em; margin-left: 0; margin-right: 0; font-weight: bold;">Para garantir que nossos comunicados cheguem em sua caixa de entrada, adicione o e-mail <a href="mailto:info@feiraorganica.com.br" style="color:#0079BF;">info@feiraorganica.com.br</a> ao seu catálogo de endereços.</td></tr>   
+                                                            <tr><td align="center" style="font-size: .67em; margin-top: 2.33em; margin-bottom: 2.33em; margin-left: 0; margin-right: 0; font-weight: bold;">Não consegue ver este e-mail? <a href="https://feiraorganica.com/newsletter/{{newsletter.encoded-url}}" style="text-decoration:none; font-size: 1.17em; margin-top: 1em; margin-bottom: 1em; margin-left: 0; margin-right: 0; font-weight: bold">Clique aqui.</a></td></tr>
+                                                        </table>
+                                                    </td>
+                                                    <td width="15"><img src="https://s3-sa-east-1.amazonaws.com/fodev/img/email/pixeltransparent.png" width="15" height="1" /></td>
+                                                </tr>
+                                            </table>
+                                            <table width="600" style="background-color:#0079BF;">
+                                                <tr>
+                                                    <td align="center">
+                                                        <a href="https://feiraorganica.com" style="color:white; text-decoration:none; font-size: 1.17em; margin-top: 1em; margin-bottom: 1em; margin-left: 0; margin-right: 0; font-weight: bold">A Feira Orgânica Delivery agradece sua confiança!</a>
+                                                    </td>
+                                                </tr>    
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,111 @@
+<div class="row">
+    <div class="col-sm-22 col-sm-offset-1">
+        
+        <h1>Pedido <span ng-bind="order._id"></span> </h1>
+
+        <div class="row">
+            <div class="col-sm-12">
+                
+                <h2>Dados</h2>
+                <p><strong>Status do pagamento: </strong> 
+                    <span class="label" 
+                        ng-class="order.status == 1 ? 'label-success' : order.status == 2 ? 'label-warning' : 'label-danger'" 
+                        ng-cloak 
+                        ng-bind="statuses[order.status].name"
+                    ></span>
+                    <small ng-class="order.status == 1 ? 'text-success' : 'text-danger'"  ng-bind="statuses[order.status].desc"></small>
+                </p>
+                <p><strong>Cliente: </strong> <span ng-bind="order.customer.name || order.customer.email"></span></p>
+                <p><strong>Valor da cesta: </strong> <span ng-bind="order.total | currency:'R$':2"></span></p>
+                <p><strong>Valor do frete: </strong> <span ng-bind="order.shipping.price | currency:'R$':2"></span></p>
+                <p><strong>Valor final: </strong> <span ng-bind="order.total + order.shipping.price | currency:'R$':2"></span></p>
+                <p><strong>Data: </strong> <span ng-bind="order.updated | date:'dd/MM/yyyy'"></span></p>
+            </div>
+            <div class="col-sm-12">
+                
+                <h2>Entrega</h2>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p><strong>CEP: </strong> <span ng-bind="order.shipping.cep"></span></p>
+                        <p><strong>Rua: </strong> <span ng-bind="order.shipping.street"></span></p>
+                        <p><strong>Número: </strong> <span ng-bind="order.shipping.number"></span></p>
+                        <p><strong>Complemento: </strong> <span ng-bind="order.shipping.complement"></span></p>
+                        <p><strong>Bairro: </strong> <span ng-bind="order.shipping.district"></span></p>
+                    </div>
+                    <div class="col-sm-12">
+                        <p><strong>Cidade: </strong> <span ng-bind="order.shipping.city"></span></p>
+                        <p><strong>Estado: </strong> <span ng-bind="order.shipping.state"></span></p>
+                        <p><strong>Entrega: </strong> <span ng-bind="order.shipping.date | date:'EEEE, dd/MM/yyyy' || order.shipping.deliveryOption"></span></p>
+                        <p><strong>Referência: </strong> <span ng-bind="order.shipping.address_ref"></span></p>   
+                        <p><strong>Fone: </strong> <span ng-bind="order.shipping.phone"></span></p>  
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+
+        <h2>Produtos</h2>
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <td>Produto</td>
+                    <td align="right">Quantidade</td>
+                    <td align="right">Preço unitário</td>
+                    <td align="right">Total</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="product in order.products" ng-class="product.unavaiable ? 'text-danger text-del' : 'text-success'">
+                    <td ng-bind="product.name"
+    					tooltip-placement="right"
+    					tooltip-html-unsafe="{{product.name}} <hr> {{product.dscr}}" 
+    					tooltip-append-to-body="true" 
+                    ></td>
+                    <td ng-bind="product.quantity" align="right"></td>
+                    <td ng-bind="product.prices[0].price | currency:'R$':2" align="right"></td>
+                    <td ng-bind="product.quantity*product.prices[0].price | currency:'R$':2" align="right"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" ng-class="order.total < 35 ? 'danger' : ''">
+                        <span ng-if="order.total < 35" >O valor mínimo para a compra de produtos é de R$35,00.</span>
+                    </td>
+                    <td align="right">Total:</h5></td>
+                    <td align="right" ng-bind="order.total | currency:'R$':2"></td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td align="right">Frete:</td>
+                    <td align="right" ng-bind="order.shipping.price | currency:'R$':2"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td align="right"><h4>Preço final:</h4></td>
+                    <td align="right"><h4 ng-bind="order.total + order.shipping.price | currency:'R$':2"></h4></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="row" ng-cloak ng-if="order.status == 0">
+            <div class="col-sm-12 pull-right">
+                <a class="btn btn-success btn-block" href="https://pagseguro.uol.com.br/v2/checkout/payment.html?code={{order.pagseguro.checkout.code}}" target="_blank">
+                    <p class="font-30">Pagar com Pagseguro</p>
+                    <small>Compra 100% segura.</small>
+                </a>
+                <br>
+                <p class="small"><strong>Atenção!</strong> Se você já efetuou o pagamento e o status do pedido não foi atualizado, clique no botão abaixo para fazer uma nova verificação junto ao Pagseguro.</p>
+                <button class="btn btn-info btn-xs" ng-click="checkPagseguroPayment(order._id)">Confirmar pagamento no Pagseguro.</button>
+            </div>
+            <div class="col-sm-12">
+                <button type="button" class="btn btn-primary btn-block" ng-click="showDepositInstructionsModal()">
+                    <p class="font-30">Pagar com depósito</p>
+                    <small>Compra 100% segura.</small>
+                </a>
+            </div>
+        </div>
+        
+    </div>
+</div>

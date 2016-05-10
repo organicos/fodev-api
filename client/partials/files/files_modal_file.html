@@ -1,0 +1,24 @@
+<h2>Dados do arquivo <span class="text-violet" ng-bind="file.name"></span></h2>
+
+<div class="row">
+
+    <div class="col-sm-16">
+        <form class="form" role="form" ng-submit="fileFormSubmit()">
+            <div class="form-group">
+                <label for="name">Título</label>
+                <input class="form-control" type="text" name="name" id="name" ng-model="file.name"/>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary" ng-disabled="processingFileUpdate">Salvar</button>
+            </div>
+        </form>
+
+    </div>
+
+    <div class="col-sm-8">
+        <a href="{{file.url}}" target="_blank">
+            <img class="img-responsive img-wide" ng-src="https://feiraorganica.com/cdn/image/400x400/?url={{file.url}}"></img>
+        </a>
+    </div>
+
+</div>

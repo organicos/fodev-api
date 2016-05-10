@@ -3,16 +3,7 @@
 var Orders = require('./../models/Orders.js');
 var Baskets = require('./../models/Baskets.js');
 
-var payment_status_map = {
-    0: 'Pagamento pendente',
-    1: 'Pago',
-    2: 'Entregue',
-    3: 'Cancelado',
-    4: 'Problemas com o pagamento.',
-    5: 'Inválido.'
-};
-
-module.exports=function(app, mongoose, moment, utils, config, https) {
+module.exports=function(app, moment, utils, config) {
     
     app.get('/v1/orders', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
             
@@ -148,7 +139,6 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                 
                 var statusChanged = order.status != req.body.status;
                     
-                order.discounts = req.body.discounts;
                 order.customer = req.body.customer;
                 order.basket = req.body.basket;
                 order.address = req.body.address;
@@ -156,36 +146,21 @@ module.exports=function(app, mongoose, moment, utils, config, https) {
                 order.shipping = req.body.shipping;
                 order.payment = req.body.payment;
                 order.status = req.body.status;
-                order.updated = req.body.updated;
-                
-                
-                // check if the order status is going to be updated to 2: DELIVERED
-                if(order.status == 2){
 
-                    if(order.refound.option == 'discount'){
-
-                        if(!order.refound.discount){
-
-                            order.refound.value = calculateRefoundValue(order);
-
-                            order.refound.discount = createNewDiscount(order, function(newDiscount){
-
-                                order.refound.discount = newDiscount;
-
-                                return _PutOrder(order, statusChanged, res);
-
-                            });
-
-                        }
-                    }
-
-
-                } else {
-
-                    return _PutOrder(order, statusChanged, res);
-
-                }
+                order.save(function(err, order){
                     
+                    if(err){
+                    
+                        res.send(err);
+                    
+                    } else {
+                    
+                        res.json(order);
+                    
+                    }
+                    
+                });
+                
             }
 
         });

@@ -1,0 +1,107 @@
+<div class="row">
+
+    <div class="col-sm-22 col-sm-offset-1">
+        
+        <br>
+
+        <div class="text-right">
+            <small>Compartilhe este produto com seus amigos:</small>
+            
+            <span>
+                
+                <button class="btn btn-default" socialshare socialshare-provider="facebook" socialshare-text="Encontrem este delicioso produto na Feira Orgãnica Delivery" socialshare-hashtags="organicos, feiraorganicadelivery, florianopolis, floripa, comidasaudavel" socialshare-url="https://feiraorganica.com/feira/{{product._id}}" socialshare-via="feiraorganicadelivery"><i class="fa fa-facebook fa-fw"></i></button>
+                <button class="btn btn-default" socialshare socialshare-provider="twitter" socialshare-text="Encontrem este delicioso produto na Feira Orgãnica Delivery" socialshare-hashtags="organicos, feiraorganicadelivery, florianopolis, floripa, comidasaudavel" socialshare-url="https://feiraorganica.com/feira/{{product._id}}" socialshare-via="feiraorganicadelivery"><i class="fa fa-twitter fa-fw"></i></button>
+                <button class="btn btn-default" socialshare socialshare-provider="google+" socialshare-text="Encontrem este delicioso produto na Feira Orgãnica Delivery" socialshare-hashtags="organicos, feiraorganicadelivery, florianopolis, floripa, comidasaudavel" socialshare-url="https://feiraorganica.com/feira/{{product._id}}" socialshare-via="feiraorganicadelivery"><i class="fa fa-google-plus fa-fw"></i></button>
+
+            </span>
+            
+        </div>
+        
+        <div ng-if="loadingProduct">Carregando os dados do produto <i class="fa fa-spin fa-spinner"></i></div>
+        
+        <div ng-if="!loadingProduct">
+            
+            <div class="row" ng-if="product.name">
+                
+                <div class="col-sm-6">
+                    
+                    <br>
+                    
+                    <img class="img-responsive" alt="{{product.name}}" ng-src="https://feiraorganica.com/cdn/image/300x300/?url={{::product.images[0].url}}" src="assets/img/global/no_image.jpeg" ng-dblclick="basketService.addToBasket(product)"></img>
+                    <small>* Imagem meramente ilustrativa</small>
+
+                    <h4 ng-bind="::order.howmany"></h4>
+                    
+                    <button class="btn btn-success btn-block" ng-click="basketService.addToBasket(product)">
+                        Colocar na cesta
+                        <span class="label label-warning" ng-bind="(basketService.getProducts() | filter : {_id: product._id})[0].quantity"></span>
+                    </button>
+    
+                </div>
+                
+                <div class="col-sm-18">
+                    
+                    <h2 ng-bind="::product.name"></h2>
+                    
+                    <hr>
+    
+                    <h3><span class="text-success" ng-bind="::product.prices[0].price | currency:'R$':2"></span> <span ng-if="product.prices[1].price > product.prices[0].price"><i class="fa fa-arrow-down text-success"></i> <del><small class="text-muted text-danger" ng-bind="::product.prices[1].price | currency:'R$':2"></small></del></span></h3>
+                    
+                    <dl class="dl-horizontal" ng-if="product.categories && product.categories[0]">
+                        <dt>Categoria: </dt>
+                        <dd ng-bind="::product.categories[0].name"></dd>
+                    </dl>
+                    
+                    <dl class="dl-horizontal" ng-if="product.season">
+                        <dt>Época: </dt>
+                        <dd ng-bind="::product.season"></dd>
+                    </dl>
+    
+                    <dl class="dl-horizontal" ng-if="product.dscr">
+                        <dt></dt>
+                        <dd class="text-justify" ng-bind-html="product.dscr" style="white-space: pre-wrap;"></dd>
+                    </dl>
+                    
+                </div>
+        
+            </div>
+            <div ng-if="!product.name">Este produto não existe ou está em falta no momento.</div>            
+            
+            
+        </div>
+        
+        <hr>
+        
+        <h3>Outros produtos da categoria {{product.categories[0].name}}</h3>
+		<div class="row">
+			<div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" ng-repeat="product in sameCategoryProducts">
+		
+		
+				<div class="thumbnail">
+					<a href="/feira/{{product.encoded_url}}" hreflang="pt-br">
+						<img class="img-responsive img-responsive-wide img-centered" alt="{{::product.name}}" ng-src="https://feiraorganica.com/cdn/image/200x200/?url={{product.images[0].url}}" ng-dblclick="basketService.addToBasket(product)" src="assets/img/global/no_image.jpeg">
+					</a>
+					<hr>
+					<div style="height:100px;">
+						<p>
+							<span ng-bind="::product.prices[0].price | currency:'R$':2"></span>
+						</p>
+						<h4 class="text-violet"><a href="/feira/{{product.encoded_url}}" ng-bind="::product.name" hreflang="pt-br"></a></h4>
+					</div>
+		
+					<button class="btn btn-success btn-block" ng-click="basketService.addToBasket(product)">Colocar na cesta 
+						<span class="label label-warning" ng-bind="(basketService.getProducts() | filter : {_id: product._id})[0].quantity"></span>
+					</button>
+		
+				</div>
+		
+		
+			</div>
+			<div class="col-xs-24" ng-if="!filteredProducts.length">Nesta semana não temos nenhum outro produto na categoria <span ng-bind="::selectedCategory"></span>!
+				<br></br>
+			</div>
+		</div>
+
+    </div>
+
+</div>

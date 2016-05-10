@@ -1,0 +1,42 @@
+<div class="row">
+    <div class="col-sm-22 col-sm-offset-1">
+        <h1>Newsletters <span ng-bind="filteredNewsletters.length"></span></h1>
+        
+        <form class="form-inline text-right">
+            <div class="form-group">
+            	<label for="newsletterQuery">Buscar newsletters</label>
+        		<input class="form-control input-xs" id="newsletterQuery" name="newsletterQuery" ng-model="newsletterQuery" type="text" placeholder="Buscar newsletters">
+            </div>
+        	<div class="form-group">
+        	    <label for="order">Ordem</label>
+                <select class="form-control" id="order" ng-model="selectedOrder">
+                    <option value="title" selected>Título</option>
+                    <option value="status" selected>Status</option>
+                    <option value="updated">Data</option>
+                </select>
+        	</div>
+            <a class="btn btn-default" href="/newsletter">+</a>
+        </form>
+        
+        <br>
+        
+        <table class="table table-condensed table-stripped table-hover">
+            <thead>
+                <tr>
+                    <td>Titulo</td>
+                    <td>Status</td>
+                    <td>Ultima modificação</td>
+                    <td>Ações</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="newsletter in filteredNewsletters = (newsletters | filter: newsletterQuery | orderBy: selectedOrder)">
+                    <td><a href="/newsletter/{{newsletter._id}}" ng-bind="newsletter.title"></a></td>
+                    <td ng-bind="newsletter.status"></td>
+                    <td ng-bind="newsletter.updated"></td>
+                    <td>x</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,26 @@
+<div class="row">
+    <div class="col-sm-22 col-sm-offset-1">
+        <h1>Etapas <span ng-bind="filteredOrderSteps.length"></span></h1>
+        <a href="/orderStep">Add</a>
+        <table class="table table-condensed table-stripped table-hover">
+            <thead>
+                <tr>
+                    <td></td>
+                    <td>Ordem</td>
+                    <td>Nome</td>
+                    <td>Dispara e-mail</td>
+                    <td>Ações</td>
+                </tr>
+            </thead>
+            <tbody ng-sortable="barConfig">
+                <tr ng-repeat="orderStep in filteredOrderSteps = (orderSteps | filter: orderStepQuery | orderBy: selectedOrder) track by orderStep.step">
+                    <td class="col-xs-1 drag-handle text-muted move"><i class="fa fa-arrows"></i></td>
+                    <td class="col-xs-1" ng-bind="orderStep.step"></td>
+                    <td><a ng-bind="orderStep.name || '???'" href="/orderStep/{{orderStep._id}}"></a></td>
+                    <td><i ng-class="orderStep.mail ? 'fa fa-check' : ''"></i></td>
+                    <td><a href="javascript:void(0)" ng-click="dropOrderStep(orderStep)">x</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
