@@ -100,7 +100,7 @@ border-left-color: #111111;
 }
 
 #bg-topo-home{
-    background:url('https://s3-sa-east-1.amazonaws.com/fodev/img/global/bg_vegetais.jpg') no-repeat center center;
+    background:url('//fodev-prod.s3.amazonaws.com/img/global/bg_vegetais.jpg') no-repeat center center;
     background-size:100% auto;
 }
 

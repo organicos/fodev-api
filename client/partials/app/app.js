@@ -103,7 +103,7 @@ app.run(['$rootScope', '$modalStack', function ($rootScope, $modalStack) {
 app.controller('myAppCtrl' , ['$scope', '$location', '$localStorage', 'basketService', 'addressService', 'HtmlMetaTagService', '$http', 'myConfig', '$rootScope' , function($scope, $location, $localStorage, basketService, addressService, HtmlMetaTagService, $http, myConfig, $rootScope) {
     
     // VARIABLES
-    
+
     // Basket 
     $scope.basketService = basketService;
     
@@ -126,17 +126,15 @@ app.controller('myAppCtrl' , ['$scope', '$location', '$localStorage', 'basketSer
     protectPrivateRoutes($scope, $location);
     
     // METHODS
-    
     $scope.ping = function(callback) {
         callback();
     }
 
+    // return to the previous page
     $scope.$back = function() {
-        
         window.history.back();
-
     };
-  
+
     $scope.addAlert = function(alertObj) {
         
         $scope.alerts.unshift(alertObj);

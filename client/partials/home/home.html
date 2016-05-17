@@ -1,7 +1,7 @@
 <div class="row no-gutter background-white" id="bg-topo-home">
 	<div class="col-xs-offset-4 col-xs-16 col-sm-offset-5 col-sm-14 col-md-offset-6 col-md-12">
 
-		<img class="img-responsive img-centered img-responsive-wide" ng-src="https://s3-sa-east-1.amazonaws.com/fodev/img/global/marca.png">
+		<img class="img-responsive img-centered img-responsive-wide" ng-src="//fodev-prod.s3.amazonaws.com/img/global/marca.png">
 		<br><br class="hidden-xs hidden-sm">
 		<p class="text-center">
 			<a href="/feira"  hreflang="pt-br" class="btn btn-primary">
@@ -67,12 +67,16 @@
 
 				<div class="thumbnail">
 					<a href="/feira/{{product.encoded_url}}" hreflang="pt-br">
-						<img class="img-responsive img-responsive-wide img-centered" alt="{{::product.name}}" ng-src="https://feiraorganica.com/cdn/image/200x200/?url={{product.images[0].url}}" ng-dblclick="basketService.addToBasket(product)" src="assets/img/global/no_image.jpeg">
+						<img class="img-responsive img-responsive-wide img-centered" alt="{{::product.name}}" ng-src="{{product.images[0].url}}" ng-dblclick="basketService.addToBasket(product)" resizimage="200">
 					</a>
 					<hr>
 					<div style="height:100px;">
 						<p>
-							<span class="text-success" ng-bind="product.prices[0].price | currency:'R$':2"></span> <span ng-if="product.prices[1].price > product.prices[0].price"><i class="fa fa-arrow-down text-success"></i> <del><small class="text-muted text-danger" ng-bind="product.prices[1].price | currency:'R$':2"></small></del></span>
+							<span class="text-success" ng-bind="product.prices[0].price | currency:'R$':2"></span> 
+							<span ng-if="product.prices[1].price > product.prices[0].price">
+								<i class="fa fa-arrow-down text-success"></i> 
+								<del><small class="text-muted text-danger" ng-bind="product.prices[1].price | currency:'R$':2"></small></del>
+							</span>
 						</p>
 						<h4 class="text-violet"><a href="/feira/{{product.encoded_url}}" ng-bind="product.name" hreflang="pt-br"></a></h4>
 					</div>
@@ -138,7 +142,7 @@
 				<br>
 				** A Feira Orgânica Delivery enviará apenas 1 e-mail por semana.
 				<br>
-				*** A qualquer momento você poderá descadastrar-se. Basta acessar <a href="/eu" hreflang="pt-br">seus dados</a> e desmarcar a opção "Desejo receber semanalmente a lista de produtos e promoções".
+				*** A qualquer momento você poderá descadastrar-se. Basta clicar no link que existe no rodapé de qualquer e-mail enviado pela Feira Orgânica ou acessar <a href="/eu" hreflang="pt-br">seus dados</a> e desmarcar a opção "Desejo receber semanalmente a lista de produtos e promoções".
 			</p>
 
 
