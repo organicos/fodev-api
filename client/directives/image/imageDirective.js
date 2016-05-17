@@ -2,9 +2,10 @@
 
 angular.module('myApp')
 .directive('resizimage', ['$location', function ($location) {
+  var baseUrl = $location.$$absUrl.replace(new RegExp($location.$$path+"(?=[^"+$location.$$path+"]*$)"), '')
   var resizimageConfig = {
-    resizeOnTheFlyHost: $location.$$absUrl + 'resizimage/',
-    noImageSrc: $location.$$absUrl + 'assets/img/global/no_image.jpeg'
+    resizeOnTheFlyHost: baseUrl + '/resizimage/',
+    noImageSrc: baseUrl + '/assets/img/global/no_image.jpeg',
   };
   return {
     restrict: 'AEC',

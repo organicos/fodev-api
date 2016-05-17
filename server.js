@@ -1,52 +1,31 @@
 "use strict";
 
+// Load dependences
 var express  = require('express');
-
 var app = express(); // create our app w/ express
-
 var moment  = require('moment');
-
 app.locals.moment = moment;
-
 var https = require('https');
-
 var http = require('http');
-
 var fs = require('fs');
-
 var deepPopulate = require('mongoose-deep-populate'); // deepPopulate for mongoose to populate multidimensional objects
-
 var mongoose = require('mongoose'); // mongoose for mongodb
-
 mongoose.plugin(deepPopulate);
-    
 var morgan = require('morgan'); // log requests to the console (express4)
-
 var bodyParser = require('body-parser'); // pull information from HTML POST (express4)
-
 var methodOverride = require('method-override'); // simulate DELETE and PUT (express4)
-
 var argv = require('optimist').argv;
-
 var config = require('./config/env_config');
-
 var utils = require('./helpers/utils');
-
 var errorHandler = require('errorhandler');
-
 var compression = require('compression');
-
 var newrelic = false;
-
 if(config.env == 'prod'){
-    
     newrelic = require('newrelic');
-
 }
 
+// Compress the output
 app.use(compression());
-
-app.use(express.static(__dirname + "/client", { maxAge: 86400000 }));
 
 // Add headers
 app.use(function (req, res, next) {

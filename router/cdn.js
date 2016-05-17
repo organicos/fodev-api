@@ -5,7 +5,7 @@ module.exports=function(app, mongoose, utils) {
     });
     app.get('/resizimage/:size', function(req, res, next){
         var gm = require('gm').subClass({imageMagick: true});
-        var url = req.query.url ? encodeURI(req.query.url) : null;
+        var url = getImageUrl(encodeURI(req.query.url), req.protocol, req.headers.host, req.headers.referer);
         var size = req.params.size;
         var image;
         if(url){
@@ -50,4 +50,17 @@ module.exports=function(app, mongoose, utils) {
             }
         });
     });
+    
+    function getImageUrl(url, protocol, host, referer){
+        if(url.indexOf("http") != 0){
+            if (url.indexOf("//") == 0) {
+                url = protocol + ":" + url;
+            }
+            else if(referer){
+                if (url.indexOf("/") == 0) { url = protocol + "://" + host + url; }
+                else { url = referer + url; }
+            }           
+        }
+        return url;
+    }
 }

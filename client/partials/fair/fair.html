@@ -57,7 +57,7 @@
 		
 				<div class="thumbnail">
 					<a href="/feira/{{::product.encoded_url}}" hreflang="pt-br">
-						<img class="img-responsive img-responsive-wide img-centered" alt="{{::product.name}}" ng-src="https://feiraorganica.com/cdn/image/200x200/?url={{::product.images[0].url}}" src="assets/img/global/no_image.jpeg" ng-dblclick="basketService.addToBasket(product)">
+						<img class="img-responsive img-responsive-wide img-centered" alt="{{::product.name}}" src="{{::product.images[0].url}}" resizimage="200x200" width="200" ng-dblclick="basketService.addToBasket(product)">
 					</a>
 					<hr>
 					<div style="height:100px;">

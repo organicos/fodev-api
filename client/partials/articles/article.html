@@ -13,7 +13,7 @@
 		        <a ng-click="dropImageFromArticle(image)"><i class="fa fa-remove"></i></a>
 		    </p>
 			<a href="/image/{{image._id}}">
-				<img class="img-responsive" alt="{{image.name}}" ng-src="https://feiraorganica.com/cdn/image/200x200/?url={{image.url}}">
+				<img class="img-responsive" alt="{{image.name}}" src="{{image.url}}" resizimage="200x200">
 			</a>
 		</div>
     </div>
@@ -59,7 +59,7 @@
                         class="form-control"
                         >
                     <i ng-show="loadingAuthors" class="fa fa-spin fa-spinner"></i>
-                    <img class="img-responsive img-rounded" alt="article.author.profile_img.name" ng-src="https://feiraorganica.com/cdn/image/200x200/?url={{article.author.profile_img.url || 'https://s3-sa-east-1.amazonaws.com/fodev/img/global/no-profile-image.jpg'}}"></img>
+                    <img class="img-responsive img-rounded" alt="article.author.profile_img.name" src="{{article.author.profile_img.url}}" resizimage="200x200"></img>
                 </div>
             </div>
         </div>
@@ -89,7 +89,7 @@
         
 		<div class="thumbnail" ng-repeat="product in article.products">
 			<a href="/feira/produto/{{product.encoded_url}}">
-				<img class="img-responsive" alt="week_product" ng-src="https://feiraorganica.com/cdn/image/200x200/?url={{product.images[0].url}}">
+				<img class="img-responsive" alt="week_product" src="{{product.images[0].url}}" resizimage="200x200">
 			</a>
 			<hr>
 			<div style="height:80px;">

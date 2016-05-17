@@ -109,7 +109,7 @@
           </button>
 
           <a class="navbar-brand" href="/" hreflang="pt-br">
-            <img src="//fodev-prod.s3.amazonaws.com/img/global/logo_transparent.png" resizimage="200">
+            <img src="/resizimage/100/?url=//fodev-prod.s3.amazonaws.com/img/global/logo_transparent.png">
           </a>
 
           <a href="#" class="navbar-brand" ng-click="basketService.openBasket()">
@@ -135,7 +135,7 @@
             <li ng-class="location.path() == '/contato' ? 'active' : ''"><a href="/contato" hreflang="pt-br">Contato</a></li>
             <li ng-class="location.path() == '/entrar' ? 'active' : ''"><a href="/entrar" hreflang="pt-br" ng-cloak ng-if="!$storage.user.token">Entrar</a></li>
             <li dropdown ng-cloak ng-if="$storage.user.token">
-              <img class="img-responsive img-circle" id="profile-img" ng-src="https://feiraorganica.com/cdn/image/100x100/?url={{$storage.user.profile_img.url || '//fodev-prod.s3.amazonaws.com/img/global/no-profile-image.jpg'}}" dropdown-toggle></img>
+              <img class="img-responsive img-circle" id="profile-img" ng-src="{{$storage.user.profile_img.url}}" resizimage="100" dropdown-toggle></img>
               <ul class="dropdown-menu" role="menu">
                 <li role="presentation" class="dropdown-header" ng-bind="$storage.user.name || $storage.user.email"></li>
                 <li ng-class="location.path() == '/eu' ? 'active' : ''"><a href="/eu" hreflang="pt-br">Meus dados</a></li>
@@ -208,7 +208,7 @@
               <h4 class="text-center">Pagamento</h4>
               <p>Os pedidos só serão confirmados após a identificação do pagamento.</p>
               <p>Pagamentos via boleto podem levar até 72 horas para serem identificados.</p>
-              <img class="img-responsive" src="https://feiraorganica.com/cdn/image/200/?url=//fodev-prod.s3.amazonaws.com/img/global/pagseguro.png">
+              <img class="img-responsive" src="/resizimage/200/?url=//fodev-prod.s3.amazonaws.com/img/global/pagseguro.png">
             </div>
             <div class="col-sm-5 text-muted text-">
               <h4 class="text-center">Entrega</h4>
