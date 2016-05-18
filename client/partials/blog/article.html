@@ -1,7 +1,7 @@
 <div class="row">
 
     <div ng-class="articleProductsRaw.length == 0 ? 'col-xs-24 col-sm-offset-4 col-sm-16 col-md-offset-5 col-md-14 col-lg-offset-6 col-lg-12' : 'col-xs-24 col-sm-offset-2 col-sm-16 col-md-offset-5 col-md-11 col-lg-offset-6 col-lg-9'">
-        <img class="img-responsive img-responsive-wide" ng-if="article.images.length" alt="{{article.images[0].title}}" src="{{article.images[0].url}}" resizimage="800"></img>
+        <img class="img-responsive img-responsive-wide" ng-if="article.images.length" alt="{{::article.images[0].title}}" ng-src="{{::article.images[0].url}}" resizimage="800x800"></img>
     
         <h1 ng-bind="article.title"></h1>
         
@@ -12,9 +12,9 @@
             
             <span>
                 
-                <button class="btn btn-default" socialshare socialshare-provider="facebook" socialshare-text="Vejam esta deliciosa receita na Feira Orgãnica Delivery." socialshare-hashtags="organicos, feiraorganicadelivery, florianopolis, floripa, comidasaudavel" socialshare-url="https://feiraorganica.com/blog/{{article.encoded_url}}" socialshare-via="feiraorganicadelivery"><i class="fa fa-facebook fa-fw"></i></button>
-                <button class="btn btn-default" socialshare socialshare-provider="twitter" socialshare-text="Vejam esta deliciosa receita na Feira Orgãnica Delivery." socialshare-hashtags="organicos, feiraorganicadelivery, florianopolis, floripa, comidasaudavel" socialshare-url="https://feiraorganica.com/blog/{{article.encoded_url}}" socialshare-via="feiraorganicadelivery"><i class="fa fa-twitter fa-fw"></i></button>
-                <button class="btn btn-default" socialshare socialshare-provider="google+" socialshare-text="Vejam esta deliciosa receita na Feira Orgãnica Delivery." socialshare-hashtags="organicos, feiraorganicadelivery, florianopolis, floripa, comidasaudavel" socialshare-url="https://feiraorganica.com/blog/{{article.encoded_url}}" socialshare-via="feiraorganicadelivery"><i class="fa fa-google-plus fa-fw"></i></button>
+                <button class="btn btn-default" socialshare socialshare-provider="facebook" socialshare-text="Vejam esta deliciosa receita na Feira Orgãnica Delivery." socialshare-hashtags="organicos, feiraorganicadelivery, florianopolis, floripa, comidasaudavel" socialshare-url="https://feiraorganica.com/blog/{{::article.encoded_url}}" socialshare-via="feiraorganicadelivery"><i class="fa fa-facebook fa-fw"></i></button>
+                <button class="btn btn-default" socialshare socialshare-provider="twitter" socialshare-text="Vejam esta deliciosa receita na Feira Orgãnica Delivery." socialshare-hashtags="organicos, feiraorganicadelivery, florianopolis, floripa, comidasaudavel" socialshare-url="https://feiraorganica.com/blog/{{::article.encoded_url}}" socialshare-via="feiraorganicadelivery"><i class="fa fa-twitter fa-fw"></i></button>
+                <button class="btn btn-default" socialshare socialshare-provider="google+" socialshare-text="Vejam esta deliciosa receita na Feira Orgãnica Delivery." socialshare-hashtags="organicos, feiraorganicadelivery, florianopolis, floripa, comidasaudavel" socialshare-url="https://feiraorganica.com/blog/{{::article.encoded_url}}" socialshare-via="feiraorganicadelivery"><i class="fa fa-google-plus fa-fw"></i></button>
 
             </span>
             
@@ -24,17 +24,17 @@
         
         <hr>
         
-        <p class="text-justify" ng-bind-html="article.content" style="white-space: pre-wrap;"></p>
+        <p class="text-justify" ng-bind-html="::article.content" style="white-space: pre-wrap;"></p>
         
         <hr>
         
         <div class="row" ng-if="article.author._id">
             <div class="col-sm-3">
-                <img class="img-responsive img-circle" alt="article.author.profile_img.name" src="{{article.author.profile_img.url}}" resizimage="200x200"></img>
+                <img class="img-responsive img-circle" alt="::article.author.profile_img.name" src="{{::article.author.profile_img.url}}" resizimage="200x200"></img>
             </div>
             <div class="col-sm-21">
-                <p><strong>Por:</strong> <span ng-bind="article.author.name"></span></p>
-                <p ng-bind="article.author.brief"></p>
+                <p><strong>Por:</strong> <span ng-bind="::article.author.name"></span></p>
+                <p ng-bind="::article.author.brief"></p>
             </div>
         </div>
 
@@ -58,7 +58,7 @@
 			</div>
 
 			<button class="btn btn-success btn-block" ng-click="basketService.addToBasket(product)">Colocar na cesta 
-				<span class="label label-warning" ng-bind="(basketService.getProducts() | filter : {_id: product._id})[0].quantity"></span>
+				<span class="label label-warning" ng-bind="::(basketService.getProducts() | filter : {_id: product._id})[0].quantity"></span>
 			</button>
 
 		</div>
