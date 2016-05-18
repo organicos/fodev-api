@@ -15,7 +15,6 @@ angular.module('myApp')
     },
     link: function postLink($scope, $element, $attrs) {
       $element.bind('error', function() {
-        console.log('link---------------------------------------- ERRO -------------------');
         setImageSrc($attrs, conf, conf.brokenImageSrc);
       });
     }
