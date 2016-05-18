@@ -67,7 +67,7 @@
 
 				<div class="thumbnail">
 					<a href="/feira/{{product.encoded_url}}" hreflang="pt-br">
-						<img class="img-responsive img-responsive-wide img-centered" alt="{{::product.name}}" src="{{product.images[0].url}}" ng-dblclick="basketService.addToBasket(product)" resizimage="300x300">
+						<img class="img-responsive img-responsive-wide img-centered" alt="{{::product.name}}" ng-src="{{::product.images[0].url}}" ng-dblclick="basketService.addToBasket(product)" resizimage="300x300">
 					</a>
 					<hr>
 					<div style="height:100px;">

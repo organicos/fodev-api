@@ -6,7 +6,7 @@ module.exports=function(app, mongoose, utils) {
     app.get('/resizimage/:size', function(req, res, next){
         var gm = require('gm').subClass({imageMagick: true});
         var url = getImageUrl(encodeURI(req.query.url), req.protocol, req.headers.host, req.headers.referer);
-        var size = req.params.size;
+        var newSize = req.params.size;
         var image;
         if(url){
             image = gm(url);
@@ -17,38 +17,50 @@ module.exports=function(app, mongoose, utils) {
                 .fill("#888")
                 .drawText(10, 22, 'not found');
         }
-        if(isNaN(size)){
-            var sizes = size.split("x");
-            var width = sizes.shift();
-            var height = sizes.shift();
-            if(isNaN(width)){
-                res.statusCode = 400;
-                res.send('A largura é inválida. Favor informar um número inteiro e positivo!');
-            } else if (isNaN(height)){
-                res.statusCode = 400;
-                res.send('A altura é inválida. Favor informar um número inteiro e positivo!');
+        
+        console.log(image);
+        
+        image.size(function (err, size) {
+            if (err) {
+                res.statusCode = 404;
+                res.send('Não foi possível encontrar a imagem especificada!');
             } else {
-                image.resize(width,height, "!");
-            }
-        } else {
-            image.resize(size,size);
-        }
-        // COMPRESS
-        image.compress('Zip');
-        image.stream(function streamOut (err, stdout, stderr) {
-            if (err){
-                return next(err);
-            } else {
-                res.setHeader('Pragma', "public");
-                res.setHeader('Connection', "keep-alive");
-                res.setHeader('Cache-Control', "public, max-age=86400");
-                res.setHeader('Date', new Date(Date.now()).toUTCString());
-                res.setHeader('Expires', new Date(Date.now() + (30*86400000)).toUTCString());
-                res.setHeader('Content-Encoding', 'zip');
-                stdout.pipe(res); //pipe to response
-                stdout.on('error', next);
+                if(isNaN(newSize)){
+                    var newSizes = newSize.split("x");
+                    var width = newSizes.shift();
+                    var height = newSizes.shift();
+                    if(isNaN(width)){
+                        res.statusCode = 400;
+                        res.send('A largura é inválida. Favor informar um número inteiro e positivo!');
+                    } else if (isNaN(height)){
+                        res.statusCode = 400;
+                        res.send('A altura é inválida. Favor informar um número inteiro e positivo!');
+                    } else {
+                        image.resize(width,height, "!");
+                    }
+                } else {
+                    image.resize(newSize,newSize);
+                }
+                
+                // COMPRESS
+                image.compress('Zip');
+                image.stream(function streamOut (err, stdout, stderr) {
+                    if (err){
+                        return next(err);
+                    } else {
+                        res.setHeader('Pragma', "public");
+                        res.setHeader('Connection', "keep-alive");
+                        res.setHeader('Cache-Control', "public, max-age=86400");
+                        res.setHeader('Date', new Date(Date.now()).toUTCString());
+                        res.setHeader('Expires', new Date(Date.now() + (30*86400000)).toUTCString());
+                        res.setHeader('Content-Encoding', 'zip');
+                        stdout.pipe(res); //pipe to response
+                        stdout.on('error', next);
+                    }
+                });
             }
         });
+        
     });
     
     function getImageUrl(url, protocol, host, referer){

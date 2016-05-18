@@ -1,7 +1,7 @@
 <div class="row">
 
     <div ng-class="articleProductsRaw.length == 0 ? 'col-xs-24 col-sm-offset-4 col-sm-16 col-md-offset-5 col-md-14 col-lg-offset-6 col-lg-12' : 'col-xs-24 col-sm-offset-2 col-sm-16 col-md-offset-5 col-md-11 col-lg-offset-6 col-lg-9'">
-        <img class="img-responsive img-responsive-wide" ng-if="article.images.length" ng-src="{{article.images[0].url}}" alt="{{article.images[0].title}}" src="assets/img/global/no_image.jpeg"></img>
+        <img class="img-responsive img-responsive-wide" ng-if="article.images.length" alt="{{article.images[0].title}}" src="{{article.images[0].url}}" resizimage="800"></img>
     
         <h1 ng-bind="article.title"></h1>
         
@@ -30,7 +30,7 @@
         
         <div class="row" ng-if="article.author._id">
             <div class="col-sm-3">
-                <img class="img-responsive img-circle" alt="article.author.profile_img.name" ng-src="https://feiraorganica.com/cdn/image/200x200/?url={{article.author.profile_img.url || 'https://s3-sa-east-1.amazonaws.com/fodev/img/global/no-profile-image.jpg'}}" src="assets/img/global/no_image.jpeg"></img>
+                <img class="img-responsive img-circle" alt="article.author.profile_img.name" src="{{article.author.profile_img.url}}" resizimage="200x200"></img>
             </div>
             <div class="col-sm-21">
                 <p><strong>Por:</strong> <span ng-bind="article.author.name"></span></p>
@@ -44,7 +44,7 @@
     <div class="hidden-xs col-sm-4 col-md-3" ng-if="article.products.length > 0">
 		<div class="thumbnail" ng-repeat="product in article.products">
 			<a href="/feira/{{::product.encoded_url}}" hreflang="pt-br">
-				<img class="img-responsive" alt="{{::product.name}}" ng-src="https://feiraorganica.com/cdn/image/200x200/?url={{::product.images[0].url}}" ng-dblclick="basketService.addToBasket(product)" src="assets/img/global/no_image.jpeg">
+				<img class="img-responsive" alt="{{::product.name}}" src="{{::product.images[0].url}}" resizimage="200x200" ng-dblclick="basketService.addToBasket(product)">
 			</a>
 			<hr>
 			<div style="height:100px;">
