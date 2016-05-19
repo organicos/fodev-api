@@ -17,9 +17,6 @@ module.exports=function(app, mongoose, utils) {
                 .fill("#888")
                 .drawText(10, 22, 'not found');
         }
-        
-        console.log(image);
-        
         image.size(function (err, size) {
             if (err) {
                 res.statusCode = 404;

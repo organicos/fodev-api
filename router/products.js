@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports=function(app, mongoose, utils) {
+module.exports=function(app, mongoose, utils, config) {
         
         var Products = require('./../models/Products.js');
         
@@ -178,8 +178,8 @@ module.exports=function(app, mongoose, utils) {
         
 		} else {
 		        
-                        var file = path.resolve(__dirname+'../../../fodev-app/index.html');
-                        
+                        var file = path.resolve(config.clientPath+'/index.html');
+
                         res.sendFile(file);
 		        
 		}

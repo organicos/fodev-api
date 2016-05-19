@@ -71,5 +71,6 @@ function getResizimageUri(conf, size, src){
 }
 
 function getBaseUrl($location){
- return $location.$$absUrl.replace(new RegExp($location.$$path+"(?=[^"+$location.$$path+"]*$)"), ''); 
+  var pathIndex = $location.$$absUrl.indexOf($location.$$path);
+  return $location.$$absUrl.substring(0, pathIndex);
 }

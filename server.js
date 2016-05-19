@@ -24,6 +24,8 @@ if(config.env == 'prod'){
     newrelic = require('newrelic');
 }
 
+app.use(express.static("./client", { maxAge: 86400000 }));
+
 // Compress the output
 app.use(compression());
 
@@ -76,10 +78,10 @@ if(['dev', 'stg'].indexOf(config.env) > -1){
 // load the routes
 require('./router/storeConfigs')(app, utils);
 require('./router/addresses')(app, utils);
-require('./router/articles')(app, mongoose, utils);
+require('./router/articles')(app, mongoose, utils, config);
 require('./router/baskets')(app, utils);
 require('./router/categories')(app, mongoose, utils);
-require('./router/cdn')(app, mongoose, utils);
+require('./router/resizimage')(app, mongoose, utils);
 require('./router/cities')(app, mongoose, utils);
 require('./router/countries')(app, mongoose, utils);
 require('./router/discounts')(app, mongoose, utils);
@@ -91,7 +93,7 @@ require('./router/newsletters')(app, mongoose, config, utils);
 require('./router/orders')(app, moment, utils, config);
 require('./router/packings')(app, mongoose, utils);
 require('./router/playground')(app, mongoose, config, utils);
-require('./router/products')(app, mongoose, utils);
+require('./router/products')(app, mongoose, utils, config);
 require('./router/shippings')(app, moment);
 require('./router/s3')(app, mongoose, utils, config);
 require('./router/states')(app, mongoose, utils);
