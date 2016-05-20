@@ -15,7 +15,7 @@
         		        <a ng-click="dropImage(image)"><i class="fa fa-remove"></i></a>
         		    </p>
         			<a href="/image/{{image._id}}">
-        				<img class="img-responsive" alt="{{image.name}}" ng-src="https://feiraorganica.com/cdn/image/200x200/?url={{image.url}}">
+        				<img class="img-responsive" alt="{{image.name}}" ng-src="{{image.url}}" resizimage="200x200">
         			</a>
         		</div>
             </div>

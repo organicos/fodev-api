@@ -125,7 +125,7 @@
                                             </table>
                                             <table width="600" style="background-color:#F0F0F0;">
                                                 <tr>
-                                                    <td width="15"><img src="https://s3-sa-east-1.amazonaws.com/fodev/img/email/pixeltransparent.png" width="15" height="1" /></td>
+                                                    <td width="15"><img src="//fodev-prod.s3.amazonaws.com/fodev/img/email/pixeltransparent.png" width="15" height="1" /></td>
                                                     <td width="570">
                                                         <table>
                                                             <tr style="color:#1D9E74; font-size: 2em; margin-top: 0.67em; margin-bottom: 0.67em; margin-left: 0; margin-right: 0; font-weight: bold;"><td ng-bind="newsletter.title"></td></tr>
@@ -146,8 +146,8 @@
                                             											<td valign="top" style="padding-bottom: 30px; padding-right: 35px; padding-top: 3px;">
                                             												<div>
                                             												    <div>
-                                            												        <a href="https://feiraorganica.com/feira/{{article.encoded_url}}">
-                                            												            <img alt="{{article.title}}" ng-src="https://feiraorganica.com/cdn/image/140x150/?url={{article.images[0].url}}" border="0" style="max-width: 510px; border: 1px solid #dddddd; display: inline; height: 140px; width: 150px;">
+                                            												        <a href="https://feiraorganica.com/feira/{{::article.encoded_url}}">
+                                            												            <img alt="{{article.title}}" ng-src="{{article.images[0].url}}" resizimage="140x150" border="0" style="max-width: 510px; border: 1px solid #dddddd; display: inline; height: 140px; width: 150px;">
                                             												        </a>
                                         												        </div>
                                         												    </div>
@@ -173,7 +173,7 @@
                                                         							    <tr ng-repeat="rowProducts in section.products | groupIntoRowsBy:4">
                                                             								<td ng-repeat="product in rowProducts" valign="top" align="center" style="padding-left:5px; padding-bottom: 23px; padding-top: 10px; width: 137px;">
                                                             								    <a href="https://feiraorganica.com/feira/{{product.encoded_url}}">
-                                                            								        <img border="0" alt="{{product.name}}" ng-src="https://feiraorganica.com/cdn/image/137x120/?url={{product.images[0].url}}" style="width: 137px; height: 120px;">
+                                                            								        <img border="0" alt="{{product.name}}" ng-src="{{product.images[0].url}}" resizimage="137x120" style="width: 137px; height: 120px;">
                                                             								        <b ng-bind="product.name"></b>
                                                             								        <p>
                                                             								            <span ng-bind="product.prices[0].price | currency:'R$':2" style="color: green;"></span>
@@ -202,7 +202,7 @@
                                                             <tr><td align="center" style="font-size: .67em; margin-top: 2.33em; margin-bottom: 2.33em; margin-left: 0; margin-right: 0; font-weight: bold;">Não consegue ver este e-mail? <a href="https://feiraorganica.com/newsletter/{{newsletter.encoded-url}}" style="text-decoration:none; font-size: 1.17em; margin-top: 1em; margin-bottom: 1em; margin-left: 0; margin-right: 0; font-weight: bold">Clique aqui.</a></td></tr>
                                                         </table>
                                                     </td>
-                                                    <td width="15"><img src="https://s3-sa-east-1.amazonaws.com/fodev/img/email/pixeltransparent.png" width="15" height="1" /></td>
+                                                    <td width="15"><img src="//fodev-prod.s3.amazonaws.com/fodev/img/email/pixeltransparent.png" width="15" height="1" /></td>
                                                 </tr>
                                             </table>
                                             <table width="600" style="background-color:#0079BF;">

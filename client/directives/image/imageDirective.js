@@ -57,8 +57,7 @@ function getConf($location){
   return {
     resizeOnTheFlyHost: baseUrl + '/resizimage/',
     noImageSrc: baseUrl + '/assets/img/global/no_image.jpeg',
-    brokenImageSrc: baseUrl + '/assets/img/global/broken_image.jpeg',
-    uriUrlSegment: '/?url='
+    brokenImageSrc: baseUrl + '/assets/img/global/broken_image.jpeg'
   };
 }
 
@@ -67,10 +66,9 @@ function isValidSize(size){
 }
 
 function getResizimageUri(conf, size, src){
-  return conf.resizeOnTheFlyHost + size + conf.uriUrlSegment + src;
+  return conf.resizeOnTheFlyHost + size + '/?url=' + src;
 }
 
 function getBaseUrl($location){
-  var pathIndex = $location.$$absUrl.indexOf($location.$$path);
-  return $location.$$absUrl.substring(0, pathIndex);
+  return $location.$$protocol + '://' + $location.$$host;
 }
