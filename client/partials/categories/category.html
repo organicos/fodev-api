@@ -3,14 +3,35 @@
         
         <h1>Dados da categoria <span class="text-violet" ng-bind="category.name"></span></h1>
         
-        
         <form class="form" role="form" ng-submit="categoryFormSubmit()">
             <div class="form-group">
                 <label for="name">Título</label>
                 <input class="form-control" type="text" name="name" id="name" ng-model="category.name"/>
             </div>
+            <div class="inline-checkbox">
+                <label>
+                    <input type="checkbox" name="category.forUseInBlog" ng-model="category.forUseInBlog"> Blog
+                </label>
+                <label>
+                    <input type="checkbox" name="category.forUseInProduct" ng-model="category.forUseInProduct"> Produto
+                </label>
+            </div>
+            <div ng-if="category.subCategories.length">
+                <h4>Subcategorias</h4>
+                <div class="row" ng-repeat="(index, subCategory) in category.subCategories">
+                    <div class="form-group col-sm-20">
+                        <input class="form-control" type="text" name="subCategory-{{index}}" id="subCategory-{{index}}" ng-model="subCategory.name"/>
+                    </div>
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-info fa fa-close" ng-click="removeSubCategory(subCategory)"></button>
+                        <button ng-if="subCategory._id" type="button" class="btn btn-danger fa fa-trash" ng-click="deleteSubCategory(subCategory)"></button>
+                    </div>
+                </div>
+            </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-primary" ng-disabled="processingCategoryUpdate">Salvar</button>
+                <button type="button" class="btn btn-success" ng-click="addSubCategory()">Adicionar sub-categoria</button>
+                <button type="button" class="btn btn-danger" ng-click="dropCategory()">Excluir categoria</button>
             </div>
         </form>
         

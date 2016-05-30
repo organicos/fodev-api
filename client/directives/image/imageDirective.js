@@ -1,74 +1,139 @@
 "use strict";
 
-angular.module('myApp')
-.directive('resizimage', ['$location', function ($location) {
-  var conf = getConf($location);
+angular.module('resizimage', [])
+.provider('resizimage', function () {
+  var self = this;
+  var active = false;
+  var host = '';
+  var noImageSrc = '';
+  var brknImageSrc = '';
+  self.config = function(val){
+    if(!val){
+      return {
+        active: active,
+        host: host,
+        noImageSrc: noImageSrc,
+        brknImageSrc: brknImageSrc
+      };
+    }
+    else {
+      active = val.active || active;
+      host = val.host || host;
+      noImageSrc = val.noImageSrc || noImageSrc;
+      brknImageSrc = val.brknImageSrc || brknImageSrc;
+      return self;
+    }
+  }  
+  self.active = function(val){
+    if(!val){
+      return active;
+    }
+    else {
+      active = val;
+      return self;
+    }
+  }
+  self.host = function(val){
+    if(!val){
+      return host;
+    }
+    else {
+      host = val;
+      return self;
+    }
+  }
+  self.noImageSrc = function(val){
+    if(!val){
+      return noImageSrc;
+    }
+    else {
+      noImageSrc = val;
+      return self;
+    }
+  }
+  self.brknImageSrc = function(val){
+    if(!val){
+      return brknImageSrc;
+    }
+    else {
+      brknImageSrc = val;
+      return self;
+    }
+  }
+  self.$get = function () {
+    return this;
+  };
+})
+.directive('resizimage', ['resizimage', function (resizimage) {
+
   return {
     restrict: 'AEC',
     terminal: true,
-    controller: function($scope, $element, $attrs){
+    controller: resizimageController,
+    link: resizimageLink
+  };
+
+  function resizimageController($scope, $element, $attrs){
+    if(resizimage.active()){
       $attrs.$observe('src', function(newVal, oldVal){
-         if(newVal){
-             setImageSrc($attrs, conf);
-         }
-      });
-    },
-    link: function postLink($scope, $element, $attrs) {
-      if(!$attrs.src){
-        setImageSrc($attrs, conf, conf.noImageSrc);
-      }
-      $element.bind('error', function() {
-        setImageSrc($attrs, conf, conf.brokenImageSrc);
+        if(newVal){
+          var isBrokenImage = $attrs.resizimageBrokenImage;
+          var isMissingImage = $attrs.resizimageMissingImage;
+          var isFixedImage = $attrs.resizimageFixedImage;
+          if(!isBrokenImage && !isMissingImage && size){
+            var src = getSrc($attrs);
+            var size = getSize($attrs);
+            if(size){
+              if(!srcHasResizimageApplied(size, src)){
+                var resizimageUrl = getResizimageUri(size, src);
+                $attrs.$set("src", resizimageUrl);
+              }    
+            }
+          }
+        }
       });
     }
-  };
+  }
+
+  function resizimageLink($scope, $element, $attrs) {
+    if(resizimage.active()){
+      if(!$attrs.src){
+        $attrs.$set("src", resizimage.noImageSrc());
+        $attrs.$set("resizimage-missing-image", true);
+      }
+      $element.bind('error', function() {
+        console.log
+        $attrs.$set("src", resizimage.brknImageSrc());
+        $attrs.$set("resizimage-broken-image", true);
+      });
+    }
+  }
+
+  function srcHasResizimageApplied(size, src){
+    var resizimageUrl = getResizimageUri(size, '');
+    if(src.indexOf(resizimageUrl) == 0){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  function getSize($attrs){
+    var size = false;
+    if(isValidSize($attrs.resizimage)) size = $attrs.resizimage;
+    if(isValidSize($attrs.size)) size = $attrs.size;
+    return size;
+  }
+
+  function getSrc($attrs){
+    return $attrs.src || $attrs.ngSrc || resizimage.noImageSrc();
+  }
+
+  function isValidSize(size){
+    return /^([0-9]+)?x?([0-9]+$)/.test(size); // 200 or 200x200
+  }
+
+  function getResizimageUri(size, src){
+    return resizimage.host() + size + '/?url=' + src;
+  }
 }]);
-
-function setImageSrc($attrs, conf, src){
-  var options = getOptions($attrs, conf, src);
-  if(!srcHasResizimageApplied(conf, options)){
-    if(options.size){
-      var imageSrc = src || options.src;
-      var resizimageUrl = getResizimageUri(conf, options.size, imageSrc);
-      $attrs.$set("src", resizimageUrl);
-    }    
-  }
-}
-
-function srcHasResizimageApplied(conf, options){
-  var resizimageUrl = getResizimageUri(conf, options.size, '');
-  if(options.src.indexOf(resizimageUrl) == 0){
-    return true;
-  } else {
-    return false;
-  }
-}
-
-function getOptions($attrs, conf, source){
-  var options = {};
-  if(isValidSize($attrs.resizimage)) options.size = $attrs.resizimage;
-  if(isValidSize($attrs.size)) options.size = $attrs.size;
-  options.src = source || $attrs.src || $attrs.ngSrc || conf.noImageSrc;
-  return options;
-}
-
-function getConf($location){
-  var baseUrl = getBaseUrl($location); // used to achieve local paths
-  return {
-    resizeOnTheFlyHost: baseUrl + '/resizimage/',
-    noImageSrc: baseUrl + '/assets/img/global/no_image.jpeg',
-    brokenImageSrc: baseUrl + '/assets/img/global/broken_image.jpeg'
-  };
-}
-
-function isValidSize(size){
-  return /^([0-9]+)?x?([0-9]+$)/.test(size); // 200 or 200x200
-}
-
-function getResizimageUri(conf, size, src){
-  return conf.resizeOnTheFlyHost + size + '/?url=' + src;
-}
-
-function getBaseUrl($location){
-  return $location.$$protocol + '://' + $location.$$host;
-}

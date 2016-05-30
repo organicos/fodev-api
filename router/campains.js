@@ -2,20 +2,15 @@
 
 module.exports=function(app, mongoose, utils) {
         
-    var Categories = require('./../models/Categories.js');
+    var Categories = require('./../modules/Categories.js');
 
-    app.get('/v1/categories', utils.getRequestUser, function(req, res) {
+    app.get('/v1/categories', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
         
-        var filter = {
-            
-        };
+        var filter = {};
         
         if(req.query.name) filter.name = new RegExp(req.query.name, "i");
 
-        Categories
-        .find(filter)
-        .sort({updated: 1})
-        .exec(function(err, categories) {
+        Categories.find(filter, function(err, categories) {
 
             if (err) {
                 
@@ -35,11 +30,7 @@ module.exports=function(app, mongoose, utils) {
     
     app.get('/v1/category/:category_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
 
-        Categories
-        .findOne({_id: req.params.category_id})
-        .sort({updated: 1})
-        .populate('subCategories')
-        .exec(function(err, category) {
+        Categories.findOne({_id: req.params.category_id}, function(err, category) {
 
             if (err) {
                 
@@ -61,13 +52,7 @@ module.exports=function(app, mongoose, utils) {
 
         Categories.create({
 
-                name: req.body.name,
-
-                subCategories: req.body.subCategories,
-
-                forUseInBlog: req.body.forUseInBlog,
-            
-                forUseInProduct: req.body.forUseInProduct
+                name : req.body.name
 
         }, function(err, category) {
 
@@ -101,16 +86,6 @@ module.exports=function(app, mongoose, utils) {
                     
                 category.name = req.body.name;
 
-                category.subCategories = req.body.subCategories.map(function(subCategory){
-                    var category = new Categories(subCategory);
-                    category.isNew = subCategory._id ? false : true;
-                    return category;
-                });
-
-                category.forUseInBlog = req.body.forUseInBlog;
-            
-                category.forUseInProduct = req.body.forUseInProduct;
-
                 category.save(function(err, updatedCategory) {
 
                     if (err) {
@@ -133,7 +108,7 @@ module.exports=function(app, mongoose, utils) {
 
     });
     
-    app.delete('/v1/category/:category_id', utils.ensureAdmin, function(req, res) {
+    app.delete('/v1/categories/:category_id', utils.ensureAdmin, function(req, res) {
 
             Categories.remove({
 

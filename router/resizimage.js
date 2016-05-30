@@ -20,7 +20,7 @@ module.exports=function(app, mongoose, utils) {
         image.size(function (err, size) {
             if (err) {
                 res.statusCode = 404;
-                res.send('Não foi possível encontrar a imagem especificada [' + url + ']');
+                res.send('Não foi possível localizar a imagem especificada [' + url + ']');
             } else {
                 if(isNaN(newSize)){
                     var newSizes = newSize.split("x");

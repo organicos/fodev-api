@@ -43,45 +43,54 @@ var app = angular.module('myApp', [
   'myApp.custom-filters',
   'myApp.discounts',
   'myApp.orderSteps',
-  'myApp.storeConfigs'
+  'myApp.storeConfigs',
+  'resizimage'
 ]);
 
-app.config(['$routeProvider', '$httpProvider', '$locationProvider', function($routeProvider, $httpProvider, $locationProvider) {
+app.config(['$routeProvider', '$httpProvider', '$locationProvider', 'resizimageProvider', function($routeProvider, $httpProvider, $locationProvider, resizimageProvider) {
 
-    // define default route
-    $routeProvider.otherwise({redirectTo: '/'});
+  // Setup resizimage directive 
+  resizimageProvider.config({
+    active: true,
+    host: '/resizimage/',
+    noImageSrc: '/assets/img/global/no_image.jpeg',
+    brknImageSrc: '/assets/img/global/broken_image.jpeg'
+  });
 
-    // Append the Authenticated hash to the header
-    $httpProvider.interceptors.push(['$q', '$location', '$localStorage', function($q, $location, $localStorage) {
-        
-        return {
-            'request': function (config) {
-                
-                config.headers = config.headers || {};
-                if ($localStorage.user && $localStorage.user.token) {
-                  config.headers.Authorization = 'Organic ' + $localStorage.user.token;
-                }
-                return config;
-            },
-            'responseError': function(response) {
-                var login_path = '/entrar'+$location.path();
-                
-                if(response.status === 401 || response.status === 403) {
-                  $location.path(login_path);
-                }
-                return $q.reject(response);
-            }
-        };
-    }]);
-    
-    // add cross-domain to the header
-    $httpProvider.defaults.useXDomain = true;
+  // define default route
+  $routeProvider.otherwise({redirectTo: '/'});
 
-    // remove some http header to use CORS
-    delete $httpProvider.defaults.headers.common['X-Requested-With'];
-    
-    // enable html5 mode
-    $locationProvider.html5Mode(true).hashPrefix('!');
+  // Append the Authenticated hash to the header
+  $httpProvider.interceptors.push(['$q', '$location', '$localStorage', function($q, $location, $localStorage) {
+      
+      return {
+          'request': function (config) {
+              
+              config.headers = config.headers || {};
+              if ($localStorage.user && $localStorage.user.token) {
+                config.headers.Authorization = 'Organic ' + $localStorage.user.token;
+              }
+              return config;
+          },
+          'responseError': function(response) {
+              var login_path = '/entrar'+$location.path();
+              
+              if(response.status === 401 || response.status === 403) {
+                $location.path(login_path);
+              }
+              return $q.reject(response);
+          }
+      };
+  }]);
+  
+  // add cross-domain to the header
+  $httpProvider.defaults.useXDomain = true;
+
+  // remove some http header to use CORS
+  delete $httpProvider.defaults.headers.common['X-Requested-With'];
+  
+  // enable html5 mode
+  $locationProvider.html5Mode(true).hashPrefix('!');
         
 }]);
 
@@ -208,6 +217,10 @@ app.controller('myAppCtrl' , ['$scope', '$location', '$localStorage', 'basketSer
     }
     
 }]);
+
+function getBaseUrl($location){
+  return $location.$$protocol + '://' + $location.$$host;
+}
 
 var parametrizeLocalStorage = function($scope, $localStorage){
     

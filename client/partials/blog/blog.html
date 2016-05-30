@@ -1,33 +1,49 @@
-<h1 class="sr-only">Blog da Feira Orgânica Delivery</h1>
-
-<p class="text-center" ng-if="loadingArticles">Buscando artigos <i class="fa fa-cog fa-spin"></i></p>
-
-<div ng-if="!loadingArticles" ng-cloak>
-    
-    <div class="row visible-md-block visible-lg-block">
-        <div class="col-xs-12 col-sm-8 blog-post-thumb-wrap" ng-repeat="article in articles track by article._id">
-            <a class="blog-post-thumb" href="/blog/{{::article.encoded_url}}" hreflang="pt-br">
-                <img class="blog-post-thumb-img" src="{{::article.images[0].url}}" resizimage="300x300" alt="{{::article.images[0].title}}"></img>
-                <p class="blog-post-thumb-title">
-                    <small ng-bind="article.updated | date: 'dd/MM/yyyy'"></small>
-                    <br>
-                    <span class="font-30" ng-bind="::article.title"></span>
-                </p>                    
-            </a>
-        </div>
+<div class="row">
+    <div class="col-sm-4 background-violet">
+        <ul>
+            <li><a href="category/a">Categoria a</a></li>
+            <li><a href="category/a">Categoria b</a></li>
+            <li><a href="category/a">Categoria c</a></li>
+            <li><a href="category/a">Categoria d</a></li>
+            <li><a href="category/a">Categoria e</a></li>
+            <li><a href="category/a">Categoria f</a></li>
+        </ul>
     </div>
-    
-    <div class="row visible-xs-block visible-sm-block">
-        <div class="col-xs-12 col-sm-8 blog-post-thumb-wrap-sm" ng-repeat="article in articles track by article._id">
-            <a class="blog-post-thumb" href="/blog/{{::article.encoded_url}}" hreflang="pt-br">
-                <img class="blog-post-thumb-img" ng-src="{{::article.images[0].url}}" resizimage="200x200" alt="{{::article.images[0].title}}"></img>
-                <p class="blog-post-thumb-title">
-                    <small ng-bind="::article.updated | date: 'dd/MM/yyyy'"></small>
-                    <br>
-                    <span class="font-30" ng-bind="::article.title"></span>
-                </p>                    
-            </a>
-        </div>
-    </div>
+    <div class="col-sm-20">
+        
+        <h1 class="sr-only">Blog da Feira Orgânica Delivery</h1>
 
+        <p class="text-center" ng-if="loadingArticles">Buscando artigos <i class="fa fa-cog fa-spin"></i></p>
+
+        <div ng-if="!loadingArticles" ng-cloak>
+            
+            <div class="row visible-md-block visible-lg-block">
+                <div class="col-xs-12 col-sm-8 blog-post-thumb-wrap" ng-repeat="article in articles track by article._id">
+                    <a class="blog-post-thumb" href="/blog/{{::article.encoded_url}}" hreflang="pt-br">
+                        <img class="blog-post-thumb-img" src="{{::article.images[0].url}}" resizimage="300x300" alt="{{::article.images[0].title}}"></img>
+                        <p class="blog-post-thumb-title">
+                            <small ng-bind="article.updated | date: 'dd/MM/yyyy'"></small>
+                            <br>
+                            <span class="font-30" ng-bind="::article.title"></span>
+                        </p>                    
+                    </a>
+                </div>
+            </div>
+            
+            <div class="row visible-xs-block visible-sm-block">
+                <div class="col-xs-12 col-sm-8 blog-post-thumb-wrap-sm" ng-repeat="article in articles track by article._id">
+                    <a class="blog-post-thumb" href="/blog/{{::article.encoded_url}}" hreflang="pt-br">
+                        <img class="blog-post-thumb-img" ng-src="{{::article.images[0].url}}" resizimage="200x200" alt="{{::article.images[0].title}}"></img>
+                        <p class="blog-post-thumb-title">
+                            <small ng-bind="::article.updated | date: 'dd/MM/yyyy'"></small>
+                            <br>
+                            <span class="font-30" ng-bind="::article.title"></span>
+                        </p>                    
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
 </div>
