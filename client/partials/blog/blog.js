@@ -13,7 +13,7 @@ blog.config(['$routeProvider', function($routeProvider) {
   });
 }]);
 
-blog.controller('BlogArticlesCtrl', ['$scope','$http', '$filter', '$routeParams', 'myConfig', 'HtmlMetaTagService', function($scope, $http, $filter, $routeParams, myConfig, HtmlMetaTagService) {
+blog.controller('BlogArticlesCtrl', ['$scope','$http', '$filter', '$routeParams', 'myConfig', 'HtmlMetaTagService', 'categoryService', function($scope, $http, $filter, $routeParams, myConfig, HtmlMetaTagService, categoryService) {
   
   HtmlMetaTagService.tag('title', 'Blog');
 
@@ -21,6 +21,11 @@ blog.controller('BlogArticlesCtrl', ['$scope','$http', '$filter', '$routeParams'
   $scope.selectedFilter = '';
   $scope.selectedOrder = 'updated';
   $scope.loadingArticles = true;
+  $scope.categories = [];
+
+  categoryService.get({forUseInBlog: true}).then(function(res){
+    $scope.categories = res.data;
+  })
 
   $http.get(myConfig.apiUrl+'/articles')
   .success(function(res){

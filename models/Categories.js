@@ -4,6 +4,7 @@ var moment = require('moment');
 var CategoriesSchema = new Schema({
     name : { type: String, trim: true, required: 'Informe um nome para a categoria.' },
     subCategories: { type: [{ type: Schema.Types.ObjectId, ref: 'Categories'}], default: []},
+    parent: { type: Schema.Types.ObjectId, ref: 'Categories' },
     forUseInBlog: { type: Boolean, default: false},
     forUseInProduct: { type: Boolean, default: false},
     updated: { type: Date, default: Date.now }
@@ -14,7 +15,7 @@ CategoriesSchema.pre("validate", function(next) {
     var subCategories = category.subCategories;
     var subCategoriesLength = subCategories.length;
     if(subCategoriesLength){
-        persistSubCategories(0, function(err, subcategories){
+        persistSubCategories(function(err){
             if(err){
                 next(err);
             } else {
@@ -24,21 +25,23 @@ CategoriesSchema.pre("validate", function(next) {
     } else {
         next();
     }
-    function persistSubCategories(pointer, callback){
+    function persistSubCategories(callback, pointer){
+        var pointer = pointer || 0;
         if(pointer < subCategoriesLength){
-            subCategories[pointer].save(function(err, newSubCategory){
+            subCategories[pointer].parent = category._id;
+            subCategories[pointer].__v = 0;
+            console.log(subCategories[pointer].__v);
+            subCategories[pointer].save(function(err){
+                console.log(err);
                 if(err){
-                    var idMap = subCategories.map(function(c){return {_id:c._id}});
-                    callback(new Error('Problemas ao salvar a subcategoria ' + subCategories[pointer].name));
+                    callback(err);
                 } else {
                     pointer++;
-                    if(pointer < subCategoriesLength){
-                        persistSubCategories(pointer, callback);
-                    } else {
-                        callback(null, newSubCategory);
-                    }
+                    persistSubCategories(callback, pointer);
                 }
             });
+        } else {
+            callback();
         }
     }
 });

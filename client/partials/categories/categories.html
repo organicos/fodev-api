@@ -22,7 +22,10 @@
         <table class="table table-condensed table-stripped table-hover">
             <thead>
                 <tr>
-                    <td>nome</td>
+                    <td>Nome</td>
+                    <td>Blog</td>
+                    <td>Produto</td>
+                    <td>Subcategorias</td>
                     <td>Ultima modificação</td>
                     <td>Ações</td>
                 </tr>
@@ -30,8 +33,11 @@
             <tbody>
                 <tr ng-repeat="category in filteredCategories = (categories | filter: categoryQuery | orderBy: selectedOrder)">
                     <td><a href="/category/{{category._id}}" ng-bind="category.name || '???'"></a></td>
+                    <td><i class="fa" ng-class="category.forUseInBlog ? 'fa-check' : ''"></i></td>
+                    <td><i class="fa" ng-class="category.forUseInProduct ? 'fa-check' : ''"></i></td>
+                    <td ng-bind="category.subCategories.length"></td>
                     <td ng-bind="category.updated"></td>
-                    <td><a href="javascript:void(0)" ng-click="dropCategory(category)">x</a></td>
+                    <td><button class="btn btn-danger btn-xs" ng-click="dropCategory(category)"><i class="fa fa-trash"></i></button></td>
                 </tr>
             </tbody>
         </table>
