@@ -9,7 +9,7 @@ module.exports=function(app, express, config) {
 	var year = 365 * day;
 	
 	var fodevAppPath = config.clientPath;
-	var fileConfig = { maxAge: week };
+	var fileConfig = { maxAge: day };
 
 	// these need to go first:
 	app.use("/app.min.css", express.static(fodevAppPath + "/app.min.css", fileConfig));
@@ -18,7 +18,7 @@ module.exports=function(app, express, config) {
 	if(config.env == 'dev'){
 		app.use("/app.min.js", express.static(fodevAppPath + "/app.concat.js", fileConfig));		
 	} else {
-		app.use("/app.min.js", express.static(fodevAppPath + "/app.min.js", fileConfig));
+		app.use("/app.min.js", express.static(fodevAppPath + "/app2.min.js", fileConfig));
 	}
 
 	// define the static routes

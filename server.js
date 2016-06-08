@@ -24,8 +24,6 @@ if(config.env == 'prod'){
     newrelic = require('newrelic');
 }
 
-app.use(express.static("./client", { maxAge: 86400000 }));
-
 // Compress the output
 app.use(compression());
 
@@ -101,6 +99,7 @@ require('./router/suppliers')(app, mongoose, utils);
 require('./router/tickets')(app, mongoose, config, utils);
 require('./router/users')(app, mongoose, utils, config);
 
+// static routes
 require('./router/app')(app, express, config);
 
 // avoid server stop =====================================
