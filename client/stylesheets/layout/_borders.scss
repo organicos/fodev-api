@@ -1,0 +1,6 @@
+/** Bordas arredondadas **/
+.round-5 { @include border-radius("5"); }
+.round-10 { @include border-radius("10"); }
+.round-12 { @include border-radius("12"); }
+.round-15 { @include border-radius("15"); }
+.round-20 { @include border-radius("20"); }

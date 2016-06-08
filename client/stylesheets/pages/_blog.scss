@@ -1,0 +1,33 @@
+.blog-post-thumb-wrap{
+    height: 350px;
+}
+.blog-post-thumb-wrap-sm{
+    height: 250px;
+}
+.blog-post-thumb:hover > .blog-post-thumb-title{
+    background: rgba(29, 158, 116, 0.9);
+}
+
+.blog-post-thumb-img {
+    width: 100%;
+    height: 100%;
+    height: 350px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.blog-post-thumb-title {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.blog-post-thumb-title {
+    z-index: 1;
+    color:white;
+    font-weight:bold;
+    text-align:center;
+    background: rgba(29, 158, 116, 0.5);
+}

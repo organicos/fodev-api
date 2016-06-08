@@ -1,8 +1,9 @@
 module.exports = function(grunt) {
-    grunt.loadNpmTasks('grunt-ng-annotate');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-cssmin');
-    grunt.registerTask('default',['ngAnnotate', 'uglify', 'cssmin']);
+    grunt.loadTasks('../node_modules/grunt-ng-annotate/tasks');
+    grunt.loadTasks('../node_modules/grunt-contrib-uglify/tasks');
+    grunt.loadTasks('../node_modules/grunt-sass/tasks');
+    grunt.loadTasks('../node_modules/grunt-contrib-cssmin/tasks');
+    grunt.registerTask('default',['ngAnnotate', 'uglify', 'sass', 'cssmin']);
 
     grunt.initConfig({
         ngAnnotate: {
@@ -43,6 +44,16 @@ module.exports = function(grunt) {
                 }
             }
         },
+        sass: {
+            options: {
+                sourceMap: true
+            },
+            dist: {
+                files: {
+                    './stylesheets/main.css': './stylesheets/main.scss'
+                }
+            }
+        },
         cssmin: {
             options: {
                 shorthandCompacting: false,
@@ -51,10 +62,9 @@ module.exports = function(grunt) {
             target: {
                 files: {
                     'app.min.css': [
-                        'assets/css/*.css'
-                        , 'bower_components/bootstrap-24grid-violet/css/bootstrap.min.css'
-                        , 'bower_components/angular-chart.js/dist/angular-chart.css'
-                        , 
+                        './bower_components/bootstrap-24grid-violet/css/bootstrap.min.css'
+                        , './bower_components/angular-chart.js/dist/angular-chart.css'
+                        , './stylesheets/main.css'
                     ]
                 }
             }
