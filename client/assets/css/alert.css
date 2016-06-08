@@ -1,8 +1,0 @@
-/** alert **/
-#alertWrapper {
-    position: fixed;
-    top: 0px;
-    left: 10px;
-    right: 10px;
-    z-index:9999;
-}

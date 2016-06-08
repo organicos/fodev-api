@@ -1,5 +1,0 @@
-/** Remove o gutter do row **/
-.no-gutter > [class*='col-'] {
-    padding-right:0;
-    padding-left:0;
-}
