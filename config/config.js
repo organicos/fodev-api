@@ -4,7 +4,9 @@ var config = {};
 
 config.env = 'env_name';
 
-config.envTag = 'env_tag_to_prefix_email_subject';
+config.envTag = 'env_tag_to_prefix_email_subject - ';
+
+config.clientPath = __dirname + '/../client/';
 
 config.database = {
     host: 'localhost/databasename'
