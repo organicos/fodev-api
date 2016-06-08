@@ -2,18 +2,18 @@
 
 // Load dependences
 var express  = require('express');
-var app = express(); // create our app w/ express
+var app = express(); // CREATE OUR APP W/ EXPRESS
 var moment  = require('moment');
 app.locals.moment = moment;
 var https = require('https');
 var http = require('http');
 var fs = require('fs');
-var deepPopulate = require('mongoose-deep-populate'); // deepPopulate for mongoose to populate multidimensional objects
-var mongoose = require('mongoose'); // mongoose for mongodb
+var deepPopulate = require('mongoose-deep-populate'); // DEEPPOPULATE FOR MONGOOSE TO POPULATE MULTIDIMENSIONAL OBJECTS
+var mongoose = require('mongoose'); // MONGOOSE FOR MONGODB
 mongoose.plugin(deepPopulate);
-var morgan = require('morgan'); // log requests to the console (express4)
-var bodyParser = require('body-parser'); // pull information from HTML POST (express4)
-var methodOverride = require('method-override'); // simulate DELETE and PUT (express4)
+var morgan = require('morgan'); // LOG REQUESTS TO THE CONSOLE (EXPRESS4)
+var bodyParser = require('body-parser'); // PULL INFORMATION FROM HTML POST (EXPRESS4)
+var methodOverride = require('method-override'); // SIMULATE DELETE AND PUT (EXPRESS4)
 var argv = require('optimist').argv;
 var config = require('./config/env_config');
 var utils = require('./helpers/utils');
@@ -24,56 +24,51 @@ if(config.env == 'prod'){
     newrelic = require('newrelic');
 }
 
-// Compress the output
+// COMPRESS THE OUTPUT
 app.use(compression());
 
-// Add headers
+// ADD HEADERS
 app.use(function (req, res, next) {
-    
-    // Website you wish to allow to connect
+    // WEBSITE YOU WISH TO ALLOW TO CONNECT
     res.setHeader('Access-Control-Allow-Origin', "*");
-    // Request methods you wish to allow
+    // REQUEST METHODS YOU WISH TO ALLOW
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    // Request headers you wish to allow
-    //res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    // REQUEST HEADERS YOU WISH TO ALLOW
+    // RES.SETHEADER('ACCESS-CONTROL-ALLOW-HEADERS', 'X-REQUESTED-WITH,CONTENT-TYPE');
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, Depth, User-Agent, X-File-Size, X-Requested-With, If-Modified-Since, X-File-Name, Cache-Control, Authorization");
-    // Set to true if you need the website to include cookies in the requests sent
-    // to the API (e.g. in case you use sessions)
+    // SET TO TRUE IF YOU NEED THE WEBSITE TO INCLUDE COOKIES IN THE REQUESTS SENT
+    // TO THE API (E.G. IN CASE YOU USE SESSIONS)
     res.setHeader('Access-Control-Allow-Credentials', true);
-    // Pass to next layer of middleware
+    // PASS TO NEXT LAYER OF MIDDLEWARE
     next();
 });
 
-// configuration =================
-
+// DATABASE CONFIGURATION
 mongoose.connect('mongodb://' + config.database.host);
-
-app.use(morgan('dev')); // log every request to the console
-
-app.use(bodyParser.urlencoded({'extended':'true'}));                    // parse application/x-www-form-urlencoded
-
-app.use(bodyParser.json());                                                                     // parse application/json
-
-app.use(bodyParser.json({ type: 'application/vnd.api+json' })); // parse application/vnd.api+json as json
-
+// LOG EVERY REQUEST TO THE CONSOLE
+app.use(morgan('dev'));
+// PARSE APPLICATION/X-WWW-FORM-URLENCODED
+app.use(bodyParser.urlencoded({'extended':'true'}));
+// PARSE APPLICATION/JSON
+app.use(bodyParser.json());
+// PARSE APPLICATION/VND.API+JSON AS JSON
+app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
+// SIMULATE DELETE AND PUT (EXPRESS4)
 app.use(methodOverride());
-
+// DEFINE THE VIEW ENGINE
 app.set('view engine', 'jade');
 
+// DEFINE THE DEBUG LEVEL
 if(['dev', 'stg'].indexOf(config.env) > -1){
+    // DEFINE THE DEBUG LEVEL
     app.use(errorHandler({
         dumpExceptions: true, 
         showStack: true
     }));
-    
-    // tag para adicionar no titulo dos emails para diferenciar testes de produção
-    config.envTag = config.env + ' - ';
-    
-} else {
-    config.envTag = '';
 }
 
-// load the routes
+// LOAD THE ROUTES
+require('./router/client')(app, express, config);
 require('./router/storeConfigs')(app, utils);
 require('./router/addresses')(app, utils);
 require('./router/articles')(app, mongoose, utils, config);
@@ -99,32 +94,24 @@ require('./router/suppliers')(app, mongoose, utils);
 require('./router/tickets')(app, mongoose, config, utils);
 require('./router/users')(app, mongoose, utils, config);
 
-// static routes
-require('./router/app')(app, express, config);
-
-// avoid server stop =====================================
+// AVOID SERVER STOP
 process.on('uncaughtException', function(err) {
     console.log(err);
 });
 
+// DEFINE HTTP AND HTTPS PORTS
 var httpPort = process.env.PORT || 80;
 var httpsPort = parseInt(process.env.PORT) + 1 || 443;
-// listen (start app with node server.js) ======================================
 
+// START HTTP SERVER
 http.createServer(app).listen(httpPort, function(){
-
-        console.log('HTTP iniciado na porta: ' + httpPort);
-
+    console.log('HTTP iniciado na porta: ' + httpPort);
 });
 
-
-
+// START HTTPS SERVER
 https.createServer({
-
     key: fs.readFileSync('./ssl-data/key.key'),
-
     cert: fs.readFileSync('./ssl-data/cert.crt'),
-
     ca: [
         fs.readFileSync('./ssl-data/ca.crt')
         , fs.readFileSync('./ssl-data/b31f05f66f16b2d2.crt')
@@ -132,13 +119,8 @@ https.createServer({
         , fs.readFileSync('./ssl-data/gd_bundle-g2-g1-2.crt')
         , fs.readFileSync('./ssl-data/gd_bundle-g2-g1-3.crt')
     ],
-
     requestCert: true,
-
     rejectUnauthorized: false
-
 }, app).listen(httpsPort, function() {
-
     console.log("HTTPS - SSL iniciado na porta: " + httpsPort);
-
 });
