@@ -1,0 +1,4 @@
+/** Classe para colunas infinitas sem mudar de row **/
+.col-infinite {
+    margin-top: 5px !important;
+}

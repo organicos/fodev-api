@@ -5,36 +5,26 @@
 <div class="row">
     
     <div class="col-sm-offset-1 col-sm-3">
-        <button class="btn btn-default btn-block" type="button" ng-click="filesService.selectAppFile(setProductImages, 'true', article.images)">Alterar imagens</button>
-		<br>
-        
+        <button ng-if="!article.images" class="btn btn-default btn-block" type="button" ng-click="filesService.selectAppFile(setProductImages, 'true', article.images)">Adicionar imagens</button>
 		<div class="thumbnail" ng-repeat="image in article.images">
 		    <p class="text-right">
 		        <a ng-click="dropImageFromArticle(image)"><i class="fa fa-remove"></i></a>
 		    </p>
-			<a href="/image/{{image._id}}">
-				<img class="img-responsive" alt="{{image.name}}" ng-src="{{image.url}}" resizimage="200x200">
-			</a>
+			<img class="img-responsive" alt="{{image.name}}" ng-src="{{image.url}}" resizimage="200x200" ng-click="filesService.selectAppFile(setProductImages, 'true', article.images)">
 		</div>
     </div>
 
     <div class="col-sm-16">
         
-        <p class="text-right">
-            <button class="btn btn-danger" ng-click="dropArticle(article)" ng-if="article"><i class="fa fa-trash"></i></button>
-        </p>
-        
         <div class="row">
-            <div class="col-sm-20">
+            <div class="col-sm-21">
                 <p><b>Visualizações:</b> <span ng-bind="article.visits.length"></span></p>
             
                 <div class="row">
-                    <div class="col-sm-18">
-                        <div class="form-group">
-                            <input class="form-control" type="text" ng-model="article.encoded_url" placeholder="nome-codificado-sem-caracter-especial">
-                        </div>
+                    <div class="col-sm-18 form-group">
+                        <input class="form-control" type="text" ng-model="article.encoded_url" placeholder="nome-codificado-sem-caracter-especial">
                     </div>
-                    <div class="checkbox col-sm-6">
+                    <div class="col-sm-6 checkbox">
                         <label>
                             <input type="checkbox" name="active" ng-model="article.highlight"> Destaque
                         </label>
@@ -43,33 +33,49 @@
                         </label>
                     </div>
                 </div>
-                <div class="form-group">
-                    <input class="form-control" type="text" ng-model="article.title" placeholder="Título">
-                </div>        
-            </div>
-            <div class="col-sm-4">
+                <div class="row">
+                    <div class="col-sm-18 form-group">
+                        <input class="form-control" type="text" ng-model="article.title" placeholder="Título">
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <input 
+                            type="text" 
+                            ng-model="article.author.name" 
+                            placeholder="Autor" 
+                            typeahead="user.name for user in getAuthors($viewValue)" 
+                            typeahead-loading="loadingAuthors" 
+                            typeahead-on-select="selectAuthor($item, $model, $label)" 
+                            class="form-control"
+                            >
+                        <i ng-show="loadingAuthors" class="fa fa-spin fa-spinner"></i>
+                    </div>
+                </div>
                 <div class="form-group">
                     <input 
                         type="text" 
-                        ng-model="selectedAuthor" 
-                        placeholder="Autor" 
-                        typeahead="user.name for user in getAuthors($viewValue)" 
-                        typeahead-loading="loadingAuthors" 
-                        typeahead-on-select="selectAuthor($item, $model, $label)" 
+                        ng-model="article.category.name" 
+                        placeholder="Categoria" 
+                        typeahead="user.name for user in getCategories($viewValue)" 
+                        typeahead-loading="loadingCategories" 
+                        typeahead-on-select="selectCategory($item, $model, $label)" 
                         class="form-control"
                         >
-                    <i ng-show="loadingAuthors" class="fa fa-spin fa-spinner"></i>
-                    <img class="img-responsive img-rounded" alt="article.author.profile_img.name" ng-src="{{article.author.profile_img.url}}" resizimage="200x200"></img>
+                    <i ng-show="loadingCategories" class="fa fa-spin fa-spinner"></i>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <img class="img-responsive img-circle" alt="article.author.profile_img.name" ng-src="{{article.author.profile_img.url}}" resizimage="100x100"></img>
                 </div>
             </div>
         </div>
-    
         <div class="form-group">
             <textarea class="form-control" rows="20" ng-model="article.content" placeholder="Conteúdo do artigo"></textarea>
         </div>
 
         <div class="form-group">
             <button class="btn btn-success" type="submit" ng-model="title" placeholder="Título">Salvar</button>
+            <button class="btn btn-danger" ng-click="dropArticle(article)" ng-if="article"><i class="fa fa-trash"></i></button>
         </div>
     </div>
     

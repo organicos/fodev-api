@@ -1,0 +1,61 @@
+/** Estilo do navegador **/
+.navbar-fixed-top, .navbar-fixed-bottom{
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.navbar-fixed-top-admin{
+    background: rgba(250, 230, 100, 0.9);
+}
+
+.navbar-brand > img{
+    margin-top: -13px;
+    height:46px;
+}
+
+.navbar #profile-img{
+    margin: 12px 3px 0px 0px;
+    height:33px;
+}
+
+/** Navbar divider **/
+.navbar .divider-vertical {
+    height: 50px;
+    margin: 0 9px;
+}
+
+.navbar-inverse .divider-vertical {
+border-right-color: #222222;
+border-left-color: #111111;
+}
+
+@media (max-width: 767px) {
+.navbar-collapse .nav > .divider-vertical {
+    display: none;
+  }
+}
+
+/* navbar icons 2x */
+.navbar .navbar-brand .fa-2x{
+    margin-top:-8px;
+    color:#415B76;
+}
+.navbar .navbar-brand .fa-2x + .fa-embed-text{
+    position: relative;
+    left: -27px;
+    bottom:12px;
+    color: #fff;
+    font-size: 11px;
+    font-weight:bold;
+}
+
+/** bootstrap-ui **/
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+.nav>li>a:hover{
+    background-color:#b274b2 !important;
+}
+
+.nav>li.active>a, .nav>li>a:focus{
+    background-color:#A348A3 !important;
+    color: white !important;
+}

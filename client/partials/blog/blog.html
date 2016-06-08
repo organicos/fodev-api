@@ -1,48 +1,53 @@
-<div class="row">
-    <div class="col-sm-4 background-violet">
-        <ul>
-            <li ng-repeat="category in categories"><a href="category" ng-bind="category.name"></a>
-                <ul ng-if="category.subCategories.length">
-                    <li ng-repeat="subCategory in category.subCategories"><a href="subCategory" ng-bind="subCategory.name"></a></li>
+<div id="wrapper">
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+            <li ng-repeat="category in categories"><a href="/blog/categoria/{{category.slug}}" ng-bind="category.name"></a>
+                <ul class="sidebar-sub-nav" ng-if="category.subcategories.length">
+                    <li ng-repeat="subcategory in category.subcategories"><a href="/blog/categoria/{{subcategory.slug}}" ng-bind="subcategory.name"></a></li>
                 </ul>
             </li>
         </ul>
     </div>
-    <div class="col-sm-20">
-        
-        <h1 class="sr-only">Blog da Feira Orgânica Delivery</h1>
+    <!-- /#sidebar-wrapper -->
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+            <h1 class="sr-only">Blog da Feira Orgânica Delivery</h1>
 
-        <p class="text-center" ng-if="loadingArticles">Buscando artigos <i class="fa fa-cog fa-spin"></i></p>
+            <p class="text-center" ng-if="loadingArticles">Buscando artigos <i class="fa fa-cog fa-spin"></i></p>
 
-        <div ng-if="!loadingArticles" ng-cloak>
-            
-            <div class="row visible-md-block visible-lg-block">
-                <div class="col-xs-12 col-sm-8 blog-post-thumb-wrap" ng-repeat="article in articles track by article._id">
-                    <a class="blog-post-thumb" href="/blog/{{::article.encoded_url}}" hreflang="pt-br">
-                        <img class="blog-post-thumb-img" src="{{::article.images[0].url}}" resizimage="300x300" alt="{{::article.images[0].title}}"></img>
-                        <p class="blog-post-thumb-title">
-                            <small ng-bind="article.updated | date: 'dd/MM/yyyy'"></small>
-                            <br>
-                            <span class="font-30" ng-bind="::article.title"></span>
-                        </p>                    
-                    </a>
+            <div ng-if="!loadingArticles" ng-cloak>
+                
+                <div class="row visible-md-block visible-lg-block">
+                    <div class="col-xs-12 col-sm-8 blog-post-thumb-wrap" ng-repeat="article in articles track by article._id">
+                        <a class="blog-post-thumb" href="/blog/{{::article.encoded_url}}" hreflang="pt-br">
+                            <img class="blog-post-thumb-img" src="{{::article.images[0].url}}" resizimage="300x300" alt="{{::article.images[0].title}}"></img>
+                            <p class="blog-post-thumb-title">
+                                <small ng-bind="article.updated | date: 'dd/MM/yyyy'"></small>
+                                <br>
+                                <span class="font-30" ng-bind="::article.title"></span>
+                            </p>                    
+                        </a>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="row visible-xs-block visible-sm-block">
-                <div class="col-xs-12 col-sm-8 blog-post-thumb-wrap-sm" ng-repeat="article in articles track by article._id">
-                    <a class="blog-post-thumb" href="/blog/{{::article.encoded_url}}" hreflang="pt-br">
-                        <img class="blog-post-thumb-img" ng-src="{{::article.images[0].url}}" resizimage="200x200" alt="{{::article.images[0].title}}"></img>
-                        <p class="blog-post-thumb-title">
-                            <small ng-bind="::article.updated | date: 'dd/MM/yyyy'"></small>
-                            <br>
-                            <span class="font-30" ng-bind="::article.title"></span>
-                        </p>                    
-                    </a>
+                
+                <div class="row visible-xs-block visible-sm-block">
+                    <div class="col-xs-12 col-sm-8 blog-post-thumb-wrap-sm" ng-repeat="article in articles track by article._id">
+                        <a class="blog-post-thumb" href="/blog/{{::article.encoded_url}}" hreflang="pt-br">
+                            <img class="blog-post-thumb-img" ng-src="{{::article.images[0].url}}" resizimage="200x200" alt="{{::article.images[0].title}}"></img>
+                            <p class="blog-post-thumb-title">
+                                <small ng-bind="::article.updated | date: 'dd/MM/yyyy'"></small>
+                                <br>
+                                <span class="font-30" ng-bind="::article.title"></span>
+                            </p>                    
+                        </a>
+                    </div>
                 </div>
-            </div>
 
+            </div>
         </div>
-
     </div>
+    <!-- /#page-content-wrapper -->
 </div>
+<!-- /#wrapper -->

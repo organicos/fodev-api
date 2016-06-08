@@ -49,6 +49,7 @@ articles.controller('ArticleCtrl', ['$scope','$http', '$filter', '$routeParams',
   $scope.loadingProducts = false;
   $scope.loadingAuthors = false;
   $scope.loadingImages = false;
+  $scope.loadingCategories = false;
   $scope.filesService = filesService;
 
   if($routeParams.id){
@@ -71,6 +72,25 @@ articles.controller('ArticleCtrl', ['$scope','$http', '$filter', '$routeParams',
     });
     
   }
+
+  $scope.getCategories = function(name){
+    return $http.get(myConfig.apiUrl+'/categories', {
+      params: {
+        name: name,
+        forUseInBlog: true
+      }
+    }).then(function(res) {
+      
+      return res.data;
+
+    });
+  }
+
+  $scope.selectCategory = function (item, model, label) {
+    
+    $scope.article.category = item;
+    
+  };
 
   $scope.getAuthors = function(name){
     return $http.get(myConfig.apiUrl+'/users', {

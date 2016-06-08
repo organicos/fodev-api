@@ -33,7 +33,7 @@ categories.controller('AdminCategoriesCtrl', ['$scope', 'categoryService', 'Html
             }, 
             function (res) {
                 var error_list = [];
-                angular.forEach(res.errors, function(error, path) {
+                angular.forEach(res.data.errors, function(error, path) {
                     this.push(error.message);
                 }, error_list);
                 $scope.$emit('alert', {
@@ -65,21 +65,21 @@ categories.controller('AdminCategoryCtrl', ['$scope', '$routeParams', '$location
         )
     }
     
-    $scope.removeSubCategory = function(subCategory){
-        var subCategoryIndex = $scope.category.subCategories.indexOf(subCategory);
-        if(subCategoryIndex >= 0){
-            $scope.category.subCategories.splice(subCategoryIndex, 1);
+    $scope.removeSubCategory = function(subcategory){
+        var subcategoryIndex = $scope.category.subcategories.indexOf(subcategory);
+        if(subcategoryIndex >= 0){
+            $scope.category.subcategories.splice(subcategoryIndex, 1);
         }
     }
 
-    $scope.deleteSubCategory = function(subCategory){
-        categoryService.delete(subCategory).then(
+    $scope.deleteSubCategory = function(subcategory){
+        categoryService.delete(subcategory).then(
             function(res) {
-                $scope.removeSubCategory(subCategory);
+                $scope.removeSubCategory(subcategory);
             }
             , function (res) {
                 var error_list = [];
-                angular.forEach(res.errors, function(error, path) {
+                angular.forEach(res.data.errors, function(error, path) {
                     this.push(error.message);
                 }, error_list);
                 $scope.$emit('alert', {
@@ -93,10 +93,10 @@ categories.controller('AdminCategoryCtrl', ['$scope', '$routeParams', '$location
 
     $scope.addSubCategory = function(){
         var newSubCategorie = {name: 'Nova sub-categoria'};
-        if($scope.category.subCategories){
-            $scope.category.subCategories.push(newSubCategorie);
+        if($scope.category.subcategories){
+            $scope.category.subcategories.push(newSubCategorie);
         } else {
-            $scope.category.subCategories = [newSubCategorie];
+            $scope.category.subcategories = [newSubCategorie];
         }
     }
 
@@ -116,7 +116,7 @@ categories.controller('AdminCategoryCtrl', ['$scope', '$routeParams', '$location
             }
             , function (res) {
                 var error_list = [];
-                angular.forEach(res.errors, function(error, path) {
+                angular.forEach(res.data.errors, function(error, path) {
                     this.push(error.message);
                 }, error_list);
                 $scope.$emit('alert', {
@@ -137,7 +137,7 @@ categories.controller('AdminCategoryCtrl', ['$scope', '$routeParams', '$location
             }
             , function (res) {
                 var error_list = [];
-                angular.forEach(res.errors, function(error, path) {
+                angular.forEach(res.data.errors, function(error, path) {
                     this.push(error.message);
                 }, error_list);
                 $scope.$emit('alert', {
@@ -164,7 +164,7 @@ categories.controller('AdminCategoryCtrl', ['$scope', '$routeParams', '$location
             , function(res) {
                 $scope.processingChangePassword = false;
                 var error_list = [];
-                angular.forEach(res.errors, function(error, path) {
+                angular.forEach(res.data.errors, function(error, path) {
                     this.push(error.message);
                 }, error_list);
                 $scope.$emit('alert', {

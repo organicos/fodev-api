@@ -7,6 +7,10 @@ blog.config(['$routeProvider', function($routeProvider) {
     templateUrl: '/partials/blog/blog.html',
     controller: 'BlogArticlesCtrl'
   });
+  $routeProvider.when('/blog/categoria/:id', {
+    templateUrl: '/partials/blog/blog.html',
+    controller: 'BlogArticlesCtrl'
+  });
   $routeProvider.when('/blog/:id', {
     templateUrl: '/partials/blog/article.html',
     controller: 'BlogArticleCtrl'
@@ -16,6 +20,27 @@ blog.config(['$routeProvider', function($routeProvider) {
 blog.controller('BlogArticlesCtrl', ['$scope','$http', '$filter', '$routeParams', 'myConfig', 'HtmlMetaTagService', 'categoryService', function($scope, $http, $filter, $routeParams, myConfig, HtmlMetaTagService, categoryService) {
   
   HtmlMetaTagService.tag('title', 'Blog');
+
+  if($routeParams.id){
+    
+    $http.get(myConfig.apiUrl+'/articles/category/'+$routeParams.id)
+    .then(function(res) {
+      
+      HtmlMetaTagService.tag('title', res.title);
+
+      $scope.article = res.data;
+      
+    }, function(res) {
+    
+        $scope.$emit('alert', {
+            kind: 'danger',
+            msg: res.data,
+            title: "Não foi possível acessar os dados do artigo. Verifique o motivo abaixo:"
+        });
+    
+    });
+    
+  }
 
   $scope.articles = [];
   $scope.selectedFilter = '';
@@ -28,15 +53,15 @@ blog.controller('BlogArticlesCtrl', ['$scope','$http', '$filter', '$routeParams'
   })
 
   $http.get(myConfig.apiUrl+'/articles')
-  .success(function(res){
+  .then(function(res){
     
-    $scope.articles = res;
+    $scope.articles = res.data;
     
-  }).error(function(err) {
+  }, function(res) {
   
       $scope.$emit('alert', {
           kind: 'danger',
-          msg: err,
+          msg: res.data,
           title: "Não foi possível acessar a lista de artigos. Verifique o motivo abaixo:"
       });
   
@@ -68,17 +93,17 @@ blog.controller('BlogArticleCtrl', ['$scope','$http', '$filter', '$routeParams',
   if($routeParams.id){
     
     $http.get(myConfig.apiUrl+'/article/'+$routeParams.id)
-    .success(function(res) {
+    .then(function(res) {
       
       HtmlMetaTagService.tag('title', res.title);
 
-      $scope.article = res;
+      $scope.article = res.data;
       
-    }).error(function(err) {
+    }, function(res) {
     
         $scope.$emit('alert', {
             kind: 'danger',
-            msg: err,
+            msg: res.data,
             title: "Não foi possível acessar os dados do artigo. Verifique o motivo abaixo:"
         });
     

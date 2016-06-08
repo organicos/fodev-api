@@ -14,7 +14,7 @@ module.exports=function(app, mongoose, utils) {
         Categories
         .find(filter)
         .sort({updated: 1})
-        .populate('subCategories')
+        .populate('subcategories')
         .exec(function(err, categories) {
             if (err) {
                 res.statusCode = 400;
@@ -29,7 +29,7 @@ module.exports=function(app, mongoose, utils) {
         Categories
         .findOne({_id: req.params.category_id})
         .sort({updated: 1})
-        .populate('subCategories')
+        .populate('subcategories')
         .exec(function(err, category) {
             if (err) {
                 res.statusCode = 400;
@@ -43,7 +43,8 @@ module.exports=function(app, mongoose, utils) {
     app.post('/v1/category', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
         Categories.create({
             name: req.body.name,
-            subCategories: req.body.subCategories,
+            slug: req.body.slug,
+            subcategories: req.body.subcategories,
             forUseInBlog: req.body.forUseInBlog,
             forUseInProduct: req.body.forUseInProduct
         }, function(err, category) {
@@ -63,7 +64,8 @@ module.exports=function(app, mongoose, utils) {
                 res.send(err);
             } else {
                 category.name = req.body.name;
-                category.subCategories = req.body.subCategories.map(function(subCategory){
+                category.slug = req.body.slug;
+                category.subcategories = req.body.subcategories.map(function(subCategory){
                     var category = new Categories(subCategory);
                     category.isNew = subCategory._id ? false : true;
                     return category;

@@ -18,7 +18,7 @@ module.exports=function(app, mongoose, utils, config) {
                         
                 Articles
                 .find(filter, null, {sort: {updated: -1}})
-                .populate(['images', 'author'])
+                .populate(['images', 'author', 'category'])
                 .exec(function(err, articles) {
                         
                         if (err) {
@@ -33,6 +33,35 @@ module.exports=function(app, mongoose, utils, config) {
         
         });
 
+        app.get('/v1/articles/category/:slug_or_id', utils.getRequestUser, function(req, res) {
+                
+                var filter = {};
+                
+                if(!req.user || req.user.kind != 'admin') filter.active = 1;
+                
+                var slug_or_id = req.params.slug_or_id;
+                
+                filter['category.slug'] = slug_or_id;
+
+                console.log(filter);
+
+                Articles
+                .find(filter, null, {sort: {updated: -1}})
+                .populate(['images', 'author', 'category'])
+                .exec(function(err, articles) {
+                        
+                        if (err) {
+                                
+                                res.statusCode = 400;
+                                res.send(err);       
+                        }
+        
+                        res.json(articles);
+                        
+                });
+
+        });
+
         app.get('/v1/article/:slug_or_id', utils.getRequestUser, function(req, res) {
                 
                 var filter = {};
@@ -41,7 +70,7 @@ module.exports=function(app, mongoose, utils, config) {
                 
                 var slug_or_id = req.params.slug_or_id;
                 
-                filter.$or = [{encoded_url: slug_or_id}];
+                filter.$or = [{slug: slug_or_id}];
 
                 if (utils.isObjectId(slug_or_id)) {
 
@@ -51,7 +80,7 @@ module.exports=function(app, mongoose, utils, config) {
                 
                 Articles
                 .findOne(filter, null, {sort: {updated: -1}})
-                .deepPopulate(['author', 'author.profile_img', 'images', 'products', 'products.images', 'products.prices'])
+                .deepPopulate(['author', 'author.profile_img', 'images', 'products', 'products.images', 'products.prices', 'category'])
                 .exec(function(err, article) {
                         
                         if (err) {
@@ -115,10 +144,12 @@ module.exports=function(app, mongoose, utils, config) {
                         author : req.body.author,
 
                         content : req.body.content,
+
+                        category : req.body.category,
                         
                         img : 'https://s3-sa-east-1.amazonaws.com/fodev/img/global/logo.png',
                         
-                        encoded_url : req.body.encoded_url,
+                        slug : req.body.slug,
                         
                         highlight : req.body.highlight,
                         
@@ -161,10 +192,12 @@ module.exports=function(app, mongoose, utils, config) {
                                 article.author = req.body.author;
                                 
                                 article.content = req.body.content;
+
+                                article.category = req.body.category;
                                 
                                 article.images = req.body.images;
                                 
-                                article.encoded_url = req.body.encoded_url;
+                                article.slug = req.body.slug;
                                 
                                 article.highlight = req.body.highlight;
                                 
@@ -243,7 +276,7 @@ module.exports=function(app, mongoose, utils, config) {
                         
                         var slug_or_id = req.params.slug_or_id;
                         
-                        filter.$or = [{encoded_url: slug_or_id}];
+                        filter.$or = [{slug: slug_or_id}];
         
                         if (utils.isObjectId(slug_or_id)) {
         
