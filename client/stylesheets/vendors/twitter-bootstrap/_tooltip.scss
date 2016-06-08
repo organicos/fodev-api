@@ -1,4 +1,6 @@
 /** tooltip **/
-.tooltip > .tooltip-inner {
-    text-align:left;
+.tooltip {
+    & > .tooltip-inner {
+        text-align:left;
+    }
 }

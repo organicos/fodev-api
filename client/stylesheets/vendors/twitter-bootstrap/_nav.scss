@@ -1,0 +1,23 @@
+/** bootstrap-ui **/
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+.nav {
+    & > li {
+        & > a {
+            & :hover{
+                background-color: $base-bg-color-violet !important;
+                color: $base-txt-color-white !important;
+            }
+            & :focus{
+                background-color: $base-bg-color-violet !important;
+                color: $base-txt-color-white !important;
+            }
+        }
+        .active {
+            & > a{
+                background-color: $base-bg-color-violet !important;
+                color: $base-txt-color-white !important;
+            }
+        }
+    }
+}
