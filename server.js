@@ -68,7 +68,6 @@ if(['dev', 'stg'].indexOf(config.env) > -1){
 }
 
 // LOAD THE ROUTES
-require('./router/client')(app, express, config);
 require('./router/storeConfigs')(app, utils);
 require('./router/addresses')(app, utils);
 require('./router/articles')(app, mongoose, utils, config);
@@ -93,7 +92,7 @@ require('./router/states')(app, mongoose, utils);
 require('./router/suppliers')(app, mongoose, utils);
 require('./router/tickets')(app, mongoose, config, utils);
 require('./router/users')(app, mongoose, utils, config);
-
+require('./router/client')(app, express, config);
 // AVOID SERVER STOP
 process.on('uncaughtException', function(err) {
     console.log(err);
