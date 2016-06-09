@@ -1,10 +1,10 @@
-/** Estilo do navegador **/
+/** NAVBAR **/
 .navbar-fixed-top, .navbar-fixed-bottom{
-    background: transparentize($base-bg-color-white, 0.9);
+    background: transparentize($base-bg-color-white, 0.1);
 }
 
 .navbar-fixed-top-admin{
-    background: transparentize($base-bg-color-yellow, 0.9);
+    background: transparentize($base-bg-color-yellow, 0.1);
 }
 
 .navbar-brand > img{

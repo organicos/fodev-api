@@ -8,8 +8,6 @@
 @import "layout/_borders";
 @import "layout/_col-infinite";
 @import "layout/_footer";
-@import "layout/_navs";
-@import "layout/_no-gutter";
 @import "layout/_simple-sidebar";
 
 /* GLOBAL RESOURCES */
@@ -30,4 +28,7 @@
 /* VENDORS */
 @import "vendors/twitter-bootstrap/_alert";
 @import "vendors/twitter-bootstrap/_image";
+@import "vendors/twitter-bootstrap/_nav";
+@import "vendors/twitter-bootstrap/_navbar";
+@import "vendors/twitter-bootstrap/_no-gutter";
 @import "vendors/twitter-bootstrap/_tooltip";
