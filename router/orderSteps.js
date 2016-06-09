@@ -10,7 +10,9 @@ module.exports=function(app, mongoose, utils) {
         
         if(req.query.name) filter.name = new RegExp(req.query.name, "i");
 
-        OrderSteps.find(filter, function(err, orderSteps) {
+        OrderSteps
+        .find(filter)
+        .exec(function(err, orderSteps) {
 
             if (err) {
                 
@@ -30,7 +32,9 @@ module.exports=function(app, mongoose, utils) {
     
     app.get('/v1/orderStep/:orderStep_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
 
-        OrderSteps.findOne({_id: req.params.orderStep_id}, function(err, orderStep) {
+        OrderSteps
+        .findOne({_id: req.params.orderStep_id})
+        .exec(function(err, orderStep) {
 
             if (err) {
                 
@@ -75,7 +79,9 @@ module.exports=function(app, mongoose, utils) {
     
     app.put('/v1/orderStep/:orderStep_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res){
 
-        OrderSteps.findById(req.params.orderStep_id, function(err, orderStep) {
+        OrderSteps
+        .findById(req.params.orderStep_id)
+        .exec(function(err, orderStep) {
                 
             if (err) {
                     

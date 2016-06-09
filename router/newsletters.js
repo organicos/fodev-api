@@ -56,8 +56,6 @@ module.exports=function(app, mongoose, config, utils) {
 
     app.get('/news/:id', utils.getRequestUser, function(req, res) {
         
-        console.log(req.user);
-        
         var filter = {_id: req.params.id};
         
         Newsletters
@@ -93,7 +91,6 @@ module.exports=function(app, mongoose, config, utils) {
     app.post('/v1/newsletter/:id/send', utils.ensureAdmin, function(req, res) {
         
         var filter = {_id: req.body._id};
-        console.log('iuhiuhiuh');
         Newsletters
         .findOne(filter)
         .deepPopulate(['sections'])
@@ -200,8 +197,6 @@ module.exports=function(app, mongoose, config, utils) {
         
         var filter = {_id: req.params.id};
         
-
-
         Newsletters
         .findOne(filter)
         .deepPopulate(['sections'])
@@ -292,7 +287,9 @@ module.exports=function(app, mongoose, config, utils) {
     
     app.post('/v1/newsletter/signup', function(req, res) {
         
-        Users.findOne({email: req.body.email}, function(err, user) {
+        Users
+        .findOne({email: req.body.email})
+        .exec(function(err, user) {
 
             if (err) {
                 
@@ -372,7 +369,9 @@ module.exports=function(app, mongoose, config, utils) {
     
     app.post('/v1/newsletter/signout', function(req, res) {
         
-        Users.findOne({email: req.body.email}, function(err, user) {
+        Users
+        .findOne({email: req.body.email})
+        .exec(function(err, user) {
 
             if (err) {
                 

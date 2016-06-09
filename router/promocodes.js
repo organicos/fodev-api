@@ -10,7 +10,9 @@ module.exports=function(app, mongoose, utils) {
         
         if(req.query.name) filter.name = new RegExp(req.query.name, "i");
 
-        Promocodes.find(filter, function(err, promocodes) {
+        Promocodes
+        .find(filter)
+        .exec(function(err, promocodes) {
 
             if (err) {
                 
@@ -30,7 +32,9 @@ module.exports=function(app, mongoose, utils) {
     
     app.get('/v1/promocode/:promocode_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
 
-        Promocodes.findOne({_id: req.params.promocode_id}, function(err, promocode) {
+        Promocodes
+        .findOne({_id: req.params.promocode_id})
+        .exec(function(err, promocode) {
 
             if (err) {
                 
@@ -82,7 +86,9 @@ module.exports=function(app, mongoose, utils) {
     
     app.put('/v1/promocode/:promocode_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res){
 
-        Promocodes.findById(req.params.promocode_id, function(err, promocode) {
+        Promocodes
+        .findById(req.params.promocode_id)
+        .exec(function(err, promocode) {
                 
             if (err) {
                     

@@ -10,7 +10,9 @@ module.exports=function(app, mongoose, utils) {
         
         if(req.query.name) filter.name = new RegExp(req.query.name, "i");
 
-        Groups.find(filter, function(err, groups) {
+        Groups
+        .find(filter)
+        .exec(function(err, groups) {
 
             if (err) {
                 
@@ -30,7 +32,9 @@ module.exports=function(app, mongoose, utils) {
     
     app.get('/v1/group/:group_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
 
-        Groups.findOne({_id: req.params.group_id}, function(err, group) {
+        Groups
+        .findOne({_id: req.params.group_id})
+        .exec(function(err, group) {
 
             if (err) {
                 
@@ -74,7 +78,9 @@ module.exports=function(app, mongoose, utils) {
     
     app.put('/v1/group/:group_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res){
 
-        Groups.findById(req.params.group_id, function(err, group) {
+        Groups
+        .findById(req.params.group_id)
+        .exec(function(err, group) {
                 
             if (err) {
                     

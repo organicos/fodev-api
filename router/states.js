@@ -31,7 +31,8 @@ module.exports=function(app, mongoose, utils) {
     app.get('/v1/state/:state_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
 
         States
-        .findOne({_id: req.params.state_id}, null, {sort: {updated: -1}})
+        .findOne({_id: req.params.state_id})
+        .sort({updated: -1})
         .populate(['country'])
         .exec(function(err, state) {
                 
@@ -77,7 +78,8 @@ module.exports=function(app, mongoose, utils) {
     
     app.put('/v1/state/:state_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res){
 
-        States.findById(req.params.state_id, function(err, state) {
+        States.findById(req.params.state_id)
+        .exec(function(err, state) {
                 
             if (err) {
                     

@@ -10,7 +10,10 @@ module.exports=function(app, mongoose, utils) {
         
         if(req.user.kind != 'admin') filter['customer._id'] = req.user._id;
 
-        Discounts.find(filter, null, {sort: {updated: 1}}, function(err, discounts) {
+        Discounts
+        .find(filter)
+        .sort({updated: 1})
+        .exec(function(err, discounts) {
 
             if (err) {
                     res.send(err);       
@@ -24,7 +27,9 @@ module.exports=function(app, mongoose, utils) {
     
     app.get('/v1/discount/:discount_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
 
-        Discounts.findOne({_id: req.params.discount_id}, function(err, discount) {
+        Discounts
+        .findOne({_id: req.params.discount_id})
+        .exec(function(err, discount) {
 
             if (err) {
                 
@@ -78,7 +83,9 @@ module.exports=function(app, mongoose, utils) {
     
     app.put('/v1/discount/:discount_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res){
 
-        Discounts.findById(req.params.discount_id, function(err, discount) {
+        Discounts
+        .findById(req.params.discount_id)
+        .exec(function(err, discount) {
                 
             if (err) {
                     

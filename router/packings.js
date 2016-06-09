@@ -29,7 +29,9 @@ module.exports=function(app, mongoose, utils) {
     
     app.get('/v1/packing/:packing_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
 
-        Packings.findOne({_id: req.params.packing_id}, function(err, packing) {
+        Packings
+        .findOne({_id: req.params.packing_id})
+        .exec(function(err, packing) {
 
             if (err) {
                 
@@ -79,7 +81,9 @@ module.exports=function(app, mongoose, utils) {
     
     app.put('/v1/packing/:packing_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res){
 
-        Packings.findById(req.params.packing_id, function(err, packing) {
+        Packings
+        .findById(req.params.packing_id)
+        .exec(function(err, packing) {
                 
             if (err) {
                     

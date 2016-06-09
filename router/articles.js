@@ -17,7 +17,8 @@ module.exports=function(app, mongoose, utils, config) {
                 if(!req.user || req.user.kind != 'admin') filter.active = 1;
                         
                 Articles
-                .find(filter, null, {sort: {updated: -1}})
+                .find(filter)
+                .sort({updated: -1})
                 .populate(['images', 'author', 'category'])
                 .exec(function(err, articles) {
                         
@@ -43,10 +44,9 @@ module.exports=function(app, mongoose, utils, config) {
                 
                 filter['category.slug'] = slug_or_id;
 
-                console.log(filter);
-
                 Articles
-                .find(filter, null, {sort: {updated: -1}})
+                .find(filter)
+                .sort({updated: -1})
                 .populate(['images', 'author', 'category'])
                 .exec(function(err, articles) {
                         
@@ -79,7 +79,8 @@ module.exports=function(app, mongoose, utils, config) {
                 }
                 
                 Articles
-                .findOne(filter, null, {sort: {updated: -1}})
+                .findOne(filter)
+                .sort({updated: -1})
                 .deepPopulate(['author', 'author.profile_img', 'images', 'products', 'products.images', 'products.prices', 'category'])
                 .exec(function(err, article) {
                         
@@ -177,7 +178,9 @@ module.exports=function(app, mongoose, utils, config) {
 
         app.put('/v1/article/:article_id', utils.ensureAdmin, function(req, res){
 
-                return Articles.findById(req.params.article_id, function(err, article) {
+                return Articles
+                .findById(req.params.article_id)
+                .exec(function(err, article) {
                         
                         if (err) {
                                 
@@ -285,7 +288,8 @@ module.exports=function(app, mongoose, utils, config) {
                         }
                         
                         Articles
-                        .findOne(filter, null, {sort: {updated: -1}})
+                        .findOne(filter)
+                        .sort({updated: -1})
                         .deepPopulate(['images', 'products'])
                         .exec(function(err, article) {
                                 

@@ -11,7 +11,8 @@ module.exports=function(app, mongoose, utils) {
         if(req.query.name) filter.name = new RegExp(req.query.name, "i");
 
         Suppliers
-        .find(filter, null, {sort: ['name']})
+        .find(filter)
+        .sort({name: 1})
         .exec(function(err, suppliers) {
                     
             if (err) {
@@ -35,7 +36,8 @@ module.exports=function(app, mongoose, utils) {
         var filter = {_id: req.params.supplier_id};
         
         Suppliers
-        .findOne(filter, null, {sort: ['name']})
+        .findOne(filter)
+        .sort({name: 1})
         .deepPopulate(['images', 'products', 'address'])
         .exec(function(err, supplier) {
             
@@ -89,7 +91,9 @@ module.exports=function(app, mongoose, utils) {
     
     app.put('/v1/supplier/:supplier_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res){
 
-        Suppliers.findById(req.params.supplier_id, function(err, supplier) {
+        Suppliers
+        .findById(req.params.supplier_id)
+        .exec(function(err, supplier) {
                 
             if (err) {
                     

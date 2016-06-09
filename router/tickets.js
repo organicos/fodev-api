@@ -40,7 +40,8 @@ module.exports=function(app, mongoose, config, utils) {
         if(req.user.kind != 'admin') filter['customer._id'] = req.user._id;
         
         Tickets
-        .find(filter, null, {sort: {updated: -1}})
+        .find(filter)
+        .sort({updated: -1})
         .lean()
         .populate(['customer'])
         .exec(function(err, tickets) {
@@ -175,7 +176,9 @@ module.exports=function(app, mongoose, config, utils) {
     
     app.post('/v1/ticket', utils.getRequestUser, function(req, res) {
 
-        Users.findOne({email: req.body.email}, function(err, user) {
+        Users
+        .findOne({email: req.body.email})
+        .exec(function(err, user) {
 
             if (err) {
                 

@@ -10,7 +10,9 @@ module.exports=function(app, utils) {
         
         if(req.query.name) filter.name = new RegExp(req.query.name, "i");
 
-        RefoundTypes.find(filter, function(err, refoundTypes) {
+        RefoundTypes
+        .find(filter)
+        .exec(function(err, refoundTypes) {
 
             if (err) {
                 
@@ -30,7 +32,9 @@ module.exports=function(app, utils) {
     
     app.get('/v1/refoundType/:refoundType_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
 
-        RefoundTypes.findOne({_id: req.params.refoundType_id}, function(err, refoundType) {
+        RefoundTypes
+        .findOne({_id: req.params.refoundType_id})
+        .exec(function(err, refoundType) {
 
             if (err) {
                 
@@ -74,7 +78,9 @@ module.exports=function(app, utils) {
     
     app.put('/v1/refoundType/:refoundType_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res){
 
-        RefoundTypes.findById(req.params.refoundType_id, function(err, refoundType) {
+        RefoundTypes
+        .findById(req.params.refoundType_id)
+        .exec(function(err, refoundType) {
                 
             if (err) {
                     

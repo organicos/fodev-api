@@ -187,7 +187,9 @@ module.exports=function(app, mongoose, utils, config) {
     });
 
     app.post('/v1/signin', function(req, res) {
-            Users.findOne({email: req.body.email}, '+password', function(err, user) {
+            Users
+            .findOne({email: req.body.email}, '+password')
+            .exec(function(err, user) {
                     if (err) {
                         
                         res.statusCode = 400;
@@ -258,7 +260,9 @@ module.exports=function(app, mongoose, utils, config) {
 
     app.post('/v1/signup', function(req, res) {
 
-        Users.findOne({email: req.body.email, password: req.body.password}, function(err, user) {
+        Users
+        .findOne({email: req.body.email, password: req.body.password})
+        .exec(function(err, user) {
 
                 if (err) {
                     
@@ -361,7 +365,9 @@ module.exports=function(app, mongoose, utils, config) {
     
     app.put('/v1/user/:user_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res){
 
-            Users.findById(req.params.user_id, function(err, user) {
+            Users
+            .findById(req.params.user_id)
+            .exec(function(err, user) {
                     
                 if (err) {
                         

@@ -30,7 +30,9 @@ module.exports=function(app, mongoose, utils) {
     
     app.get('/v1/country/:country_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
 
-        Countries.findOne({_id: req.params.country_id}, function(err, country) {
+        Countries
+        .findOne({_id: req.params.country_id})
+        .exec(function(err, country) {
 
             if (err) {
                 
@@ -78,7 +80,9 @@ module.exports=function(app, mongoose, utils) {
     
     app.put('/v1/country/:country_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res){
 
-        Countries.findById(req.params.country_id, function(err, country) {
+        Countries
+        .findById(req.params.country_id)
+        .exec(function(err, country) {
                 
             if (err) {
                     

@@ -42,7 +42,8 @@ module.exports=function(app, mongoose, utils, config) {
                 }
 
                 Products
-                .find(filter, hiddenFields, {sort: {name: 1}})
+                .find(filter, hiddenFields)
+                .sort({name: 1})
                 .populate(populate)
                 .exec(function(err, products) {
                         
@@ -93,7 +94,8 @@ module.exports=function(app, mongoose, utils, config) {
                 }
 
                 Products
-                .findOne(filter, hiddenFields, {sort: {updated: -1}})
+                .findOne(filter, hiddenFields)
+                .sort({updated: -1})
                 .populate(populate)
                 .exec(function(err, product) {
                         

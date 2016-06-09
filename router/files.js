@@ -40,7 +40,9 @@ module.exports = function (app, mongoose, utils) {
         
         if(req.query.name) filter.name = new RegExp(req.query.name, "i");
 
-        Files.find(filter, function(err, files) {
+        Files
+        .find(filter)
+        .exec(function(err, files) {
 
             if (err) {
                 
@@ -85,7 +87,9 @@ module.exports = function (app, mongoose, utils) {
 
         if(req.query.name) filter.name = new RegExp(req.query.name, "i");
 
-        Files.find(filter, function(err, files) {
+        Files
+        .find(filter)
+        .exec(function(err, files) {
 
             if (err) {
                 
