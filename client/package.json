@@ -1,0 +1,36 @@
+{
+  "name": "client",
+  "version": "1.0.0",
+  "description": "This project is an client application that consume and exposes the e-commerce data. Retrieving data from an API.",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "grunt": "*",
+    "grunt-cli": "*",
+    "grunt-contrib-cssmin": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-ng-annotate": "*",
+    "grunt-sass": "*"
+  },
+  "dependencies": {
+    "angular": "^1.5.6",
+    "angular-animate": "^1.5.6",
+    "angular-bootstrap": "^0.12.2",
+    "angular-chart.js": "^0.10.2",
+    "angular-filter": "^0.5.8",
+    "angular-i18n": "^1.5.6",
+    "angular-loader": "^1.5.6",
+    "angular-mocks": "^1.5.6",
+    "angular-route": "^1.5.6",
+    "angular-sanitize": "^1.5.6",
+    "bootstrap-sass": "*",
+    "font-awesome": "^4.6.3",
+    "ng-file-upload": "^12.0.4",
+    "ngstorage": "^0.3.10",
+    "sortablejs": "^1.4.2"
+  }
+}

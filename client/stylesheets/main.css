@@ -11,7 +11,7 @@ body {
   -moz-word-break: break-word;
   -ms-word-break: break-word;
   word-break: break-word;
-  /* HYPHENS */
+  /* USE HYPHENS WHEN BREAKING WORDS */
   -webkit-hyphens: auto;
   -moz-hyphens: auto;
   -ms-hyphens: auto;

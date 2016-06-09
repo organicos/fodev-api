@@ -35,6 +35,11 @@ build/Release
 
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
 node_modules
+client/node_modules
+
+# Bower
+bower_components
+client/bower_components
 
 # config file
 config/env_config.js

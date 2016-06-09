@@ -13,20 +13,20 @@ module.exports = function(grunt) {
             jsFiles: {
                 files: {
                     'app.concat.js': [
-                        'bower_components/angular-i18n/angular-locale_pt-br.js'
-                        , 'bower_components/angular-route/angular-route.min.js'
-                        , 'bower_components/ngstorage/ngStorage.min.js'
-                        , 'bower_components/angular-bootstrap/ui-bootstrap.min.js'
-                        , 'bower_components/angular-bootstrap/ui-bootstrap-tpls.js'
-                        , 'bower_components/angular-filter/dist/angular-filter.min.js'
-                        , 'bower_components/angular-sanitize/angular-sanitize.min.js'
-                        , 'bower_components/angular-animate/angular-animate.min.js'
-                        , 'bower_components/angularjs-socialshare/src/js/angular-socialshare.js'
-                        , 'bower_components/Chart.js/Chart.min.js'
-                        , 'bower_components/angular-chart.js/dist/angular-chart.min.js'
-                        , 'bower_components/ng-file-upload/ng-file-upload-shim.min.js'
-                        , 'bower_components/ng-file-upload/ng-file-upload.min.js'
-                        , 'bower_components/angular-image-crop/image-crop.js'
+                        'node_modules/angular-i18n/angular-locale_pt-br.js'
+                        , 'node_modules/angular-route/angular-route.min.js'
+                        , 'node_modules/ngstorage/ngStorage.min.js'
+                        , 'node_modules/angular-bootstrap/ui-bootstrap.min.js'
+                        , 'node_modules/angular-bootstrap/ui-bootstrap-tpls.js'
+                        , 'node_modules/angular-filter/dist/angular-filter.min.js'
+                        , 'node_modules/angular-sanitize/angular-sanitize.min.js'
+                        , 'node_modules/angular-animate/angular-animate.min.js'
+                        , 'node_modules/chart.js/Chart.min.js'
+                        , 'node_modules/angular-chart.js/dist/angular-chart.min.js'
+                        , 'node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js'
+                        , 'node_modules/ng-file-upload/dist/ng-file-upload.min.js'
+                        , 'node_modules/sortablejs/Sortable.min.js'
+                        , 'node_modules/sortablejs/ng-sortable.js'
                         , 'partials/*/*.js'
                         , 'filters/*.js'
                         , 'services/*.js'
@@ -62,8 +62,8 @@ module.exports = function(grunt) {
             target: {
                 files: {
                     'app.min.css': [
-                        './bower_components/bootstrap-24grid-violet/css/bootstrap.min.css'
-                        , './bower_components/angular-chart.js/dist/angular-chart.css'
+                        './assets/css/bootstrap-24grid-violet/css/bootstrap.min.css'
+                        , './node_modules/angular-chart.js/dist/angular-chart.css'
                         , './stylesheets/main.css'
                     ]
                 }

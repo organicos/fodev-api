@@ -14,7 +14,7 @@ module.exports=function(app, express, config) {
 	app.use("/app.min.css", express.static(fodevAppPath + "app.min.css", fileConfig));
 	app.use("/app.min.js", express.static(fodevAppPath + mainJsFile, fileConfig));
 	app.use("/assets", express.static(fodevAppPath + "assets", fileConfig));
-	app.use("/bower_components", express.static(fodevAppPath + "bower_components", fileConfig));
+	app.use("/node_modules", express.static(fodevAppPath + "node_modules", fileConfig));
 	app.use("/components", express.static(fodevAppPath + "components", fileConfig));
 	app.use("/partials", express.static(fodevAppPath + "partials", fileConfig));
 	app.use("/services", express.static(fodevAppPath + "services", fileConfig));
