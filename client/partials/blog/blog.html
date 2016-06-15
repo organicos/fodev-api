@@ -16,8 +16,10 @@
             <h1 class="sr-only">Blog da Feira Orgânica Delivery</h1>
 
             <p class="text-center" ng-if="loadingArticles">Buscando artigos <i class="fa fa-cog fa-spin"></i></p>
-
-            <div ng-if="!loadingArticles" ng-cloak>
+            <div class="well background-blue">
+                <p>Ah :( não encontramos nenhum artigo ativo nesta categoria...</p>
+            </div>
+            <div ng-if="!loadingArticles || articles" ng-cloak>
                 
                 <div class="row visible-md-block visible-lg-block">
                     <div class="col-xs-12 col-sm-8 blog-post-thumb-wrap" ng-repeat="article in articles track by article._id">

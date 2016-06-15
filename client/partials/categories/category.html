@@ -23,11 +23,15 @@
             <div ng-if="category.subcategories.length">
                 <h4>Subcategorias</h4>
                 <div class="row" ng-repeat="(index, subcategory) in category.subcategories">
-                    <div class="form-group col-sm-12">
+                    <div class="form-group col-sm-9">
                         <input class="form-control" type="text" name="subcat-index-{{index}}" id="subcat-index-{{index}}" ng-model="subcategory.name" placeholder="nome ex. (My subcategory name)"/>
                     </div>
                     <div class="form-group col-sm-10">
                         <input class="form-control" type="text" name="subcat-slug-{{index}}" id="subcat-slug-{{index}}" ng-model="subcategory.slug" placeholder="endereço da sub-categoria."/>
+                    </div>
+                    <div class="btn-group col-sm-3">
+                        <label class="btn btn-primary" ng-model="subcategory.forUseInBlog" ng-click="subcategory.forUseInBlog = !subcategory.forUseInBlog;" ng-class="subcategory.forUseInBlog ? 'active' : ''">Blog</label>
+                        <label class="btn btn-primary" ng-model="subcategory.forUseInProduct" ng-click="subcategory.forUseInProduct = !subcategory.forUseInProduct;" ng-class="subcategory.forUseInProduct ? 'active' : ''">Produto
                     </div>
                     <div class="form-group col-sm-2">
                         <button type="button" class="btn btn-info fa fa-close" ng-click="removeSubCategory(subcategory)"></button>
@@ -37,7 +41,7 @@
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-primary" ng-disabled="processingCategoryUpdate">Salvar</button>
-                <button type="button" class="btn btn-success" ng-click="addSubCategory()">Adicionar sub-categoria</button>
+                <button type="button" class="btn btn-success" ng-if="!category.parent" ng-click="addSubCategory()">Adicionar sub-categoria</button>
                 <button type="button" class="btn btn-danger" ng-click="dropCategory()">Excluir categoria</button>
             </div>
         </form>

@@ -1,4 +1,12 @@
 "use strict";
+var sanitize            = require("mongo-sanitize");
+var nodemailer          = require('nodemailer');
+var mandrillTransport   = require('nodemailer-mandrill-transport');
+var emailTemplates      = require('email-templates');
+var jwt                 = require("jsonwebtoken");
+var path                = require('path');
+var moment              = require('moment');
+var config              = require('./../config/env_config');
 
 function ensureAuthorized(req, res, next) {
     var bearerToken;
@@ -26,9 +34,6 @@ function ensureAdmin(req, res, next) {
 }
 
 exports.ensureAdmin = ensureAdmin;
-
-var config = require('./../config/env_config');
-var jwt = require("jsonwebtoken");
 
 function getUserKind(req, callback){
     
@@ -78,25 +83,15 @@ function getRequestUser(req, res, next){
 
 exports.getRequestUser = getRequestUser;
 
-
-
-
 function sendMail(mailConfig){
     
-    var path = require('path');
-    
-    mailConfig.data.moment  = require('moment');
+    mailConfig.data.moment = moment;
     
     var templatesDir   = path.join(__dirname, '../templates/');
     
-    var nodemailer =        require('nodemailer');
-    var mandrillTransport = require('nodemailer-mandrill-transport');
-    var emailTemplates =    require('email-templates');
-    var appConfig =         require('./../config/env_config');
-
     var transporter = nodemailer.createTransport(mandrillTransport({
         auth: {
-            apiKey: appConfig.mandrill.apiKey
+            apiKey: config.mandrill.apiKey
         }
     }));
     
@@ -124,10 +119,10 @@ function sendMail(mailConfig){
                 } else {
 
                     transporter.sendMail({
-                        from: appConfig.mail.from,
-                        replyTo: appConfig.mail.replyTo,
+                        from: config.mail.from,
+                        replyTo: config.mail.replyTo,
                         to: mailConfig.receivers.toString(),
-                        subject: appConfig.envTag + mailConfig.subject,
+                        subject: config.envTag + mailConfig.subject,
                         text: text,
                         html: html
                     }, function(error, info) {
@@ -186,3 +181,10 @@ function makeSlug(str, leaveExtension){
 };
 
 exports.makeSlug = makeSlug;
+
+function cleanBody(req, res, next) {
+  req.body = sanitize(req.body);
+  next();
+}
+
+exports.cleanBody = cleanBody;

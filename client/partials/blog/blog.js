@@ -21,38 +21,9 @@ blog.controller('BlogArticlesCtrl', ['$scope','$http', '$filter', '$routeParams'
   
   HtmlMetaTagService.tag('title', 'Blog');
 
-  if($routeParams.id){
+  var resourceUrl = $routeParams.id ? myConfig.apiUrl+'/articles/category/'+$routeParams.id : myConfig.apiUrl+'/articles';
     
-    $http.get(myConfig.apiUrl+'/articles/category/'+$routeParams.id)
-    .then(function(res) {
-      
-      HtmlMetaTagService.tag('title', res.title);
-
-      $scope.article = res.data;
-      
-    }, function(res) {
-    
-        $scope.$emit('alert', {
-            kind: 'danger',
-            msg: res.data,
-            title: "Não foi possível acessar os dados do artigo. Verifique o motivo abaixo:"
-        });
-    
-    });
-    
-  }
-
-  $scope.articles = [];
-  $scope.selectedFilter = '';
-  $scope.selectedOrder = 'updated';
-  $scope.loadingArticles = true;
-  $scope.categories = [];
-
-  categoryService.get({forUseInBlog: true}).then(function(res){
-    $scope.categories = res.data;
-  })
-
-  $http.get(myConfig.apiUrl+'/articles')
+  $http.get(resourceUrl)
   .then(function(res){
     
     $scope.articles = res.data;
@@ -70,6 +41,18 @@ blog.controller('BlogArticlesCtrl', ['$scope','$http', '$filter', '$routeParams'
     $scope.loadingArticles = false;
     
   });
+    
+  $scope.articles = [];
+  $scope.selectedFilter = '';
+  $scope.selectedOrder = 'updated';
+  $scope.loadingArticles = true;
+  $scope.categories = [];
+
+  categoryService.get({forUseInBlog: true}).then(function(res){
+    $scope.categories = res.data;
+  })
+
+
 
   $scope.selectFilter = function (value) {
     
@@ -89,26 +72,21 @@ blog.controller('BlogArticleCtrl', ['$scope','$http', '$filter', '$routeParams',
 
   $scope.saving_article = false;
   $scope.article = {};
+  $http.get(myConfig.apiUrl+'/article/'+$routeParams.id)
+  .then(function(res) {
+    
+    HtmlMetaTagService.tag('title', res.title);
 
-  if($routeParams.id){
+    $scope.article = res.data;
     
-    $http.get(myConfig.apiUrl+'/article/'+$routeParams.id)
-    .then(function(res) {
-      
-      HtmlMetaTagService.tag('title', res.title);
-
-      $scope.article = res.data;
-      
-    }, function(res) {
-    
-        $scope.$emit('alert', {
-            kind: 'danger',
-            msg: res.data,
-            title: "Não foi possível acessar os dados do artigo. Verifique o motivo abaixo:"
-        });
-    
-    });
-    
-  }
+  }, function(res) {
+  
+      $scope.$emit('alert', {
+          kind: 'danger',
+          msg: res.data,
+          title: "Não foi possível acessar os dados do artigo. Verifique o motivo abaixo:"
+      });
+  
+  });
 
 }]);

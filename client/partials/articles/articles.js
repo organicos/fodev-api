@@ -51,6 +51,7 @@ articles.controller('ArticleCtrl', ['$scope','$http', '$filter', '$routeParams',
   $scope.loadingImages = false;
   $scope.loadingCategories = false;
   $scope.filesService = filesService;
+  $scope.categoryInput = "";
 
   if($routeParams.id){
     
@@ -87,9 +88,9 @@ articles.controller('ArticleCtrl', ['$scope','$http', '$filter', '$routeParams',
   }
 
   $scope.selectCategory = function (item, model, label) {
-    
-    $scope.article.category = item;
-    
+    $scope.article.categories = $scope.article.categories || [];
+    $scope.article.categories.push(item);
+    $scope.categoryInput = "";
   };
 
   $scope.getAuthors = function(name){

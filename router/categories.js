@@ -11,15 +11,28 @@ module.exports=function(app, mongoose, utils) {
         if(req.query.name) filter.name = new RegExp(req.query.name, "i");
         if(req.query.forUseInBlog) filter.forUseInBlog = req.query.forUseInBlog;
         if(req.query.forUseInProduct) filter.forUseInProduct = req.query.forUseInProduct;
+
         Categories
-        .find(filter)
-        .sort({updated: 1})
-        .populate('subcategories')
+        .aggregate([
+            {$unwind : "$subcategories"},
+            {$match : filter,
+            {$project : {
+                _id : "$subcategories._id", 
+                name : "$subcategories.name"
+                     }
+            }
+        ])
         .exec(function(err, categories) {
             if (err) {
                 res.statusCode = 400;
                 res.send(err)
             } else {
+                for(category in categories){
+                    if(category.subcategories.length > 0){
+                        category.subcategories = category.subcategories.filter(function(x){return new RegExp(req.query.name, "i").test(x.name)})
+                    }
+                }
+
                 res.json(categories);
             }
         });

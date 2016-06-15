@@ -19,6 +19,7 @@ var config = require('./config/env_config');
 var utils = require('./helpers/utils');
 var errorHandler = require('errorhandler');
 var compression = require('compression');
+var sanitize = require("mongo-sanitize");
 var newrelic = false;
 if(config.env == 'prod'){
     newrelic = require('newrelic');
@@ -70,9 +71,9 @@ if(['dev', 'stg'].indexOf(config.env) > -1){
 // LOAD THE ROUTES
 require('./router/storeConfigs')(app, utils);
 require('./router/addresses')(app, utils);
-require('./router/articles')(app, mongoose, utils, config);
-require('./router/baskets')(app, utils);
 require('./router/categories')(app, mongoose, utils);
+require('./router/articles')(app, mongoose, utils, config, sanitize);
+require('./router/baskets')(app, utils);
 require('./router/resizimage')(app, mongoose, utils);
 require('./router/cities')(app, mongoose, utils);
 require('./router/countries')(app, mongoose, utils);

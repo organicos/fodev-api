@@ -37,7 +37,7 @@
                     <td ng-bind="category.slug"></td>
                     <td><i class="fa" ng-class="category.forUseInBlog ? 'fa-check' : ''"></i></td>
                     <td><i class="fa" ng-class="category.forUseInProduct ? 'fa-check' : ''"></i></td>
-                    <td ng-bind="category.subcategories.length"></td>
+                    <td><a href="/category/{{category._id}}" class="badge badge-info" ng-repeat="category in category.subcategories" ng-bind="category.name"></a></td>
                     <td ng-bind="category.updated"></td>
                     <td><button class="btn btn-danger btn-xs" ng-click="dropCategory(category)"><i class="fa fa-trash"></i></button></td>
                 </tr>

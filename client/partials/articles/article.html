@@ -22,7 +22,7 @@
             
                 <div class="row">
                     <div class="col-sm-18 form-group">
-                        <input class="form-control" type="text" ng-model="article.encoded_url" placeholder="nome-codificado-sem-caracter-especial">
+                        <input class="form-control" type="text" ng-model="article.slug" placeholder="nome-codificado-sem-caracter-especial">
                     </div>
                     <div class="col-sm-6 checkbox">
                         <label>
@@ -53,7 +53,7 @@
                 <div class="form-group">
                     <input 
                         type="text" 
-                        ng-model="article.category.name" 
+                        ng-model="categoryInput"
                         placeholder="Categoria" 
                         typeahead="user.name for user in getCategories($viewValue)" 
                         typeahead-loading="loadingCategories" 
@@ -61,6 +61,9 @@
                         class="form-control"
                         >
                     <i ng-show="loadingCategories" class="fa fa-spin fa-spinner"></i>
+                </div>
+                <div class="well">
+                    <span class="badge badge-info" ng-repeat="category in article.categories" ng-bind="::category.name"></span>
                 </div>
             </div>
             <div class="col-sm-3">
@@ -94,7 +97,7 @@
         </div>
         
 		<div class="thumbnail" ng-repeat="product in article.products">
-			<a href="/feira/produto/{{product.encoded_url}}">
+			<a href="/feira/produto/{{product.slug}}">
 				<img class="img-responsive" alt="week_product" ng-src="{{product.images[0].url}}" resizimage="200x200">
 			</a>
 			<hr>
@@ -105,7 +108,7 @@
 						<a ng-if="product.category" ng-click="selectCategory(product.category)" ng-bind="product.category"></a>
 					</span>
 				</p>
-				<h4 class="text-violet"><a href="/feira/produto/{{product.encoded_url}}" ng-bind="product.name"></a></h4>
+				<h4 class="text-violet"><a href="/feira/produto/{{product.slug}}" ng-bind="product.name"></a></h4>
 			</div>
 
 			<button class="btn btn-danger btn-block" ng-click="dropProductFromArticle(product)">Remover</button>
