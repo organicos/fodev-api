@@ -134,9 +134,9 @@
             <li ng-class="location.path() == '/certificacao' ? 'active' : ''"><a href="/certificacao" hreflang="pt-br">Certificação</a></li>
             <li ng-class="location.path() == '/contato' ? 'active' : ''"><a href="/contato" hreflang="pt-br">Contato</a></li>
             <li ng-class="location.path() == '/entrar' ? 'active' : ''"><a href="/entrar" hreflang="pt-br" ng-cloak ng-if="!$storage.user.token">Entrar</a></li>
-            <li dropdown ng-cloak ng-if="$storage.user.token">
-              <img class="img-responsive img-circle" id="profile-img" ng-src="{{$storage.user.profile_img.url}}" resizimage="100" dropdown-toggle></img>
-              <ul class="dropdown-menu" role="menu">
+            <li uib-dropdown ng-cloak ng-if="$storage.user.token">
+              <img class="img-responsive img-circle" id="profile-img" ng-src="{{$storage.user.profile_img.url}}" resizimage="100" uib-dropdown-toggle></img>
+              <ul class="dropdown-menu" uib-dropdown-menu role="menu">
                 <li role="presentation" class="dropdown-header" ng-bind="$storage.user.name || $storage.user.email"></li>
                 <li ng-class="location.path() == '/eu' ? 'active' : ''"><a href="/eu" hreflang="pt-br">Meus dados</a></li>
                 <li ng-class="location.path() == '/meus/descontos' ? 'active' : ''"><a href="/meus/descontos" hreflang="pt-br">Meus descontos</a></li>
@@ -154,12 +154,12 @@
     
     <div class="container-fluid" ng-cloak>
       <div id="alertWrapper">
-        <alert ng-repeat="alert in alerts track by $index" type="{{alert.kind}}" close="closeAlert($index)">
+        <uib-alert ng-repeat="alert in alerts track by $index" type="{{alert.kind}}" close="closeAlert($index)">
           <strong ng-bind="alert.title"></strong>
           <ul>
             <li ng-repeat="message in alert.msg track by $index" ng-bind="message"></li>
           </ul>
-        </alert>
+        </uib-alert>
       </div>
     </div>
 

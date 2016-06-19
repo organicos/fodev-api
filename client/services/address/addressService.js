@@ -1,4 +1,4 @@
-angular.module('myApp').service('addressService', ['$rootScope', '$modal', '$filter', '$http', 'confirmModalService', 'myConfig', function ($rootScope, $modal, $filter, $http, confirmModalService, myConfig) {
+angular.module('myApp').service('addressService', ['$rootScope', '$uibModal', '$filter', '$http', 'confirmModalService', 'myConfig', function ($rootScope, $uibModal, $filter, $http, confirmModalService, myConfig) {
     
     var self = this;
 
@@ -38,7 +38,7 @@ angular.module('myApp').service('addressService', ['$rootScope', '$modal', '$fil
 
             addresses = res;
 
-            return $modal.open({
+            return $uibModal.open({
                 backdrop: true,
                 keyboard: true,
                 modalFade: true,
@@ -56,7 +56,7 @@ angular.module('myApp').service('addressService', ['$rootScope', '$modal', '$fil
         
     };
     
-    var addressServiceModalController = function($scope, $location, $modalInstance){
+    var addressServiceModalController = function($scope, $location, $uibModalInstance){
 
         $scope.selectable = config.selectable;
         $scope.selectedAddress = config.selectedAddress;
@@ -242,11 +242,11 @@ angular.module('myApp').service('addressService', ['$rootScope', '$modal', '$fil
                 
                 config.selectCallback(address);
 
-                $modalInstance.dismiss('selected');
+                $uibModalInstance.dismiss('selected');
 
             },
             cancel: function () {
-                $modalInstance.dismiss('cancel');
+                $uibModalInstance.dismiss('cancel');
             }
         };
         

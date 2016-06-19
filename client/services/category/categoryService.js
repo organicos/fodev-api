@@ -1,4 +1,4 @@
-angular.module('myApp').service('categoryService', ['$rootScope', '$modal', '$filter', '$http', 'confirmModalService', 'myConfig', function ($rootScope, $modal, $filter, $http, confirmModalService, myConfig) {
+angular.module('myApp').service('categoryService', ['$rootScope', '$uibModal', '$filter', '$http', 'confirmModalService', 'myConfig', function ($rootScope, $uibModal, $filter, $http, confirmModalService, myConfig) {
     this.get = function(category){
         if(category){
             if(category._id){

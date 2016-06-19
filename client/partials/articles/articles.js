@@ -46,6 +46,7 @@ articles.controller('ArticleCtrl', ['$scope','$http', '$filter', '$routeParams',
 
   $scope.saving_article = false;
   $scope.article = {};
+  $scope.categories = {};
   $scope.loadingProducts = false;
   $scope.loadingAuthors = false;
   $scope.loadingImages = false;
@@ -75,21 +76,25 @@ articles.controller('ArticleCtrl', ['$scope','$http', '$filter', '$routeParams',
   }
 
   $scope.getCategories = function(name){
+    $scope.loadingCategories = false;
     return $http.get(myConfig.apiUrl+'/categories', {
       params: {
-        name: name,
         forUseInBlog: true
       }
     }).then(function(res) {
-      
-      return res.data;
+      $scope.loadingCategories = false;
+      $scope.categories = res.data;
 
     });
-  }
+  };
+  $scope.getCategories();
 
-  $scope.selectCategory = function (item, model, label) {
+  $scope.selectCategory = function (item) {
     $scope.article.categories = $scope.article.categories || [];
-    $scope.article.categories.push(item);
+    var itemExistInArray = $scope.article.categories.filter(function(a){return a._id == item._id});
+    if(!itemExistInArray.length){
+      $scope.article.categories.push(item);
+    }
     $scope.categoryInput = "";
   };
 

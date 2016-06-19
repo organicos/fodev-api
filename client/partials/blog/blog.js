@@ -21,8 +21,18 @@ blog.controller('BlogArticlesCtrl', ['$scope','$http', '$filter', '$routeParams'
   
   HtmlMetaTagService.tag('title', 'Blog');
 
+  $scope.articles = [];
+  $scope.selectedFilter = '';
+  $scope.selectedOrder = 'updated';
+  $scope.loadingArticles = true;
+  $scope.categories = [];
+
+  categoryService.get({forUseInBlog: true}).then(function(res){
+    $scope.categories = res.data;
+  });
+
   var resourceUrl = $routeParams.id ? myConfig.apiUrl+'/articles/category/'+$routeParams.id : myConfig.apiUrl+'/articles';
-    
+
   $http.get(resourceUrl)
   .then(function(res){
     
@@ -37,22 +47,10 @@ blog.controller('BlogArticlesCtrl', ['$scope','$http', '$filter', '$routeParams'
       });
   
   }).finally(function(res){
-    
+    console.log('aqui no finally');
     $scope.loadingArticles = false;
     
   });
-    
-  $scope.articles = [];
-  $scope.selectedFilter = '';
-  $scope.selectedOrder = 'updated';
-  $scope.loadingArticles = true;
-  $scope.categories = [];
-
-  categoryService.get({forUseInBlog: true}).then(function(res){
-    $scope.categories = res.data;
-  })
-
-
 
   $scope.selectFilter = function (value) {
     

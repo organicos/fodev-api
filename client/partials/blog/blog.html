@@ -16,37 +16,37 @@
             <h1 class="sr-only">Blog da Feira Orgânica Delivery</h1>
 
             <p class="text-center" ng-if="loadingArticles">Buscando artigos <i class="fa fa-cog fa-spin"></i></p>
-            <div class="well background-blue">
-                <p>Ah :( não encontramos nenhum artigo ativo nesta categoria...</p>
-            </div>
-            <div ng-if="!loadingArticles || articles" ng-cloak>
-                
-                <div class="row visible-md-block visible-lg-block">
-                    <div class="col-xs-12 col-sm-8 blog-post-thumb-wrap" ng-repeat="article in articles track by article._id">
-                        <a class="blog-post-thumb" href="/blog/{{::article.encoded_url}}" hreflang="pt-br">
-                            <img class="blog-post-thumb-img" src="{{::article.images[0].url}}" resizimage="300x300" alt="{{::article.images[0].title}}"></img>
-                            <p class="blog-post-thumb-title">
-                                <small ng-bind="article.updated | date: 'dd/MM/yyyy'"></small>
-                                <br>
-                                <span class="font-30" ng-bind="::article.title"></span>
-                            </p>                    
-                        </a>
-                    </div>
+            <div ng-if="!loadingArticles">
+                <div ng-if="!articles.length" class="well background-blue">
+                    <p>Ah :( não encontramos nenhum artigo ativo nesta categoria...</p>
                 </div>
-                
-                <div class="row visible-xs-block visible-sm-block">
-                    <div class="col-xs-12 col-sm-8 blog-post-thumb-wrap-sm" ng-repeat="article in articles track by article._id">
-                        <a class="blog-post-thumb" href="/blog/{{::article.encoded_url}}" hreflang="pt-br">
-                            <img class="blog-post-thumb-img" ng-src="{{::article.images[0].url}}" resizimage="200x200" alt="{{::article.images[0].title}}"></img>
-                            <p class="blog-post-thumb-title">
-                                <small ng-bind="::article.updated | date: 'dd/MM/yyyy'"></small>
-                                <br>
-                                <span class="font-30" ng-bind="::article.title"></span>
-                            </p>                    
-                        </a>
+                <div ng-if="articles.length" ng-cloak>
+                    <div class="row visible-md-block visible-lg-block">
+                        <div class="col-xs-12 col-sm-8 blog-post-thumb-wrap" ng-repeat="article in articles track by article._id">
+                            <a class="blog-post-thumb" href="/blog/{{::article.encoded_url}}" hreflang="pt-br">
+                                <img class="blog-post-thumb-img" src="{{::article.images[0].url}}" resizimage="300x300" alt="{{::article.images[0].title}}"></img>
+                                <p class="blog-post-thumb-title">
+                                    <small ng-bind="article.updated | date: 'dd/MM/yyyy'"></small>
+                                    <br>
+                                    <span class="font-30" ng-bind="::article.title"></span>
+                                </p>                    
+                            </a>
+                        </div>
                     </div>
-                </div>
-
+                    
+                    <div class="row visible-xs-block visible-sm-block">
+                        <div class="col-xs-12 col-sm-8 blog-post-thumb-wrap-sm" ng-repeat="article in articles track by article._id">
+                            <a class="blog-post-thumb" href="/blog/{{::article.encoded_url}}" hreflang="pt-br">
+                                <img class="blog-post-thumb-img" ng-src="{{::article.images[0].url}}" resizimage="200x200" alt="{{::article.images[0].title}}"></img>
+                                <p class="blog-post-thumb-title">
+                                    <small ng-bind="::article.updated | date: 'dd/MM/yyyy'"></small>
+                                    <br>
+                                    <span class="font-30" ng-bind="::article.title"></span>
+                                </p>                    
+                            </a>
+                        </div>
+                    </div>
+                </div>                
             </div>
         </div>
     </div>

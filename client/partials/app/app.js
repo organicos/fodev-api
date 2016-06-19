@@ -93,14 +93,14 @@ app.config(['$routeProvider', '$httpProvider', '$locationProvider', 'resizimageP
 }]);
 
 // close modal on back button
-app.run(['$rootScope', '$modalStack', function ($rootScope, $modalStack) {
+app.run(['$rootScope', '$uibModalStack', function ($rootScope, $uibModalStack) {
    $rootScope.$on('$locationChangeStart', function (event) {
-       var anyModalOpen = !!$modalStack.getTop();
+       var anyModalOpen = !!$uibModalStack.getTop();
        if(anyModalOpen){
             event.preventDefault();
-            var top = $modalStack.getTop();
+            var top = $uibModalStack.getTop();
             if (top) {
-                $modalStack.dismiss(top.key);
+                $uibModalStack.dismiss(top.key);
             }
             
        }

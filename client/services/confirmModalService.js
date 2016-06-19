@@ -1,4 +1,4 @@
-angular.module('myApp').service('confirmModalService', ['$modal', function ($modal) {
+angular.module('myApp').service('confirmModalService', ['$uibModal', function ($uibModal) {
 
     var modalDefaults = {
         backdrop: true,
@@ -33,18 +33,18 @@ angular.module('myApp').service('confirmModalService', ['$modal', function ($mod
         angular.extend(tempModalOptions, modalOptions, customModalOptions);
 
         if (!tempModalDefaults.controller) {
-            tempModalDefaults.controller = ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+            tempModalDefaults.controller = ['$scope', '$uibModalInstance', function ($scope, $uibModalInstance) {
                 $scope.modalOptions = tempModalOptions;
                 $scope.modalOptions.ok = function (result) {
-                    $modalInstance.close(true);
+                    $uibModalInstance.close(true);
                 };
                 $scope.modalOptions.close = function (result) {
-                    $modalInstance.close(false);
+                    $uibModalInstance.close(false);
                 };
             }]
         }
 
-        return $modal.open(tempModalDefaults).result;
+        return $uibModal.open(tempModalDefaults).result;
     };
 
 }]);

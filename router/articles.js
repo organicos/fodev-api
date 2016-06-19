@@ -26,18 +26,11 @@ module.exports=function(app, mongoose, utils, config, sanitize) {
         });
 
         app.get('/v1/articles/category/:slug_or_id', utils.getRequestUser, function(req, res) {
-                var filter = {};
-                if(!req.user || req.user.kind != 'admin') filter.active = 1;
                 var slug_or_id = req.params.slug_or_id;
-                var $or = [{slug: { $eq: req.params.slug_or_id }}];
-                if (utils.isObjectId(slug_or_id)) {
-                        $or.push({ _id: { $eq: req.params.slug_or_id }});
-                }
-                filter.categories = {
-                        $elemMatch:{
-                                $or: $or
-                        }
+                var filter = {
+                        'categories.slug': slug_or_id
                 };
+                if(!req.user || req.user.kind != 'admin') filter.active = 1;
                 Articles
                 .find(filter)
                 .sort({updated: -1})

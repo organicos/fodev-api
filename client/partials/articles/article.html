@@ -51,19 +51,25 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <input 
-                        type="text" 
-                        ng-model="categoryInput"
-                        placeholder="Categoria" 
-                        typeahead="user.name for user in getCategories($viewValue)" 
-                        typeahead-loading="loadingCategories" 
-                        typeahead-on-select="selectCategory($item, $model, $label)" 
-                        class="form-control"
-                        >
-                    <i ng-show="loadingCategories" class="fa fa-spin fa-spinner"></i>
-                </div>
-                <div class="well">
-                    <span class="badge badge-info" ng-repeat="category in article.categories" ng-bind="::category.name"></span>
+                    <div class="btn-group" uib-dropdown>
+                      <button id="split-button" type="button" class="btn btn-info">Categoria</button>
+                      <button type="button" class="btn btn-danger" uib-dropdown-toggle>
+                        <span ng-bind=""></span>
+                        <span class="caret"></span>
+                        <span class="sr-only">Select cateory!</span>
+                      </button>
+                      <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
+                        <li ng-class="category.subcategories.length ? 'dropdown-submenu':''" role="menuitem" ng-repeat="category in categories">
+                            <a href="javascrip:void(0);" ng-bind="category.name" ng-click="selectCategory(category)"></a>
+                            <ul ng-if="category.subcategories.length" class="dropdown-menu">
+                                <li ng-repeat="subcategory in category.subcategories">
+                                    <a tabindex="-1" ref="javascrip:void(0);" ng-bind="subcategory.name" ng-click="selectCategory(subcategory); $event.stopNextHandler = true;"></a>
+                                </li>
+                            </ul>
+                        </li>
+                      </ul>
+                    </div>
+                    <span class="badge badge-info" ng-repeat="category in article.categories" ng-bind="category.name"></span>
                 </div>
             </div>
             <div class="col-sm-3">

@@ -1,4 +1,4 @@
-angular.module('myApp').service('filesService', ['$modal', function ($modal) {
+angular.module('myApp').service('filesService', ['$uibModal', function ($uibModal) {
     
     var self = this;
     var multiple = false;
@@ -51,7 +51,7 @@ angular.module('myApp').service('filesService', ['$modal', function ($modal) {
     }
     
     var createModal = function(template){
-        return $modal.open({
+        return $uibModal.open({
             backdrop: true,
             keyboard: true,
             modalFade: true,
@@ -128,7 +128,7 @@ angular.module('myApp').service('filesService', ['$modal', function ($modal) {
         return manageFiles(typeTab);
     };
     
-    var selectFilesModalCtrl = function (Upload, $scope, $http, $modalInstance, myConfig, $filter) {
+    var selectFilesModalCtrl = function (Upload, $scope, $http, $uibModalInstance, myConfig, $filter) {
         $scope.progress = 4;
         $scope.uploading = false;
         $scope.typeTab = getTypeTab();
@@ -185,7 +185,7 @@ angular.module('myApp').service('filesService', ['$modal', function ($modal) {
                 var items = getMultiple() ? $scope.selectedItems : $scope.selectedItems[0];
                 callback(items);
                 $scope.selectedItems
-                $modalInstance.dismiss('files_selected');
+                $uibModalInstance.dismiss('files_selected');
             },
             open: function () {
                 
@@ -203,7 +203,7 @@ angular.module('myApp').service('filesService', ['$modal', function ($modal) {
                 
             },
             close: function (result) {
-                $modalInstance.dismiss('cancel');
+                $uibModalInstance.dismiss('cancel');
             }
         };
         
@@ -316,7 +316,7 @@ angular.module('myApp').service('filesService', ['$modal', function ($modal) {
             })
             .success(function(res) {
                 
-                $modalInstance.dismiss('files_selected');
+                $uibModalInstance.dismiss('files_selected');
                 
                 callback(res);
                 

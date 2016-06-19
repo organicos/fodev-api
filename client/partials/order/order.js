@@ -44,7 +44,7 @@ var statuses = [
   {id: 5, name: 'Inválido', desc: 'Pedidos que não respeitam a política do negócio.'}
 ];
 
-order.controller('OrdersCtrl', ['$scope','$http', '$filter', '$routeParams', 'myConfig', 'HtmlMetaTagService', '$modal', function($scope, $http, $filter, $routeParams, myConfig, HtmlMetaTagService, $modal) {
+order.controller('OrdersCtrl', ['$scope','$http', '$filter', '$routeParams', 'myConfig', 'HtmlMetaTagService', '$uibModal', function($scope, $http, $filter, $routeParams, myConfig, HtmlMetaTagService, $uibModal) {
   
     HtmlMetaTagService.tag('title', 'Pedidos');
     $scope.checkAllStatus = false;
@@ -131,21 +131,21 @@ order.controller('OrdersCtrl', ['$scope','$http', '$filter', '$routeParams', 'my
     });
 
 
-    return $modal.open({
+    return $uibModal.open({
       backdrop: true,
       keyboard: true,
       modalFade: true,
       size: 'lg',
       templateUrl: '/partials/order/order_condensed_modal.html',
-      controller: function ($scope, $location, $modalInstance) {
+      controller: function ($scope, $location, $uibModalInstance) {
         $scope.products = condensedList;
         $scope.modalOptions = {
           print: function (result) {
             $location.path('/printCondensedProductsList');
-            $modalInstance.dismiss('print');
+            $uibModalInstance.dismiss('print');
           },
           close: function (result) {
-            $modalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss('cancel');
           }
         }
       }
@@ -153,7 +153,7 @@ order.controller('OrdersCtrl', ['$scope','$http', '$filter', '$routeParams', 'my
   }
 }]);
 
-order.controller('OrderCtrl', ['$scope','$http', '$filter', '$routeParams', 'myConfig', 'confirmModalService', 'HtmlMetaTagService', '$modal', function($scope, $http, $filter, $routeParams, myConfig, confirmModalService, HtmlMetaTagService, $modal) {
+order.controller('OrderCtrl', ['$scope','$http', '$filter', '$routeParams', 'myConfig', 'confirmModalService', 'HtmlMetaTagService', '$uibModal', function($scope, $http, $filter, $routeParams, myConfig, confirmModalService, HtmlMetaTagService, $uibModal) {
   
   $scope.order = {};
   $scope.statuses = statuses;
@@ -294,16 +294,16 @@ order.controller('OrderCtrl', ['$scope','$http', '$filter', '$routeParams', 'myC
 
   $scope.showDepositInstructionsModal = function(){
     
-      return $modal.open({
+      return $uibModal.open({
           backdrop: true,
           keyboard: true,
           modalFade: true,
           size: 'md',
           templateUrl: '/partials/order/deposit_instructions.html',
-          controller: function ($scope, $location, $modalInstance) {
+          controller: function ($scope, $location, $uibModalInstance) {
               $scope.modalOptions = {
                   close: function (result) {
-                      $modalInstance.dismiss('cancel');
+                      $uibModalInstance.dismiss('cancel');
                   }
               };
           }

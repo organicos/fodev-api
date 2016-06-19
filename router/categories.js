@@ -6,33 +6,22 @@ module.exports=function(app, mongoose, utils) {
 
     app.get('/v1/categories', utils.getRequestUser, function(req, res) {
         var filter = {
-            parent: null
+            parent: null,
         };
+
         if(req.query.name) filter.name = new RegExp(req.query.name, "i");
         if(req.query.forUseInBlog) filter.forUseInBlog = req.query.forUseInBlog;
         if(req.query.forUseInProduct) filter.forUseInProduct = req.query.forUseInProduct;
 
         Categories
-        .aggregate([
-            {$unwind : "$subcategories"},
-            {$match : filter,
-            {$project : {
-                _id : "$subcategories._id", 
-                name : "$subcategories.name"
-                     }
-            }
-        ])
+        .find(filter)
+        .populate('subcategories')
+        .sort({updated: 1})
         .exec(function(err, categories) {
             if (err) {
                 res.statusCode = 400;
                 res.send(err)
             } else {
-                for(category in categories){
-                    if(category.subcategories.length > 0){
-                        category.subcategories = category.subcategories.filter(function(x){return new RegExp(req.query.name, "i").test(x.name)})
-                    }
-                }
-
                 res.json(categories);
             }
         });
@@ -41,8 +30,8 @@ module.exports=function(app, mongoose, utils) {
     app.get('/v1/category/:category_id', utils.ensureAuthorized, utils.getRequestUser, function(req, res) {
         Categories
         .findOne({_id: req.params.category_id})
-        .sort({updated: 1})
         .populate('subcategories')
+        .sort({updated: 1})
         .exec(function(err, category) {
             if (err) {
                 res.statusCode = 400;

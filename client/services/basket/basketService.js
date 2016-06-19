@@ -1,4 +1,4 @@
-angular.module('myApp').service('basketService', ['$modal', '$localStorage', '$filter', 'confirmModalService', function ($modal, $localStorage, $filter, confirmModalService) {
+angular.module('myApp').service('basketService', ['$uibModal', '$localStorage', '$filter', 'confirmModalService', function ($uibModal, $localStorage, $filter, confirmModalService) {
     
     var self = this;
     
@@ -110,13 +110,13 @@ angular.module('myApp').service('basketService', ['$modal', '$localStorage', '$f
     
     self.openBasket = function(){
         var currentTimestamp = new Date().getTime();
-        return $modal.open({
+        return $uibModal.open({
             backdrop: true,
             keyboard: true,
             modalFade: true,
             size: 'lg',
             templateUrl: '/services/basket/basket_modal.html?' + currentTimestamp,
-            controller: function ($scope, $location, $modalInstance) {
+            controller: function ($scope, $location, $uibModalInstance) {
                 $scope.basket = basket;
                 $scope.getTotal = self.getTotal;
                 $scope.addToBasket = self.addToBasket;
@@ -124,14 +124,14 @@ angular.module('myApp').service('basketService', ['$modal', '$localStorage', '$f
                 $scope.modalOptions = {
                     ok: function (result) {
                         $location.path('/revisar-pedido');
-                        $modalInstance.dismiss('order_review');
+                        $uibModalInstance.dismiss('order_review');
                     },
                     close: function (result) {
-                        $modalInstance.dismiss('cancel');
+                        $uibModalInstance.dismiss('cancel');
                     },
                     goTo: function(location){
                         $location.path(location);
-                        $modalInstance.dismiss(location);
+                        $uibModalInstance.dismiss(location);
                     },
                     clearBasket: self.clearBasket
                 };
