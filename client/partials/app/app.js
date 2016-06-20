@@ -122,6 +122,13 @@ app.controller('myAppCtrl' , ['$scope', '$location', '$localStorage', 'basketSer
     
     // signup to news data model
     $scope.signupToNewsletter = {mail: ""};
+
+    $scope.myApp = {
+      modules: {
+        fair: false,
+        blog: true
+      }
+    }
     
     
     // CONSTRUCTOR

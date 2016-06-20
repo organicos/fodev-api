@@ -112,23 +112,22 @@
             <img src="//fodev-prod.s3.amazonaws.com/img/global/logo_transparent.png" height="100">
           </a>
 
-          <a href="#" class="navbar-brand" ng-click="basketService.openBasket()">
+          <a href="#" class="navbar-brand" ng-click="basketService.openBasket()" ng-if="myApp.modules.fair">
             <i class="fa fa-shopping-cart fa-2x"></i> 
             <small class="fa-embed-text" ng-bind="basketService.productsAmount()"></small>
           </a>
 
-          <div class="navbar-text navbar-right">
+          <div class="navbar-text navbar-right" ng-if="myApp.modules.fair">
             <a href="/feira" class="btn btn-primary visible-xs-inline-block"><i class="fo-logo"></i> Feira</a>
           </div>
           
         </div>
         <div id="navbar" class="collapse navbar-collapse" collapse="isCollapsed">
           <ul class="nav navbar-nav navbar-right">
-            <li><p class="navbar-btn"><a href="/feira" class="btn btn-primary hidden-xs" hreflang="pt-br"><i class="fo-logo"></i> Feira</a></p></li>
+            <li ng-if="myApp.modules.fair"><p class="navbar-btn"><a href="/feira" class="btn btn-primary hidden-xs" hreflang="pt-br"><i class="fo-logo"></i> Feira</a></p></li>
             <li class="divider-vertical"></li>
             <li ng-class="location.path() == '/administracao' ? 'active' : ''"><a href="/administracao" ng-cloak ng-if="$storage.user.kind == 'admin'" hreflang="pt-br">Admin</a></li>
-            <li ng-class="location.path() == '/blog' ? 'active' : ''"><a href="/blog" hreflang="pt-br">Blog</a></li>
-            <li ng-class="location.path() == '/#como-funciona' ? 'active' : ''"><a href="/#como-funciona" hreflang="pt-br">Como funciona</a></li>
+            <li ng-class="location.path() == '/blog' ? 'active' : ''" ng-if="myApp.modules.blog"><a href="/blog" hreflang="pt-br">Blog</a></li>
             <li ng-class="location.path() == '/sobre' ? 'active' : ''"><a href="/sobre" hreflang="pt-br">Sobre</a></li>
             <li ng-class="location.path() == '/sustentabilidade' ? 'active' : ''"><a href="/sustentabilidade" hreflang="pt-br">Sustentabilidade</a></li>
             <li ng-class="location.path() == '/certificacao' ? 'active' : ''"><a href="/certificacao" hreflang="pt-br">Certificação</a></li>
