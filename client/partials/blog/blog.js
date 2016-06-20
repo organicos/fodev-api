@@ -33,7 +33,9 @@ blog.controller('BlogArticlesCtrl', ['$scope','$http', '$filter', '$routeParams'
 
   var resourceUrl = $routeParams.id ? myConfig.apiUrl+'/articles/category/'+$routeParams.id : myConfig.apiUrl+'/articles';
 
-  $http.get(resourceUrl)
+  $http.get(resourceUrl,{
+    params:{highlight:true}
+  })
   .then(function(res){
     
     $scope.articles = res.data;

@@ -11,6 +11,8 @@ module.exports=function(app, mongoose, utils, config, sanitize) {
 
         app.get('/v1/articles', utils.getRequestUser, function(req, res) {
                 var filter = {};
+                // query filter: highlight
+                if(req.query.highlight) filter.highlight = 1;
                 if(!req.user || req.user.kind != 'admin') filter.active = 1;
                 Articles
                 .find(filter)

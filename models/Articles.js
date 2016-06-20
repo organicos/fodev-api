@@ -11,7 +11,7 @@ var Articles = new Schema({
         categories: [Categories],
         visits: { type: [{ type : Schema.Types.ObjectId, ref: 'Visits' }], default: []},
         highlight : { type: Boolean, default: false },
-        active : { type: Boolean, default: true },
+        active : { type: Boolean, default: false },
         clicks: { type: Number, default: 0 },
         updated: { type: Date, default: Date.now }
 });

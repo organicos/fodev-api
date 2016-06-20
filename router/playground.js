@@ -22,6 +22,60 @@ module.exports=function(app, mongoose, config, utils) {
         
     });
 
+    app.get('/v1/playground/articles/upgrade-slug', function(req, res) {
+            
+        Articles.find(function(err, articles) {
+
+            if (err) {
+                    
+                res.statusCode = 400;
+                res.send(err);
+
+            }
+            
+            var total = articles.length;
+            var result = [];
+
+            function saveAll(){
+                
+                var article = articles.pop();
+                var encoded = article.name;
+                console.log(encoded);
+
+                article.slug = article.encoded_url || 'encoded' + new Date().toString();
+
+                article.save(function(err, savedArticle){
+                  
+                    if (err) {
+                        
+                        throw err;//handle error
+                        
+                    } else {
+                        
+                        result.push(savedArticle);
+                    
+                        if (--total) {
+                            
+                            saveAll();
+                            
+                        } else {
+                            
+                            res.send('Artigos migrados com sucesso!');
+                            
+                        }
+                        
+                    }
+
+                });
+            
+            }
+            
+            saveAll();
+            
+        });
+
+    });
+
     app.get('/v1/playground/products/upgrade-sctructure', function(req, res) {
         
         var imagesRaw = [];
