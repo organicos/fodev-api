@@ -1,8 +1,8 @@
 module.exports = function(grunt) {
-    grunt.loadTasks('../node_modules/grunt-ng-annotate/tasks');
-    grunt.loadTasks('../node_modules/grunt-contrib-uglify/tasks');
-    grunt.loadTasks('../node_modules/grunt-sass/tasks');
-    grunt.loadTasks('../node_modules/grunt-contrib-cssmin/tasks');
+    grunt.loadTasks('node_modules/grunt-ng-annotate/tasks');
+    grunt.loadTasks('node_modules/grunt-contrib-uglify/tasks');
+    grunt.loadTasks('node_modules/grunt-sass/tasks');
+    grunt.loadTasks('node_modules/grunt-contrib-cssmin/tasks');
     grunt.registerTask('default',['ngAnnotate', 'uglify', 'sass', 'cssmin']);
 
     grunt.initConfig({
@@ -21,7 +21,7 @@ module.exports = function(grunt) {
                         , 'node_modules/angular-filter/dist/angular-filter.min.js'
                         , 'node_modules/angular-sanitize/angular-sanitize.min.js'
                         , 'node_modules/angular-animate/angular-animate.min.js'
-                        , 'node_modules/chart.js/Chart.min.js'
+                        , 'node_modules/chart.js/dist/Chart.min.js'
                         , 'node_modules/angular-chart.js/dist/angular-chart.min.js'
                         , 'node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js'
                         , 'node_modules/ng-file-upload/dist/ng-file-upload.min.js'

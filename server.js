@@ -109,18 +109,10 @@ http.createServer(app).listen(httpPort, function(){
 });
 
 // START HTTPS SERVER
-https.createServer({
-    key: fs.readFileSync('./ssl-data/key.key'),
-    cert: fs.readFileSync('./ssl-data/cert.crt'),
-    ca: [
-        fs.readFileSync('./ssl-data/ca.crt')
-        , fs.readFileSync('./ssl-data/b31f05f66f16b2d2.crt')
-        , fs.readFileSync('./ssl-data/gd_bundle-g2-g1-1.crt')
-        , fs.readFileSync('./ssl-data/gd_bundle-g2-g1-2.crt')
-        , fs.readFileSync('./ssl-data/gd_bundle-g2-g1-3.crt')
-    ],
-    requestCert: true,
-    rejectUnauthorized: false
+https.createServer({ 
+        key: fs.readFileSync("/etc/letsencrypt/archive/feiraorganica.com/privkey1.pem"),
+        cert: fs.readFileSync("/etc/letsencrypt/archive/feiraorganica.com/fullchain1.pem"),
+        ca: fs.readFileSync("/etc/letsencrypt/archive/feiraorganica.com/chain1.pem")
 }, app).listen(httpsPort, function() {
     console.log("HTTPS - SSL iniciado na porta: " + httpsPort);
 });

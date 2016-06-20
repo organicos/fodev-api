@@ -11,10 +11,11 @@
   "devDependencies": {
     "grunt": "*",
     "grunt-cli": "*",
-    "grunt-contrib-cssmin": "*",
-    "grunt-contrib-uglify": "*",
-    "grunt-ng-annotate": "*",
-    "grunt-sass": "*"
+    "grunt-contrib-cssmin": "~1.0.1",
+    "grunt-contrib-uglify": "~1.0.1",
+    "grunt-ng-annotate": "~2.0.2",
+    "grunt-sass": "*",
+    "grunt-contrib-sass": "~1.0.0"
   },
   "dependencies": {
     "angular": "^1.5.6",
@@ -31,6 +32,10 @@
     "font-awesome": "^4.6.3",
     "ng-file-upload": "^12.0.4",
     "ngstorage": "^0.3.10",
-    "sortablejs": "^1.4.2"
+    "sortablejs": "^1.4.2",
+    "grunt-ng-annotate": "~2.0.2",
+    "grunt-sass": "~1.2.0",
+    "angular-chart": "~0.5.0",
+    "chart.js": "~2.1.6"
   }
 }
