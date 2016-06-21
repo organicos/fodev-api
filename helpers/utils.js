@@ -47,7 +47,7 @@ function getUserKind(req, callback){
         console.log(config.APP_PRIVATE_KEY);
         // verify a token symmetric
         jwt.verify( bearer[1], config.APP_PRIVATE_KEY, function(err, decoded) {
-            console.log(decoded);
+            console.log(decoded, decoded.kind);
             callback(decoded.kind);
 
         });   
