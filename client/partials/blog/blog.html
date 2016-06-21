@@ -26,7 +26,7 @@
                             <a class="blog-post-thumb" href="/blog/{{::article.slug}}" hreflang="pt-br">
                                 <img class="blog-post-thumb-img" src="{{::article.images[0].url}}" resizimage="300x300" alt="{{::article.images[0].title}}"></img>
                                 <p class="blog-post-thumb-title">
-                                    <small ng-bind="article.updated | date: 'dd/MM/yyyy'"></small>
+                                    <small><span ng-bind="article.updated | date: 'dd/MM/yyyy'"></span> - <i class="fa fa-eye"></i> <span ng-bind="::article.visits.length"></span></small>
                                     <br>
                                     <span class="font-30" ng-bind="::article.title"></span>
                                 </p>                    
@@ -39,7 +39,7 @@
                             <a class="blog-post-thumb" href="/blog/{{::article.slug}}" hreflang="pt-br">
                                 <img class="blog-post-thumb-img" ng-src="{{::article.images[0].url}}" resizimage="200x200" alt="{{::article.images[0].title}}"></img>
                                 <p class="blog-post-thumb-title">
-                                    <small ng-bind="::article.updated | date: 'dd/MM/yyyy'"></small>
+                                    <small><span ng-bind="article.updated | date: 'dd/MM/yyyy'"></span> - <i class="fa fa-eye"></i> <span ng-bind="::article.visits.length"></span></small>
                                     <br>
                                     <span class="font-30" ng-bind="::article.title"></span>
                                 </p>                    

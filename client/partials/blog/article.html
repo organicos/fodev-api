@@ -4,6 +4,7 @@
         <img class="img-responsive img-responsive-wide" ng-if="article.images.length" alt="{{::article.images[0].title}}" ng-src="{{::article.images[0].url}}" resizimage="800"></img>
     
         <h1 ng-bind="article.title"></h1>
+        <small><span ng-bind="::article.updated | date: 'dd/MM/yyyy'"></span> - <i class="fa fa-eye"></i> <span ng-bind="::article.visits.length"></span></small>
         
         <hr>
         
