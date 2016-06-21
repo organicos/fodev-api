@@ -102,7 +102,10 @@ angular.module('resizimage', [])
         $attrs.$set("resizimage-missing-image", true);
       }
       $element.bind('error', function() {
-        console.log
+        if($attrs.resizimageDebug){
+          var src = $attrs["src"] + "";
+          $attrs.$set("onclick", "window.open('"+src+"');");
+        }
         $attrs.$set("src", resizimage.brknImageSrc());
         $attrs.$set("resizimage-broken-image", true);
       });

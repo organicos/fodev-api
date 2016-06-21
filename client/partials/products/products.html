@@ -22,6 +22,7 @@
         <table class="table table-condensed table-stripped table-hover">
             <thead>
                 <tr>
+                    <td></td>
                     <td class="click" ng-click="orderByField='name'; reverseSort = !reverseSort">Nome</td>
                     <td class="click" ng-click="orderByField='costs[0].price'; reverseSort = !reverseSort">Custo</td>
                     <td class="click" ng-click="orderByField='prices[0].price'; reverseSort = !reverseSort">Preço</td>
@@ -38,6 +39,7 @@
 
             <tbody>
                 <tr ng-repeat="product in filteredProducts = (products | filter: productQuery | filter: {categories : {name: selectedCategory}} | orderBy:orderByField:reverseSort) track by product._id">
+                    <td><img class="img img-responsive" resizimage="200x200" resizimage-debug="true" ng-src="product.images[0].url"></td>
                     <td><a class="text-violet" href="/produto/{{product._id}}" ng-bind="::product.name"></a></td>
                     <td>
                         <span ng-bind="::product.costs[0].price | currency"></span>

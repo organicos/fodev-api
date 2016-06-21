@@ -15,6 +15,7 @@
         <table class="table table-condensed table-stripped table-hover small">
             <thead>
                 <tr>
+                    <td></td>
                     <td class="click" ng-click="orderByField='title'; reverseSort = !reverseSort">Título</td>
                     <td class="click" ng-click="orderByField='visits.length'; reverseSort = !reverseSort">Visualizações</td>
                     <td class="click" ng-click="orderByField='slug'; reverseSort = !reverseSort">Slug</td>
@@ -27,6 +28,7 @@
             </thead>
             <tbody>
                 <tr ng-repeat="article in filteredArticles = (articles | filter: orderQuery | orderBy:orderByField:reverseSort)">
+                    <td><img class="img img-responsive" resizimage="200x200" resizimage-debug="true" ng-src="article.images[0].url"></td>
                     <td><a href="/artigo/{{article._id}}" ng-bind="article.title" title="{{article.title}}"></a></td>
                     <td ng-bind="article.visits.length"></td>
                     <td ng-bind="article.slug"></td>
