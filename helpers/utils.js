@@ -17,6 +17,7 @@ function ensureAuthorized(req, res, next) {
         req.token = bearerToken;
         next();
     } else {
+        console.log('Not authorized!', req);
         res.sendStatus(403);
     }
 }
@@ -28,7 +29,8 @@ function ensureAdmin(req, res, next) {
        if (userKind == 'admin') {
            next();
        } else {
-           res.sendStatus(403);
+            console.log('Not admin!', userKind, req);
+            res.sendStatus(403);
        }
     });
 }
