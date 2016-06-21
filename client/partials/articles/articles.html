@@ -28,7 +28,7 @@
             </thead>
             <tbody>
                 <tr ng-repeat="article in filteredArticles = (articles | filter: orderQuery | orderBy:orderByField:reverseSort)">
-                    <td><img class="img img-responsive" resizimage="200x200" resizimage-debug="true" ng-src="{{::article.images[0].url}}"></td>
+                    <td class="col-sm-1"><img class="img img-responsive" resizimage="200x200" resizimage-debug="true" ng-src="{{::article.images[0].url}}"></td>
                     <td><a href="/artigo/{{article._id}}" ng-bind="article.title" title="{{article.title}}"></a></td>
                     <td ng-bind="article.visits.length"></td>
                     <td ng-bind="article.slug"></td>
