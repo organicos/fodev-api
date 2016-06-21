@@ -17,7 +17,7 @@ function ensureAuthorized(req, res, next) {
         req.token = bearerToken;
         next();
     } else {
-        console.log('Not authorized!', req);
+        console.log('Not authorized!');
         res.sendStatus(403);
     }
 }
@@ -29,7 +29,7 @@ function ensureAdmin(req, res, next) {
        if (userKind == 'admin') {
            next();
        } else {
-            console.log('Not admin!', userKind, req);
+            console.log('Not admin!', userKind);
             res.sendStatus(403);
        }
     });
@@ -40,12 +40,14 @@ exports.ensureAdmin = ensureAdmin;
 function getUserKind(req, callback){
     
     var bearerHeader = req.headers["authorization"];
-    
+    console.log(bearerHeader.length);
     if (typeof bearerHeader !== 'undefined') {
         var bearer = bearerHeader.split(" ");
+        console.log(bearerHeader.length);
+        console.log(config.APP_PRIVATE_KEY);
         // verify a token symmetric
         jwt.verify( bearer[1], config.APP_PRIVATE_KEY, function(err, decoded) {
-
+            console.log(decoded);
             callback(decoded.kind);
 
         });   
